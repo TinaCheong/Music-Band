@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Default Colors -->
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- Main Theme -->
+    <color name="white">#ffffff</color>
+    <color name="gray_e5dfdf">#e5dfdf</color>
+    <color name="green_e3f6f5">#e3f6f5</color>
+    <color name="green_bae8e8">#bae8e8</color>
+    <color name="blue_272343">#272343</color>
+    <color name="gray_646464">#646464</color>
+    <color name="gray_DDDDDD">#DDDDDD</color>
+    <color name="black_3f3a3a">#3f3a3a</color>
+
+
 </resources>
