@@ -2,11 +2,42 @@ package com.tina.musicband
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
+import com.tina.musicband.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding.lifecycleOwner = this
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.navigation_main -> {
+                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_global_mainFragment)
+                    true
+                }
+                R.id.navigation_music_search -> {
+                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_global_searchMusicFragment)
+                    true
+                }
+                R.id.navigation_quick_match -> {
+                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_global_quickMatchFragment)
+                    true
+                }
+                R.id.navigation_profile -> {
+                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_global_profileFragment)
+                    true
+                }
+                else -> false
+
+            }
+        }
     }
 }

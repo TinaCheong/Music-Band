@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_posts"
+        android:id="@+id/navigation_main"
         android:icon="@drawable/ic_post_selector"
         android:title=""/>
 
@@ -12,12 +12,12 @@
         android:title=""/>
 
     <item
-        android:id="@+id/navigation_speed_match"
+        android:id="@+id/navigation_quick_match"
         android:icon="@drawable/ic_speed_match_selector"
         android:title=""/>
 
     <item
-        android:id="@+id/navigation_user_profile"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_user_profile_selector"
         android:title=""/>
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.tina.musicband.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/searchMusicFragment"
+        android:name="com.tina.musicband.search.SearchMusicFragment"
+        android:label="fragment_search_music"
+        tools:layout="@layout/fragment_search_music" />
+    <fragment
+        android:id="@+id/quickMatchFragment"
+        android:name="com.tina.musicband.match.QuickMatchFragment"
+        android:label="fragment_quick_match"
+        tools:layout="@layout/fragment_quick_match" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.tina.musicband.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <action
+        android:id="@+id/action_global_mainFragment"
+        app:destination="@id/mainFragment" />
+    <action
+        android:id="@+id/action_global_searchMusicFragment"
+        app:destination="@id/searchMusicFragment" />
+    <action
+        android:id="@+id/action_global_quickMatchFragment"
+        app:destination="@id/quickMatchFragment" />
+    <action
+        android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment" />
+</navigation>
