@@ -8,8 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
+import com.tina.musicband.MainActivity
 import com.tina.musicband.R
+import com.tina.musicband.data.Posts
 import com.tina.musicband.databinding.FragmentMainBinding
+import java.sql.Timestamp
 
 /**
  * A simple [Fragment] subclass.
@@ -29,10 +33,51 @@ class MainFragment : Fragment() {
             inflater, R.layout.fragment_main, container, false
         )
 
-        // FAB Animation Settings
+        binding.lifecycleOwner = this
+
+        // Implement the FAB Animation
         binding.mainFab.setOnClickListener {
             fabAnimation()
         }
+
+        // Navigate to the Add Music Fragment
+        binding.musicFab.setOnClickListener {
+            findNavController().navigate(R.id.action_global_addMusicFragment)
+        }
+
+        //Change the visibility of toolbar and bottom navigation
+        (activity as MainActivity).binding.toolbar.visibility = View.VISIBLE
+        (activity as MainActivity).binding.bottomNavigation.visibility = View.VISIBLE
+
+        val mainAdapter = MainAdapter()
+
+        binding.recyclerViewMainPage.adapter = mainAdapter
+
+        val posts = listOf<Posts>(Posts("",
+            "",
+            "",
+            "",
+            Timestamp(20200122),
+            "",Timestamp(20200122),
+            "",
+            "",
+            "",
+            "",
+            20), Posts("",
+            "",
+            "",
+            "",
+            Timestamp(20200122),
+            "",Timestamp(20200122),
+            "",
+            "",
+            "",
+            "",
+            30))
+
+
+        mainAdapter.submitList(posts)
+
 
         return binding.root
     }

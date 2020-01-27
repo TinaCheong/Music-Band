@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_f1f9f9">
+        android:background="@color/blue_272343">
 
         <EditText
             android:id="@+id/music_title_edit"
@@ -20,6 +20,9 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Title"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:backgroundTint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="@+id/music_title_icon"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,9 +31,11 @@
 
         <ImageView
             android:id="@+id/music_image_edit"
-            android:layout_width="412dp"
+            android:layout_width="0dp"
             android:layout_height="200dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +50,9 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Composer"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:backgroundTint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="@+id/music_composer_icon"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,6 +67,9 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Description"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:backgroundTint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="@+id/music_description_icon"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,8 +83,9 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:text="Submit"
-            android:textColor="@color/white"
-            android:background="@color/blue_0f4c75"
+            android:textColor="@color/black_3f3a3a"
+            android:background="@color/white"
+            android:elevation="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_description_edit" />
 
@@ -82,9 +94,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:background="@color/white"
             android:text="Back"
-            android:textColor="@color/white"
-            android:background="@color/blue_0f4c75"
+            android:textColor="@color/black_3f3a3a"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/submit_button" />
 
@@ -94,7 +107,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:tint="@color/blue_272343"
+            android:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_music_title" />
@@ -105,7 +118,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:tint="@color/blue_272343"
+            android:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_image_edit"
             app:srcCompat="@drawable/ic_composer" />
@@ -116,7 +129,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:tint="@color/blue_272343"
+            android:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_composer_edit"
             app:srcCompat="@drawable/ic_description" />
