@@ -37,4 +37,11 @@
     <action
         android:id="@+id/action_global_profileFragment"
         app:destination="@id/profileFragment" />
+    <fragment
+        android:id="@+id/addMusicFragment"
+        android:name="com.tina.musicband.addmusic.AddMusicFragment"
+        android:label="AddMusicFragment" />
+    <action
+        android:id="@+id/action_global_addMusicFragment"
+        app:destination="@id/addMusicFragment" />
 </navigation>
