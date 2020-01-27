@@ -2,6 +2,7 @@ package com.tina.musicband
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.tina.musicband.databinding.ActivityMainBinding
@@ -10,6 +11,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    var isOpen = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,8 +20,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
 
+        //Bottom Navigation Settings
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.navigation_main -> {
                     findNavController(R.id.myNavHostFragment).navigate(R.id.action_global_mainFragment)
                     true
@@ -39,5 +44,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
     }
 }
