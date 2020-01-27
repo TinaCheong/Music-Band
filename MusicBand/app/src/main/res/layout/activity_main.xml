@@ -62,5 +62,8 @@
             app:itemIconSize="33dp"
             app:menu="@menu/bottom_navigation_menu">
         </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

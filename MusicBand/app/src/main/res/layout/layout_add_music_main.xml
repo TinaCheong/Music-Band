@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_f1f9f9">
+
+        <EditText
+            android:id="@+id/music_title_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="Title"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/music_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/music_title_icon"
+            app:layout_constraintTop_toTopOf="@+id/music_title_icon" />
+
+        <ImageView
+            android:id="@+id/music_image_edit"
+            android:layout_width="412dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="24dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_title_edit"
+            app:srcCompat="@drawable/image_placeholder" />
+
+        <EditText
+            android:id="@+id/music_composer_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="Composer"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/music_composer_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/music_composer_icon"
+            app:layout_constraintTop_toTopOf="@+id/music_composer_icon" />
+
+        <EditText
+            android:id="@+id/music_description_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/music_description_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/music_description_icon"
+            app:layout_constraintTop_toTopOf="@+id/music_description_icon" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:background="@color/blue_0f4c75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_description_edit" />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Back"
+            android:textColor="@color/white"
+            android:background="@color/blue_0f4c75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/submit_button" />
+
+        <ImageView
+            android:id="@+id/music_title_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:tint="@color/blue_272343"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_music_title" />
+
+        <ImageView
+            android:id="@+id/music_composer_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:tint="@color/blue_272343"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_image_edit"
+            app:srcCompat="@drawable/ic_composer" />
+
+        <ImageView
+            android:id="@+id/music_description_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:tint="@color/blue_272343"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_composer_edit"
+            app:srcCompat="@drawable/ic_description" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

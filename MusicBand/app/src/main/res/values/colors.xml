@@ -14,6 +14,13 @@
     <color name="gray_646464">#646464</color>
     <color name="gray_DDDDDD">#DDDDDD</color>
     <color name="black_3f3a3a">#3f3a3a</color>
+    <color name="green_6ba8a9">#6ba8a9</color>
+    <color name="blue_bbe1fa">#bbe1fa</color>
+    <color name="blue_e1f2fb">#e1f2fb</color>
+    <color name="gray_f1f9f9">#f1f9f9</color>
+    <color name="blue_0f4c75">#0f4c75</color>
+    <color name="brown_4B4B4B">#4B4B4B</color>
+    <color name="blue_3282b8">#3282b8</color>
 
     <!-- Colors with Opacity -->
     <color name="white_50">#80ffffff</color>
