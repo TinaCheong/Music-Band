@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.tina.musicband.MainActivity
 import com.tina.musicband.R
+import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
 import com.tina.musicband.databinding.FragmentMainBinding
 import java.sql.Timestamp
@@ -20,7 +21,7 @@ import java.sql.Timestamp
  */
 class MainFragment : Fragment() {
 
-    var isOpen = false
+    private var isOpen = false
 
     lateinit var binding: FragmentMainBinding
 
@@ -53,27 +54,28 @@ class MainFragment : Fragment() {
 
         binding.recyclerViewMainPage.adapter = mainAdapter
 
-        val posts = listOf<Posts>(Posts("",
+        val posts = listOf(Posts("",
             "",
             "",
             "",
-            Timestamp(20200122),
-            "",Timestamp(20200122),
-            "",
-            "",
-            "",
-            "",
-            20), Posts("",
-            "",
-            "",
-            "",
-            Timestamp(20200122),
-            "",Timestamp(20200122),
+            12,
+            "","",
             "",
             "",
             "",
             "",
-            30))
+            20, Comments("")
+        ), Posts("",
+            "",
+            "",
+            "",
+            24,
+            "","",
+            "",
+            "",
+            "",
+            "",
+            30, Comments("")))
 
 
         mainAdapter.submitList(posts)
@@ -84,7 +86,7 @@ class MainFragment : Fragment() {
 
     // FAB Animation Settings
 
-    fun fabAnimation() {
+    private fun fabAnimation() {
 
         val fabOpen = AnimationUtils.loadAnimation(activity, R.anim.fab_open)
         val fabClose = AnimationUtils.loadAnimation(activity, R.anim.fab_close)

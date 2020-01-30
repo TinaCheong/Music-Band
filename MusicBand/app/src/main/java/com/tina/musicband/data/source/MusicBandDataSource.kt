@@ -6,7 +6,7 @@ import com.tina.musicband.data.Result
 
 interface MusicBandDataSource {
 
-    suspend fun getPosts(): Result<List<Posts>>
+    suspend fun publishEvents(posts: Posts): Result<Boolean>
 
     suspend fun getComments(): Result<List<Comments>>
 

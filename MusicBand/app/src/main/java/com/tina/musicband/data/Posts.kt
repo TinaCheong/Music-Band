@@ -5,16 +5,17 @@ import kotlinx.android.parcel.Parcelize
 import java.sql.Timestamp
 
 data class Posts(
-    val type: String,
-    val userName: String,
-    val userId: String,
-    val postId: String ,
-    val createdTime: Timestamp,
-    val title: String,
-    val date: Timestamp,
-    val description: String,
-    val image: String,
-    val composer: String,
-    val musicLink: String,
-    val like: Int
+    var type: String,
+    var userName: String,
+    var userId: String,
+    var postId: String ,
+    var createdTime: Long,
+    var title: String,
+    var date: String,
+    var description: String,
+    var image: String,
+    var composer: String,
+    var musicLink: String,
+    var like: Int,
+    var comments: Comments
 )
