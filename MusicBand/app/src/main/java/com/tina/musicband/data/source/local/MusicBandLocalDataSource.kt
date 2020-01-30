@@ -7,7 +7,8 @@ import com.tina.musicband.data.Result
 import com.tina.musicband.data.source.MusicBandDataSource
 
 class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
-    override suspend fun getPosts(): Result<List<Posts>> {
+
+    override suspend fun publishEvents(posts: Posts): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
