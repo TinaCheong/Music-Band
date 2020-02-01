@@ -29,18 +29,6 @@
             app:layout_constraintStart_toEndOf="@+id/music_title_icon"
             app:layout_constraintTop_toTopOf="@+id/music_title_icon" />
 
-        <ImageView
-            android:id="@+id/music_image_edit"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/music_title_edit"
-            app:srcCompat="@drawable/image_placeholder" />
 
         <EditText
             android:id="@+id/music_composer_edit"
@@ -117,10 +105,10 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/music_image_edit"
+            app:layout_constraintTop_toBottomOf="@+id/music_upload_hint"
             app:srcCompat="@drawable/ic_composer" />
 
         <ImageView
@@ -133,5 +121,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_composer_edit"
             app:srcCompat="@drawable/ic_description" />
+
+        <ImageView
+            android:id="@+id/add_music_icon"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="32dp"
+            android:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_title_edit"
+            app:srcCompat="@drawable/ic_add_music" />
+
+        <TextView
+            android:id="@+id/music_upload_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="No file selected"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_music_icon" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
