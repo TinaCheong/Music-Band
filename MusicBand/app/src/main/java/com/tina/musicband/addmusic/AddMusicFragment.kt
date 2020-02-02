@@ -194,7 +194,7 @@ class AddMusicFragment : Fragment() {
         }
 
     }
-    
+
 
     private fun getDurationFromMilli(duration: Int): String {
 

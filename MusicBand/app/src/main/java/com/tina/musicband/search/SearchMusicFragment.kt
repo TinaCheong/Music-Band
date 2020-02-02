@@ -12,8 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
+import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentSearchMusicBinding
 import java.lang.Exception
 
@@ -32,6 +34,8 @@ class SearchMusicFragment : Fragment() {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_search_music, container, false
         )
+
+        binding.lifecycleOwner = this
 
         val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
 
@@ -102,6 +106,23 @@ class SearchMusicFragment : Fragment() {
 
         val runnable = Thread(MusicRunnable())
         runnable.start()
+
+        val adapter = SearchMusicAdapter()
+        binding.recyclerViewSearchMusicPage.adapter = adapter
+
+        FirebaseFirestore.getInstance().collection("songs").get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    val songsList = mutableListOf<Songs>()
+                    for (document in it.result!!){
+
+                        val songs = document.toObject(Songs::class.java)
+                        songsList.add(songs)
+
+                    }
+                        adapter.submitList(songsList)
+                }
+            }
 
         return binding.root
 
