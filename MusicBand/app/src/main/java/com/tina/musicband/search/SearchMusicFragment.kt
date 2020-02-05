@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.Songs
@@ -36,6 +37,10 @@ class SearchMusicFragment : Fragment() {
         )
 
         binding.lifecycleOwner = this
+
+        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.VISIBLE
+        (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
+        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
 
         val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
 

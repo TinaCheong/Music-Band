@@ -1,8 +1,6 @@
 package com.tina.musicband.data.source
 
-import com.tina.musicband.data.Comments
-import com.tina.musicband.data.Posts
-import com.tina.musicband.data.Result
+import com.tina.musicband.data.*
 
 class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSource,
                                  private val localDataSource: MusicBandDataSource)
@@ -13,6 +11,14 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
 
     override suspend fun getComments(): Result<List<Comments>> {
         return remoteDataSource.getComments()
+    }
+
+    override suspend fun getSongs(): Result<List<Songs>> {
+        return remoteDataSource.getSongs()
+    }
+
+    override suspend fun getUserData(): Result<User> {
+        return remoteDataSource.getUserData()
     }
 
 

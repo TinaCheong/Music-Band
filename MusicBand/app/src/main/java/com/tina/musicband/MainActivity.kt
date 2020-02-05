@@ -1,11 +1,13 @@
 package com.tina.musicband
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.tina.musicband.databinding.ActivityMainBinding
+import com.tina.musicband.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
 
