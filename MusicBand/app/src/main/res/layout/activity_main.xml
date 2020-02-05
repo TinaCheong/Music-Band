@@ -23,13 +23,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/toolbar_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/logo_music_band">
-            </ImageView>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blue_272343"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="14dp">
+
+                <ImageView
+                    android:id="@+id/toolbar_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/logo_music_band"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/toolbar_logo_search"
+                    android:layout_width="126dp"
+                    android:layout_height="43dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/logo_music_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/toolbar_logo_profile"
+                    android:layout_width="130dp"
+                    android:layout_height="61dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/logo_profile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
         </androidx.appcompat.widget.Toolbar>
 
         <fragment

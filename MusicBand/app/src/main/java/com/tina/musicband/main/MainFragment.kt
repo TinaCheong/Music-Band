@@ -49,6 +49,9 @@ class MainFragment : Fragment() {
         //Change the visibility of toolbar and bottom navigation
         (activity as MainActivity).binding.toolbar.visibility = View.VISIBLE
         (activity as MainActivity).binding.bottomNavigation.visibility = View.VISIBLE
+        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
+        (activity as MainActivity).binding.toolbarLogo.visibility = View.VISIBLE
+        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
 
         val mainAdapter = MainAdapter()
 

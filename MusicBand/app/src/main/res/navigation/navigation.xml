@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/mainFragment"
@@ -44,4 +44,19 @@
     <action
         android:id="@+id/action_global_addMusicFragment"
         app:destination="@id/addMusicFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.tina.musicband.login.LoginFragment"
+        android:label="LoginFragment" />
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.tina.musicband.profile.ProfileEditFragment"
+        android:label="fragment_profile_edit"
+        tools:layout="@layout/fragment_profile_edit" />
+    <action
+        android:id="@+id/action_global_profileEditFragment"
+        app:destination="@id/profileEditFragment" />
 </navigation>

@@ -34,11 +34,28 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
 
         fun bind(songs: Songs) {
 
+            class MusicRunnable : Runnable {
+                override fun run() {
+                    while (mediaPlayer != null) {
+                        try {
+                            val message = Message()
+                            message.what = mediaPlayer.getCurrentPosition()
+                            handler.sendMessage(message)
+                            Thread.sleep(1000)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
+
             binding.musicTitleText.setText(songs.songTitle)
             binding.musicEndTime.setText(songs.songDuration)
             setMediaPlayer(songs)
             binding.musicPlayButton.setOnClickListener {
                 mediaPlayer.start()
+                val runnable = Thread(MusicRunnable())
+                runnable.start()
             }
             binding.musicPauseButton.setOnClickListener {
                 mediaPlayer.pause()
@@ -46,9 +63,6 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
 
             mediaPlayer.seekTo(0)
 
-            val totalTime = mediaPlayer.duration
-
-            binding.musicSeekBar.setMax(totalTime)
 
             binding.musicSeekBar.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
@@ -77,33 +91,19 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
             })
 
 
-            class MusicRunnable : Runnable {
-                override fun run() {
-                    while (mediaPlayer != null) {
-                        try {
-                            val message = Message()
-                            message.what = mediaPlayer.getCurrentPosition()
-                            handler.sendMessage(message)
-                            Thread.sleep(1000)
-                        } catch (e: Exception) {
 
-                        }
-                    }
-                }
-            }
 
             handler = @SuppressLint("HandlerLeak")
             object : Handler() {
                 override fun handleMessage(msg: Message) {
                     val currentPosition = msg.what
-                    binding.musicSeekBar.setProgress(currentPosition)
-
+                    val percent = (currentPosition.toFloat() / 100000 * 100).toInt()
+                    binding.musicSeekBar.progress = percent
                     val startTime = createTIme(currentPosition)
 
                     if (startTime.contains("-")) {
                         binding.musicStartTime.setText("00:00")
                     } else {
-
                         binding.musicStartTime.setText(startTime)
 
                     }
@@ -112,8 +112,7 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
                 }
             }
 
-            val runnable = Thread(MusicRunnable())
-            runnable.start()
+
 
 
             binding.executePendingBindings()
