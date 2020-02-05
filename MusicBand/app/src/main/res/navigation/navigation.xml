@@ -59,4 +59,11 @@
     <action
         android:id="@+id/action_global_profileEditFragment"
         app:destination="@id/profileEditFragment" />
+    <fragment
+        android:id="@+id/addEventFragment"
+        android:name="com.tina.musicband.addevent.AddEventFragment"
+        android:label="AddEventFragment" />
+    <action
+        android:id="@+id/action_global_addEventFragment"
+        app:destination="@id/addEventFragment" />
 </navigation>
