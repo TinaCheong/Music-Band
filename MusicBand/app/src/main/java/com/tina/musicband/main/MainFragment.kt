@@ -46,6 +46,10 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_global_addMusicFragment)
         }
 
+        binding.eventFab.setOnClickListener {
+            findNavController().navigate(R.id.action_global_addEventFragment)
+        }
+
         //Change the visibility of toolbar and bottom navigation
         (activity as MainActivity).binding.toolbar.visibility = View.VISIBLE
         (activity as MainActivity).binding.bottomNavigation.visibility = View.VISIBLE
