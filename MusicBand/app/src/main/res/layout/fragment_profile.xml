@@ -30,10 +30,10 @@
 
                                 <ImageView
                                     android:id="@+id/profile_background"
-                                    android:layout_width="406dp"
-                                    android:layout_height="149dp"
-                                    android:scaleType="center"
-                                    android:src="@drawable/image_background_default_black"
+                                    android:layout_width="0dp"
+                                    android:layout_height="180dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/bg_flower"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="1.0"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
                                     android:layout_width="129dp"
                                     android:layout_height="129dp"
                                     android:layout_marginBottom="85dp"
-                                    android:src="@drawable/ic_profile_avatar"
+                                    android:src="@drawable/ic_woman_1"
                                     app:layout_constraintBottom_toTopOf="@+id/posts_count"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent" />
@@ -66,6 +66,7 @@
                                     android:layout_height="2dp"
                                     android:layout_marginTop="32dp"
                                     android:background="@color/white"
+                                    android:visibility="invisible"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.0"
                                     app:layout_constraintStart_toStartOf="parent"

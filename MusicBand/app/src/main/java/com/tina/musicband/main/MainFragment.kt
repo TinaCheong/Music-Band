@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.MainActivity
 import com.tina.musicband.R
 import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
+import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentMainBinding
 import java.sql.Timestamp
 
@@ -55,37 +57,26 @@ class MainFragment : Fragment() {
         (activity as MainActivity).binding.bottomNavigation.visibility = View.VISIBLE
         (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
         (activity as MainActivity).binding.toolbarLogo.visibility = View.VISIBLE
+        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
         (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
 
         val mainAdapter = MainAdapter()
 
         binding.recyclerViewMainPage.adapter = mainAdapter
 
-        val posts = listOf(Posts("",
-            "",
-            "",
-            "",
-            12,
-            "","",
-            "",
-            "",
-            "",
-            "",
-            20, Comments("")
-        ), Posts("",
-            "",
-            "",
-            "",
-            24,
-            "","",
-            "",
-            "",
-            "",
-            "",
-            30, Comments("")))
+        FirebaseFirestore.getInstance().collection("posts").get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    val songsList = mutableListOf<Posts>()
+                    for (document in it.result!!){
 
+                        val posts = document.toObject(Posts::class.java)
+                        songsList.add(posts)
 
-        mainAdapter.submitList(posts)
+                    }
+                    mainAdapter.submitList(songsList)
+                }
+            }
 
 
         return binding.root

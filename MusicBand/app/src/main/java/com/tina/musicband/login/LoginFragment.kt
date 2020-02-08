@@ -28,7 +28,7 @@ class LoginFragment : Fragment() {
         )
 
         binding.facebookLoginButton.setOnClickListener {
-            findNavController().navigate(R.id.action_global_mainFragment)
+            findNavController().navigate(R.id.action_global_avatarSelectFragment)
         }
 
         (activity as MainActivity).binding.toolbar.visibility = View.GONE

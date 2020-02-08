@@ -41,6 +41,7 @@ class SearchMusicFragment : Fragment() {
         (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.VISIBLE
         (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
         (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
+        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
 
         val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
 
