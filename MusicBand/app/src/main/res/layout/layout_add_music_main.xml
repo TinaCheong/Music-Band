@@ -123,27 +123,103 @@
             app:srcCompat="@drawable/ic_description" />
 
         <ImageView
+            android:id="@+id/add_music_border"
+            android:layout_width="149dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/blue_272343"
+            android:background="@drawable/search_view_round_corner"
+            app:layout_constraintEnd_toStartOf="@+id/white_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_title_edit" />
+
+        <ImageView
             android:id="@+id/add_music_icon"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_marginStart="36dp"
             android:layout_marginTop="32dp"
             android:tint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_title_edit"
             app:srcCompat="@drawable/ic_add_music" />
 
         <TextView
             android:id="@+id/music_upload_hint"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="28dp"
             android:text="No file selected"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/white_line"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_music_icon" />
+
+        <View
+            android:id="@+id/white_line"
+            android:layout_width="1dp"
+            android:layout_height="160dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/image_border"
+            app:layout_constraintHorizontal_bias="0.512"
+            app:layout_constraintStart_toEndOf="@+id/add_music_icon"
+            app:layout_constraintTop_toBottomOf="@+id/music_title_edit" />
+
+        <ImageView
+            android:id="@+id/image_border"
+            android:layout_width="149dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/search_view_round_corner"
+            android:backgroundTint="@color/blue_272343"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_title_edit" />
+
+        <ImageView
+            android:id="@+id/cover_upload_icon"
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginBottom="60dp"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/cover_upload_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/music_title_show"
+            app:srcCompat="@drawable/ic_add_image" />
+
+        <TextView
+            android:id="@+id/cover_upload_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="36dp"
+            android:text="No file selected"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/add_music_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/music_upload_hint" />
+
+        <TextView
+            android:id="@+id/music_title_show"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="24dp"
+            android:text="No file selected"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/add_music_border"
+            app:layout_constraintEnd_toStartOf="@+id/white_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/add_music_border" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

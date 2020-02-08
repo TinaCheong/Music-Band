@@ -13,11 +13,14 @@ import android.widget.SeekBar
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
+import com.tina.musicband.R
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.ItemMusicPlayerSearchBinding
+import kotlinx.android.synthetic.main.item_music_player_search.view.*
 import okhttp3.internal.notify
 import okhttp3.internal.notifyAll
 import java.io.IOException
@@ -50,8 +53,18 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
             }
 
             binding.musicTitleText.setText(songs.songTitle)
+
             binding.musicEndTime.setText(songs.songDuration)
+
+            Glide.with(MusicBandApplication.instance.applicationContext)
+                .asDrawable()
+                .load(songs.cover)
+                .override(77,77)
+                .placeholder(R.drawable.ic_album_cover)
+                .into(binding.musicCover)
+
             setMediaPlayer(songs)
+
             binding.musicPlayButton.setOnClickListener {
                 mediaPlayer.start()
                 val runnable = Thread(MusicRunnable())

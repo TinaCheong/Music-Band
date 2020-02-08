@@ -37,6 +37,7 @@ class ProfileFragment : Fragment() {
 
         (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
         (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
+        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
         (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.VISIBLE
 
         changePages()

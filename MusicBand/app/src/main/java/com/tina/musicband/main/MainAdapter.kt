@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.tina.musicband.MainActivity
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.data.Posts
 import com.tina.musicband.databinding.ItemEventsMainBinding
 import com.tina.musicband.databinding.ItemMusicMainBinding
@@ -20,7 +23,14 @@ class MainAdapter : ListAdapter<Posts, RecyclerView.ViewHolder>(DiffCallback) {
     class EventViewHolder(private var binding: ItemEventsMainBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(posts: Posts) {
-            binding.executePendingBindings()
+
+            binding.usernameText.setText(posts.userName)
+            binding.eventTitle.setText(posts.title)
+            binding.eventDescription.setText(posts.description)
+            binding.eventDate.setText(posts.date)
+            binding.eventLike.setText(posts.like.toString())
+            Glide.with(MusicBandApplication.instance.applicationContext).load(posts.image).centerCrop().into(binding.mainImage)
+
         }
     }
 

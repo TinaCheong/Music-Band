@@ -66,4 +66,11 @@
     <action
         android:id="@+id/action_global_addEventFragment"
         app:destination="@id/addEventFragment" />
+    <fragment
+        android:id="@+id/avatarSelectFragment"
+        android:name="com.tina.musicband.avatar.AvatarSelectFragment"
+        android:label="AvatarSelectFragment" />
+    <action
+        android:id="@+id/action_global_avatarSelectFragment"
+        app:destination="@id/avatarSelectFragment" />
 </navigation>
