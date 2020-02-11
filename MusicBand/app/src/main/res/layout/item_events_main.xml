@@ -64,7 +64,7 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="59dp"
                     android:layout_height="62dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -72,10 +72,9 @@
 
                 <ImageView
                     android:id="@+id/main_image"
-                    android:layout_width="362dp"
+                    android:layout_width="0dp"
                     android:layout_height="201dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="1dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -152,6 +151,7 @@
                     android:layout_height="23dp"
                     android:layout_marginEnd="8dp"
                     android:tint="@color/blue_272343"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toStartOf="@+id/event_interest"
                     app:layout_constraintTop_toTopOf="@+id/event_title_icon"
                     app:srcCompat="@drawable/ic_interested_normal" />
@@ -162,6 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="Interest?"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@+id/event_interest_icon"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/event_interest_icon" />
@@ -172,7 +173,9 @@
                     android:layout_height="23dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:tint="@color/blue_272343"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/event_description_icon"
                     app:srcCompat="@drawable/ic_like_normal" />
@@ -192,9 +195,8 @@
                     android:layout_width="23dp"
                     android:layout_height="23dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="2dp"
                     android:tint="@color/blue_272343"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/event_like"
                     app:layout_constraintTop_toTopOf="@+id/event_like_icon"
                     app:srcCompat="@drawable/ic_comment" />
@@ -204,6 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="4dp"
                     android:text="Comment"
                     app:layout_constraintBottom_toBottomOf="@+id/event_comment_icon"
                     app:layout_constraintStart_toEndOf="@+id/event_comment_icon"

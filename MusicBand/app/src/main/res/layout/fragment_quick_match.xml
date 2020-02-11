@@ -15,35 +15,33 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_quick_match"
-            android:layout_width="340dp"
+            android:layout_width="350dp"
             android:layout_height="453dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/arrow_right"
-            app:layout_constraintStart_toEndOf="@+id/arrow_left"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/arrow_right"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_arrow_right"
-            app:layout_constraintBottom_toBottomOf="@+id/recycler_view_quick_match"
+        <me.relex.circleindicator.CircleIndicator2
+            android:id="@+id/dot_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:ci_animator="@anim/dot_with_alpha_indicator"
+            app:ci_drawable="@drawable/white_circle_dot_indicator"
+            app:ci_drawable_unselected="@drawable/white_circle_dot_indicator"
+            app:ci_height="5dp"
+            app:ci_margin="5dp"
+            app:ci_width="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/recycler_view_quick_match" />
-
-        <ImageView
-            android:id="@+id/arrow_left"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_arrow_left"
-            app:layout_constraintBottom_toBottomOf="@+id/recycler_view_quick_match"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/recycler_view_quick_match" />
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_quick_match"></me.relex.circleindicator.CircleIndicator2>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

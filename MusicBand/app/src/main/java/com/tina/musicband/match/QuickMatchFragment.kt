@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.tina.musicband.MainActivity
 import com.tina.musicband.R
 import com.tina.musicband.data.Matching
@@ -46,6 +47,13 @@ class QuickMatchFragment : Fragment() {
             Matching("","","4"))
 
         adapter.submitList(list)
+
+        val pagerSnapHelper = PagerSnapHelper()
+        pagerSnapHelper.attachToRecyclerView(binding.recyclerViewQuickMatch)
+
+        binding.dotIndicator.attachToRecyclerView(binding.recyclerViewQuickMatch, pagerSnapHelper)
+
+        adapter.registerAdapterDataObserver(binding.dotIndicator.adapterDataObserver)
 
         // Inflate the layout for this fragment
         return binding.root

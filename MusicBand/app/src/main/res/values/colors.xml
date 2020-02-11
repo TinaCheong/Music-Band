@@ -21,9 +21,13 @@
     <color name="blue_0f4c75">#0f4c75</color>
     <color name="brown_4B4B4B">#4B4B4B</color>
     <color name="blue_3282b8">#3282b8</color>
+    <color name="purple_b21f66">#b21f66</color>
 
     <!-- Colors with Opacity -->
     <color name="white_50">#80ffffff</color>
+    <color name="white_90">#00ffffff</color>
+    <color name="gray_DDDDDD_50">#80DDDDDD</color>
+    <color name="gray_DDDDDD_90">#E6DDDDDD</color>
 
 
 </resources>

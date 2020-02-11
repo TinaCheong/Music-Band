@@ -73,4 +73,18 @@
     <action
         android:id="@+id/action_global_avatarSelectFragment"
         app:destination="@id/avatarSelectFragment" />
+    <dialog
+        android:id="@+id/avatarDialog"
+        android:name="com.tina.musicband.dialog.AvatarDialog"
+        android:label="AvatarDialog" />
+    <action
+        android:id="@+id/action_global_avatarDialog"
+        app:destination="@id/avatarDialog" />
+    <dialog
+        android:id="@+id/backgroundDialog"
+        android:name="com.tina.musicband.dialog.BackgroundDialog"
+        android:label="BackgroundDialog" />
+    <action
+        android:id="@+id/action_global_backgroundDialog"
+        app:destination="@id/backgroundDialog" />
 </navigation>
