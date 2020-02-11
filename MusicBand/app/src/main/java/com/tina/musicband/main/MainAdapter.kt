@@ -29,7 +29,11 @@ class MainAdapter : ListAdapter<Posts, RecyclerView.ViewHolder>(DiffCallback) {
             binding.eventDescription.setText(posts.description)
             binding.eventDate.setText(posts.date)
             binding.eventLike.setText(posts.like.toString())
-            Glide.with(MusicBandApplication.instance.applicationContext).load(posts.image).centerCrop().into(binding.mainImage)
+            Glide
+                .with(MusicBandApplication.instance.applicationContext)
+                .load(posts.image)
+                .centerCrop()
+                .into(binding.mainImage)
 
         }
     }

@@ -31,6 +31,14 @@ class ProfileEditFragment : Fragment() {
             findNavController().navigate(R.id.action_global_profileFragment)
         }
 
+        binding.avatarEdit.setOnClickListener {
+            findNavController().navigate(R.id.action_global_avatarDialog)
+        }
+
+        binding.addBackground.setOnClickListener {
+            findNavController().navigate(R.id.action_global_backgroundDialog)
+        }
+
         // Inflate the layout for this fragment
         return binding.root
     }

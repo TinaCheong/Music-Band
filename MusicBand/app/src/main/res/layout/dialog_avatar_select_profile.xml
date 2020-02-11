@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.dialog.AvatarDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="265dp"
+            android:tint="@color/white"
+            android:translationZ="90dp"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="0dp"
+            android:layout_height="280dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:padding="6dp"
+            app:cardBackgroundColor="@color/gray_DDDDDD_90"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:id="@+id/view_circle_1"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_woman_1"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_woman_1"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_woman_1"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_woman_1" />
+
+                <ImageView
+                    android:id="@+id/avatar_woman_1"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_marginTop="24dp"
+                    android:src="@drawable/ic_woman_1"
+                    app:layout_constraintEnd_toStartOf="@+id/avatar_woman_2"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view_circle_2"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_woman_2"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_woman_2"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_woman_2"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_woman_2" />
+
+                <ImageView
+                    android:id="@+id/avatar_woman_2"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/ic_woman_2"
+                    app:layout_constraintEnd_toStartOf="@+id/avatar_woman_3"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_woman_1"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_woman_1" />
+
+                <View
+                    android:id="@+id/view_circle_3"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_woman_3"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_woman_3"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_woman_3"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_woman_3" />
+
+                <ImageView
+                    android:id="@+id/avatar_woman_3"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/ic_woman_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_woman_2"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_woman_1" />
+
+                <View
+                    android:id="@+id/view_circle_4"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_man_1"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_man_1"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_man_1"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_man_1" />
+
+                <ImageView
+                    android:id="@+id/avatar_man_1"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/ic_man_1"
+                    app:layout_constraintEnd_toStartOf="@+id/avatar_man_2"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/avatar_woman_1" />
+
+                <View
+                    android:id="@+id/view_circle_5"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_man_2"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_man_2"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_man_2"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_man_2" />
+
+                <ImageView
+                    android:id="@+id/avatar_man_2"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/ic_man_2"
+                    app:layout_constraintEnd_toStartOf="@+id/avatar_man_3"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_man_1"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_man_1" />
+
+                <View
+                    android:id="@+id/view_circle_6"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:alpha="0"
+                    android:background="@drawable/select_view_circle"
+                    android:clickable="true"
+                    android:onClick="@{viewModel::selectAvatar}"
+                    app:layout_constraintBottom_toBottomOf="@+id/avatar_man_3"
+                    app:layout_constraintEnd_toEndOf="@+id/avatar_man_3"
+                    app:layout_constraintStart_toStartOf="@+id/avatar_man_3"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_man_3" />
+
+                <ImageView
+                    android:id="@+id/avatar_man_3"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/ic_man_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_man_2"
+                    app:layout_constraintTop_toTopOf="@+id/avatar_man_1" />
+
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="90dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/select_view_round_corner"
+                    android:text="Save"
+                    android:textColor="@color/blue_272343"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_circle_5" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
