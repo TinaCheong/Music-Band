@@ -12,6 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,17 +23,19 @@ import com.bumptech.glide.annotation.GlideModule
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.*
 import com.tina.musicband.data.Songs
+import com.tina.musicband.data.User
 import com.tina.musicband.databinding.ItemMusicPlayerSearchBinding
+import com.tina.musicband.others.ProfileOthersFragment
 import kotlinx.android.synthetic.main.item_music_player_search.view.*
 import okhttp3.internal.notify
 import okhttp3.internal.notifyAll
 import java.io.IOException
 import java.lang.Exception
 
-class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder>(DiffCallback) {
+class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder>(DiffCallback) {
 
 
-    class SongsViewHolder(private var binding: ItemMusicPlayerSearchBinding) :
+    class SongsViewHolder(private var binding: ItemMusicPlayerSearchBinding, private val searchMusicViewModel: SearchMusicViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val mediaPlayer = MediaPlayer()
@@ -80,6 +85,7 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
                 binding.musicPlayButton.visibility = View.VISIBLE
                 binding.musicPauseButton.visibility = View.INVISIBLE
             }
+
 
             mediaPlayer.seekTo(0)
 
@@ -131,9 +137,6 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
 
                 }
             }
-
-
-
 
             binding.executePendingBindings()
 
@@ -194,14 +197,15 @@ class SearchMusicAdapter : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder
         return SongsViewHolder(
             ItemMusicPlayerSearchBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            )
+            ), searchMusicViewModel
         )
     }
 
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener {
+            searchMusicViewModel.selectSong(getItem(position))
+        }
     }
-
-
 }

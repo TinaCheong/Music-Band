@@ -23,18 +23,6 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     val posts: LiveData<List<Posts>>
         get() = _posts
 
-    private val _title = MutableLiveData<String>()
-    val title: LiveData<String>
-        get() = _title
-
-    private val _date = MutableLiveData<String>()
-    val date: LiveData<String>
-        get() = _date
-
-    private val _description = MutableLiveData<String>()
-    val description: LiveData<String>
-        get() = _description
-
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
 

@@ -34,12 +34,6 @@ class ProfileFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-
-        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.VISIBLE
-
         changePages()
         setTabLayoutIcons()
 

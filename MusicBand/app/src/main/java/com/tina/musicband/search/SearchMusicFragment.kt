@@ -11,13 +11,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentSearchMusicBinding
+import com.tina.musicband.ext.getVmFactory
 import java.lang.Exception
 
 /**
@@ -25,8 +30,11 @@ import java.lang.Exception
  */
 class SearchMusicFragment : Fragment() {
 
+    val viewModel by viewModels<SearchMusicViewModel> { getVmFactory() }
+
     lateinit var binding : FragmentSearchMusicBinding
-    lateinit var handler: Handler
+//    lateinit var handler: Handler
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,85 +46,81 @@ class SearchMusicFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.VISIBLE
-        (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
+//        val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
+//
+//        mediaPlayer.seekTo(0)
+//
+//        binding.musicPlayButton.setOnClickListener {
+//            mediaPlayer.start()
+//        }
+//
+//        binding.musicPauseButton.setOnClickListener {
+//            mediaPlayer.pause()
+//        }
+//
+//        val totalTime = mediaPlayer.duration
+//
+//        binding.musicSeekBar.setMax(totalTime)
+//
+//        binding.musicSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//                if(fromUser) {
+//                    mediaPlayer.seekTo(progress)
+////                    binding.musicSeekBar.setProgress(progress)
+//                }
+//            }
+//
+//            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+//                if (mediaPlayer != null) {
+//                    mediaPlayer.pause()
+//                }
+//            }
+//
+//            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+//                if (mediaPlayer != null) {
+//                    mediaPlayer.start()
+//                }
+//            }
+//        })
+//
+//        class MusicRunnable: Runnable {
+//            override fun run() {
+//                while(mediaPlayer != null){
+//                    try {
+//                        val message = Message()
+//                        message.what = mediaPlayer.getCurrentPosition()
+//                        handler.sendMessage(message)
+//                        Thread.sleep(1000)
+//                    }catch (e : Exception){
+//
+//                    }
+//                }
+//            }
+//        }
+//
+//        handler = @SuppressLint("HandlerLeak")
+//        object : Handler(){
+//            override fun handleMessage(msg: Message) {
+//                val currentPosition = msg.what
+//                binding.musicSeekBar.setProgress(currentPosition)
+//
+//                val startTime = createTIme(currentPosition)
+//                binding.musicStartTime.setText(startTime)
+//
+//                val endTime = createTIme(totalTime - currentPosition)
+//                binding.musicEndTime.setText(endTime)
+//
+//            }
+//        }
+//
+//        val runnable = Thread(MusicRunnable())
+//        runnable.start()
 
-        val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
-
-        mediaPlayer.seekTo(0)
-
-        binding.musicPlayButton.setOnClickListener {
-            mediaPlayer.start()
-        }
-
-        binding.musicPauseButton.setOnClickListener {
-            mediaPlayer.pause()
-        }
-
-        val totalTime = mediaPlayer.duration
-
-        binding.musicSeekBar.setMax(totalTime)
-
-        binding.musicSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser) {
-                    mediaPlayer.seekTo(progress)
-//                    binding.musicSeekBar.setProgress(progress)
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.pause()
-                }
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.start()
-                }
-            }
-        })
-
-        class MusicRunnable: Runnable {
-            override fun run() {
-                while(mediaPlayer != null){
-                    try {
-                        val message = Message()
-                        message.what = mediaPlayer.getCurrentPosition()
-                        handler.sendMessage(message)
-                        Thread.sleep(1000)
-                    }catch (e : Exception){
-
-                    }
-                }
-            }
-        }
-
-        handler = @SuppressLint("HandlerLeak")
-        object : Handler(){
-            override fun handleMessage(msg: Message) {
-                val currentPosition = msg.what
-                binding.musicSeekBar.setProgress(currentPosition)
-
-                val startTime = createTIme(currentPosition)
-                binding.musicStartTime.setText(startTime)
-
-                val endTime = createTIme(totalTime - currentPosition)
-                binding.musicEndTime.setText(endTime)
-
-            }
-        }
-
-        val runnable = Thread(MusicRunnable())
-        runnable.start()
-
-        val adapter = SearchMusicAdapter()
+        val adapter = SearchMusicAdapter(viewModel)
         binding.recyclerViewSearchMusicPage.adapter = adapter
 
-        FirebaseFirestore.getInstance().collection("songs").get()
+        FirebaseFirestore.getInstance().collection("songs")
+            .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     val songsList = mutableListOf<Songs>()
@@ -130,24 +134,19 @@ class SearchMusicFragment : Fragment() {
                 }
             }
 
+        viewModel.selectedSong.observe(this, Observer {
+            it?.let {
+            findNavController().navigate(R.id.action_global_profileOthersFragment)
+            viewModel.doneNavigate()
+            }
+        })
+
+
         return binding.root
 
     }
 
-    private fun createTIme(time: Int) : String{
-        var timeLevel : String
-        val min = time/1000/60
-        val sec = time/1000%60
-        timeLevel = String.format("%02d:%02d", min, sec)
 
-//        if(sec<10){
-//            timeLevel += "0"
-//            timeLevel += sec
-//        }
-
-        return timeLevel
-
-    }
 
 
 }

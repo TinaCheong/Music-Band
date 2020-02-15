@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.addevent.AddEventViewModel" />
 
     </data>
 
@@ -32,7 +35,7 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="textPersonName"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -65,18 +68,16 @@
             app:layout_constraintTop_toBottomOf="@+id/image_border"
             app:srcCompat="@drawable/ic_calender" />
 
-        <EditText
+        <TextView
             android:id="@+id/event_time_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/white"
-            android:ems="10"
-            android:hint="Date"
-            android:inputType="textPersonName"
+            android:text="@{viewModel.selectedDate}"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/event_date_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/event_date_icon"
@@ -101,7 +102,7 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
             android:ems="10"
-            android:hint="Description"
+            android:hint="@string/description"
             android:inputType="textPersonName"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -127,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="No file selected"
+            android:text="@string/no_file_selected"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/image_border"
@@ -140,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="@color/white"
-            android:text="Submit"
+            android:text="@string/submit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/back_button" />
 
@@ -151,7 +152,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:background="@color/white"
-            android:text="Back"
+            android:text="@string/back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/event_description_text" />
 

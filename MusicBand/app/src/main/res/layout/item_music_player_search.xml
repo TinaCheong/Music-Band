@@ -13,6 +13,7 @@
         android:background="@color/blue_272343">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -46,7 +47,7 @@
                 <SeekBar
                     android:id="@+id/music_seek_bar"
                     android:layout_width="200dp"
-                    android:layout_height="19dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="46dp"
                     android:layout_marginEnd="8dp"
@@ -63,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="00:00"
+                    android:text="@string/start_time"
                     android:textColor="@color/blue_272343"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/music_cover"
@@ -74,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="5:00"
+                    android:text="@string/end_time"
                     android:textColor="@color/blue_272343"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/music_seek_bar"
@@ -84,7 +85,6 @@
                     android:id="@+id/music_play_button"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_play"
                     android:tint="@color/blue_272343"
@@ -96,7 +96,6 @@
                     android:id="@+id/music_pause_button"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_pause"
                     android:tint="@color/blue_272343"
@@ -117,6 +116,7 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/music_cover"
                     app:layout_constraintTop_toTopOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

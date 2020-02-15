@@ -41,7 +41,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recycler_view_quick_match"></me.relex.circleindicator.CircleIndicator2>
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_quick_match">
+        </me.relex.circleindicator.CircleIndicator2>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

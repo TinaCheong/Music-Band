@@ -36,13 +36,6 @@ class AvatarSelectFragment : Fragment() {
             findNavController().navigate(R.id.action_global_mainFragment)
         }
 
-        (activity as MainActivity).binding.toolbar.visibility = View.VISIBLE
-        (activity as MainActivity).binding.bottomNavigation.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogo.visibility = View.VISIBLE
-        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
-
         binding.viewModel = viewModel
 
 

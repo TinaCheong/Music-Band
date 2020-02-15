@@ -3,4 +3,66 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Dialog Background Select Profile and Dialog Avatar Select Profile -->
+    <string name="save">Save</string>
+
+    <!-- Login Fragment -->
+    <string name="facebook_login">Facebook Login</string>
+    <string name="google_login">Google Login</string>
+
+    <!-- Profile Fragment -->
+    <string name="username">Username</string>
+    <string name="posts">Posts</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+
+    <!-- Profile Edit Fragment and Profile Others Info Fragments-->
+    <string name="speciality">Speciality</string>
+    <string name="education">Education</string>
+    <string name="position">Position</string>
+    <string name="favourite_genres_of_music">Favourite Genres of Music</string>
+    <string name="introduction">Introduction</string>
+    <string name="experiences">Experiences</string>
+    <string name="no_music_no_life">No music, no life</string>
+    <string name="flute_clarinet">Flute, Clarinet</string>
+    <string name="san_francisco_university">San Francisco University</string>
+    <string name="second_flute">Second Flute</string>
+    <string name="classic_opera">Classic, Opera</string>
+    <string name="orchestra">Orchestra</string>
+    <string name="pit_orchestra">Pit Orchestra</string>
+    <string name="concert_band">Concert band</string>
+    <string name="military_band">Military Band</string>
+    <string name="string_ensemble">String Ensemble</string>
+    <string name="wing_ensemble">Wing Ensemble</string>
+    <string name="concerto">Concerto</string>
+    <string name="none">None</string>
+    <string name="anna_tin">Anna Tin</string>
+    <string name="back">Back</string>
+
+    <!-- Search Music Fragment-->
+    <string name="start_time">00:00</string>
+    <string name="end_time">05:00</string>
+
+    <!-- Main Events Item and Main Music Item-->
+    <string name="created_time">Created Time</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="description">Description</string>
+    <string name="interest">Interest?</string>
+    <string name="comment">Comment</string>
+    <string name="composer">Composer</string>
+
+    <!-- Match User Item -->
+    <string name="alice_chan">Alice Chan</string>
+
+    <!-- Main Add Event Layout -->
+    <string name="no_file_selected">No file selected</string>
+    <string name="submit">Submit</string>
+    <string name="select_a_day">Select a day</string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">508485363184387</string>
+    <string name="fb_login_protocol_scheme">fb508485363184387</string>
+    <string name="internet_not_connected">您尚未連接 Internet</string>
 </resources>

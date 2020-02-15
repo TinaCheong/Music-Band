@@ -7,16 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.R
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentProfileMusicBinding
+import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.search.SearchMusicAdapter
+import com.tina.musicband.search.SearchMusicViewModel
 
 /**
  * A simple [Fragment] subclass.
  */
 class ProfileMusicFragment : Fragment() {
+
+    val viewModel by viewModels<SearchMusicViewModel> { getVmFactory() }
 
     lateinit var binding : FragmentProfileMusicBinding
 
@@ -29,9 +34,11 @@ class ProfileMusicFragment : Fragment() {
             inflater, R.layout.fragment_profile_music, container, false
         )
 
-        val adapter = SearchMusicAdapter()
+        val adapter = SearchMusicAdapter(viewModel)
 
         binding.recyclerViewMusicProfile.adapter = adapter
+
+        binding.lifecycleOwner = this
 
         FirebaseFirestore.getInstance().collection("songs").get()
             .addOnCompleteListener {

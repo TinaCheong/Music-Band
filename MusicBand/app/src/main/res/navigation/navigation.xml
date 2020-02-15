@@ -87,4 +87,11 @@
     <action
         android:id="@+id/action_global_backgroundDialog"
         app:destination="@id/backgroundDialog" />
+    <fragment
+        android:id="@+id/profileOthersFragment"
+        android:name="com.tina.musicband.others.ProfileOthersFragment"
+        android:label="ProfileOthersFragment" />
+    <action
+        android:id="@+id/action_global_profileOthersFragment"
+        app:destination="@id/profileOthersFragment" />
 </navigation>
