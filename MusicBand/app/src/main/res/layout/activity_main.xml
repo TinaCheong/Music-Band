@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.MusicBandViewModel" />
+        <import type="android.view.View"/>
+        <import type="com.tina.musicband.util.CurrentFragmentType"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +23,7 @@
             android:layout_height="80dp"
             android:background="@color/blue_272343"
             android:elevation="4dp"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.LOGIN || viewModel.currentFragmentType == CurrentFragmentType.ADD_EVENT || viewModel.currentFragmentType == CurrentFragmentType.ADD_MUSIC? View.GONE: View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,6 +42,7 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/logo_music_band"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.MAIN || viewModel.currentFragmentType == CurrentFragmentType.SELECT_AVATAR? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -50,6 +56,7 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/logo_music_search"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.SEARCH? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +70,7 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/logo_profile"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PROFILE || viewModel.currentFragmentType == CurrentFragmentType.OTHERS_PROFILE? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +85,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/logo_resonance"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.MATCH? View.VISIBLE : View.GONE }"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -111,6 +120,7 @@
             android:layout_height="56dp"
             android:background="@color/blue_272343"
             android:elevation="4dp"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.LOGIN || viewModel.currentFragmentType == CurrentFragmentType.SELECT_AVATAR || viewModel.currentFragmentType == CurrentFragmentType.ADD_EVENT || viewModel.currentFragmentType == CurrentFragmentType.ADD_MUSIC? View.GONE: View.VISIBLE}"
             app:itemIconTint="@drawable/bottom_nav_item_selector"
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"

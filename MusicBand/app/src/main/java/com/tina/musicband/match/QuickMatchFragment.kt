@@ -29,12 +29,6 @@ class QuickMatchFragment : Fragment() {
             inflater, R.layout.fragment_quick_match, container, false
         )
 
-        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogo.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.VISIBLE
-
-
         val adapter = QuickMatchAdapter()
 
         binding.recyclerViewQuickMatch.adapter = adapter

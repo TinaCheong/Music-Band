@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.MainActivity
@@ -16,7 +17,13 @@ import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentMainBinding
+import com.tina.musicband.ext.getVmFactory
 import java.sql.Timestamp
+
+enum class POST_TYPES(val value: String) {
+    MUSIC("music"),
+    EVENT("event")
+}
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +33,8 @@ class MainFragment : Fragment() {
     private var isOpen = false
 
     lateinit var binding: FragmentMainBinding
+
+    val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
 
     override fun onCreateView(
@@ -52,29 +61,30 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_global_addEventFragment)
         }
 
-        //Change the visibility of toolbar and bottom navigation
-        (activity as MainActivity).binding.toolbar.visibility = View.VISIBLE
-        (activity as MainActivity).binding.bottomNavigation.visibility = View.VISIBLE
-        (activity as MainActivity).binding.toolbarLogoSearch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogo.visibility = View.VISIBLE
-        (activity as MainActivity).binding.toolbarLogoMatch.visibility = View.GONE
-        (activity as MainActivity).binding.toolbarLogoProfile.visibility = View.GONE
 
-        val mainAdapter = MainAdapter()
+        val mainAdapter = MainAdapter(viewModel)
 
         binding.recyclerViewMainPage.adapter = mainAdapter
 
         FirebaseFirestore.getInstance().collection("posts").get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    val songsList = mutableListOf<Posts>()
+                    val postsList = mutableListOf<Posts>()
+
+                    val list = mutableListOf<PostSealedItem>()
+
                     for (document in it.result!!){
 
                         val posts = document.toObject(Posts::class.java)
-                        songsList.add(posts)
+                        postsList.add(posts)
+
+                        when(posts.type) {
+                            POST_TYPES.EVENT.value -> list.add(PostSealedItem.EventItem(posts))
+                            POST_TYPES.MUSIC.value -> list.add(PostSealedItem.MusicItem(posts))
+                        }
 
                     }
-                    mainAdapter.submitList(songsList)
+                    mainAdapter.submitList(list)
                 }
             }
 

@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.main.MainViewModel" />
 
+        <variable
+            name="posts"
+            type="com.tina.musicband.data.Posts" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/user_avatar"
@@ -53,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Created Time"
+                    android:text="@string/created_time"
                     app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
                     app:layout_constraintEnd_toEndOf="@+id/username_text"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -64,11 +70,12 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="59dp"
                     android:layout_height="62dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
+                    android:background="@drawable/select_view_circle"
+                    android:src="@drawable/ic_woman_1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/icons_36px_profile_normal" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/main_image"
@@ -86,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Title"
+                    android:text="@string/title"
                     app:layout_constraintBottom_toBottomOf="@+id/event_title_icon"
                     app:layout_constraintStart_toEndOf="@+id/event_title_icon"
                     app:layout_constraintTop_toTopOf="@+id/event_title_icon" />
@@ -96,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Date"
+                    android:text="@string/date"
                     app:layout_constraintBottom_toBottomOf="@+id/event_date_icon"
                     app:layout_constraintStart_toEndOf="@+id/event_date_icon"
                     app:layout_constraintTop_toTopOf="@+id/event_date_icon"
@@ -118,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Description"
+                    android:text="@string/description"
                     app:layout_constraintBottom_toBottomOf="@+id/event_description_icon"
                     app:layout_constraintStart_toEndOf="@+id/event_description_icon"
                     app:layout_constraintTop_toTopOf="@+id/event_description_icon" />
@@ -161,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="Interest?"
+                    android:text="@string/interest"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@+id/event_interest_icon"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -207,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="4dp"
-                    android:text="Comment"
+                    android:text="@string/comment"
                     app:layout_constraintBottom_toBottomOf="@+id/event_comment_icon"
                     app:layout_constraintStart_toEndOf="@+id/event_comment_icon"
                     app:layout_constraintTop_toTopOf="@+id/event_comment_icon" />

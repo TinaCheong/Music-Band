@@ -21,9 +21,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.tina.musicband.MainActivity
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
+import com.tina.musicband.data.Comments
+import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.LayoutAddMusicMainBinding
+import com.tina.musicband.main.POST_TYPES
 import java.lang.Exception
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -53,10 +57,6 @@ class AddMusicFragment : Fragment() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-
-        //Change the visibility of toolbar and bottom navigation
-        (activity as MainActivity).binding.toolbar.visibility = View.GONE
-        (activity as MainActivity).binding.bottomNavigation.visibility = View.GONE
 
         binding.addMusicBorder.setOnClickListener {
             openAudioFile()
@@ -187,50 +187,104 @@ class AddMusicFragment : Fragment() {
 
 
             imageUri?.apply {
-                FirebaseStorage.getInstance().getReference("image").putFile(this).addOnSuccessListener {
-                    FirebaseStorage.getInstance().getReference("image").downloadUrl.addOnSuccessListener { cover->
-                        val coverUri = cover.toString()
+                FirebaseStorage.getInstance().getReference("image").putFile(this)
+                    .addOnSuccessListener {
+                        FirebaseStorage.getInstance().getReference("image")
+                            .downloadUrl.addOnSuccessListener { cover ->
+                            val coverUri = cover.toString()
 
-                        Log.i("Tina", "this=$this")
-                        Log.i("Tina", "coverUri=$coverUri")
+                            Log.i("Tina", "this=$this")
+                            Log.i("Tina", "coverUri=$coverUri")
 
-                        audioUri?.apply {
-                            FirebaseStorage.getInstance().getReference("sone").putFile(this).addOnSuccessListener {
-                                FirebaseStorage.getInstance().getReference("sone").downloadUrl.addOnSuccessListener { music ->
-                                    val songUri = music.toString()
+                            audioUri?.apply {
+                                FirebaseStorage.getInstance().getReference("sone").putFile(this)
+                                    .addOnSuccessListener {
+                                        FirebaseStorage.getInstance().getReference("sone")
+                                            .downloadUrl.addOnSuccessListener { music ->
+                                            val songUri = music.toString()
 
-                                    Log.d("Tina", "this=$this")
-                                    Log.d("Tina", "songUri=$songUri")
+                                            Log.d("Tina", "this=$this")
+                                            Log.d("Tina", "songUri=$songUri")
 
-                                    val songsReference =
-                                        FirebaseFirestore.getInstance().collection("songs")
-                                    val song = Songs(
-                                        songTitle = binding.musicTitleEdit.text.toString(),
-                                        songDuration = durationText,
-                                        songLink = music.toString(),
-                                        songId = "123",
-                                        cover = coverUri
+                                            val songsReference =
+                                                FirebaseFirestore.getInstance().collection("songs")
+                                            val song = Songs(
+                                                songTitle = binding.musicTitleEdit.text.toString(),
+                                                songDuration = durationText,
+                                                songLink = music.toString(),
+                                                songId = "123",
+                                                cover = coverUri
+                                            )
+
+                                            songsReference.document().set(song)
+
+                                            updatePosts(
+                                                Posts(
+                                                    userId = MusicBandApplication.instance.user.userId,
+                                                    userName = MusicBandApplication.instance.user.username,
+                                                    comments = Comments(""),
+                                                    type = POST_TYPES.MUSIC.value,
+                                                    postId = "",
+                                                    composer = binding.musicComposerEdit.text.toString(),
+                                                    title = binding.musicTitleEdit.text.toString(),
+                                                    description = binding.musicDescriptionEdit.text.toString(),
+                                                    avatar = "",
+                                                    eventId = "",
+                                                    createdTime = Calendar.getInstance().timeInMillis,
+                                                    date = "20200308",
+                                                    image = coverUri,
+                                                    like = 0,
+                                                    song = song
+                                            )
+                                            )
+
+                                            Toast.makeText(
+                                                activity,
+                                                "Upload Succeeded",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+
+                                        }.addOnFailureListener {
+                                            Log.d("FirebaseStorage", "Failed to get song uri")
+                                        }
+
+                                    }.addOnFailureListener {
+                                    Toast.makeText(
+                                        activity,
+                                        "Song Upload Failed",
+                                        Toast.LENGTH_SHORT
                                     )
-
-                                    songsReference.document().set(song)
-
-                                    Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT)
                                         .show()
                                 }
 
                             }
 
+                        }.addOnFailureListener {
+                            Log.d("FirebaseStorage", "Failed to get image uri")
                         }
-
-                    }
+                    }.addOnFailureListener {
+                    Toast.makeText(activity, "Image Upload Failed", Toast.LENGTH_SHORT)
+                        .show()
                 }
+
+
             }
-
-
-        } else {
+        }else {
             Toast.makeText(activity, "No file selected to upload", Toast.LENGTH_SHORT).show()
         }
 
+
+    }
+
+    private fun updatePosts(posts: Posts){
+
+        val postsReference = FirebaseFirestore.getInstance().collection("posts")
+        postsReference.document().set(posts).addOnSuccessListener {
+            Toast.makeText(activity, "Updated to News Feed", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(activity, "Failed to Update News Feed", Toast.LENGTH_SHORT).show()
+        }
 
     }
 
