@@ -51,7 +51,7 @@
                     android:id="@+id/profile_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/username"
+                    android:text="Tina Cheong"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -151,10 +151,10 @@
 
                 <ImageView
                     android:id="@+id/follow_button"
-                    android:layout_width="50dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="24dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="24dp"
                     android:src="@drawable/ic_follow"
                     android:tint="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"

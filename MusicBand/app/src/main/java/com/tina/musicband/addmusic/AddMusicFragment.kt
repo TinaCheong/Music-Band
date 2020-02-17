@@ -27,6 +27,7 @@ import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.LayoutAddMusicMainBinding
+import com.tina.musicband.login.UserManager
 import com.tina.musicband.main.POST_TYPES
 import java.lang.Exception
 import java.sql.Date
@@ -220,8 +221,8 @@ class AddMusicFragment : Fragment() {
 
                                             updatePosts(
                                                 Posts(
-                                                    userId = MusicBandApplication.instance.user.userId,
-                                                    userName = MusicBandApplication.instance.user.username,
+                                                    userId = UserManager.userToken,
+                                                    userName = UserManager.userName,
                                                     comments = Comments(""),
                                                     type = POST_TYPES.MUSIC.value,
                                                     postId = "",

@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.*
 import com.tina.musicband.data.Songs
@@ -64,9 +66,9 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
 
             Glide.with(MusicBandApplication.instance.applicationContext)
                 .load(songs.cover)
-                .centerCrop()
-                .placeholder(R.drawable.ic_album_cover)
-                .error(R.drawable.ic_album_cover)
+                .transform(CenterCrop(),RoundedCorners(12))
+                .placeholder(R.drawable.ic_cover)
+                .error(R.drawable.ic_cover)
                 .into(binding.musicCover)
 
             setMediaPlayer(songs)
@@ -208,4 +210,6 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
             searchMusicViewModel.selectSong(getItem(position))
         }
     }
+
+    
 }

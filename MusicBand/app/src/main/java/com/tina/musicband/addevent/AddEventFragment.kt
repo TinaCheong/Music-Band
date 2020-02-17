@@ -27,6 +27,7 @@ import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.LayoutAddEventMainBinding
 import com.tina.musicband.ext.getVmFactory
+import com.tina.musicband.login.UserManager
 import com.tina.musicband.main.POST_TYPES
 import com.tina.musicband.search.SearchMusicViewModel
 import java.util.*
@@ -123,8 +124,8 @@ class AddEventFragment : Fragment() {
                             FirebaseFirestore.getInstance().collection("posts")
                         val document = imageReference.document()
                         val post = Posts(
-                            userId = MusicBandApplication.instance.user.userId,
-                            userName = MusicBandApplication.instance.user.username,
+                            userId = UserManager.userToken,
+                            userName = UserManager.userName,
                             comments = Comments(""),
                             type = POST_TYPES.EVENT.value,
                             postId = document.id,

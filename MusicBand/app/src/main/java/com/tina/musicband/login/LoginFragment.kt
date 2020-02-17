@@ -46,9 +46,12 @@ class LoginFragment : Fragment() {
         binding.googleLoginButton.startAnimation(fadeInAnimation)
 
         binding.facebookLoginButton.setOnClickListener {
-//            if(auth.currentUser == null) {
+            if (auth.currentUser == null) {
                 viewModel.fbLogin(MusicBandApplication.instance.user)
                 findNavController().navigate(R.id.action_global_avatarSelectFragment)
+            } else {
+                findNavController().navigate(R.id.action_global_mainFragment)
+            }
         }
 
         viewModel.loginFacebook.observe(this, Observer {
