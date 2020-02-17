@@ -15,7 +15,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_quick_match"
-            android:layout_width="350dp"
+            android:layout_width="368dp"
             android:layout_height="453dp"
             android:clipToPadding="false"
             android:orientation="horizontal"

@@ -8,7 +8,7 @@ import java.sql.Timestamp
 data class Posts(
     var type: String = "",
     var userName: String? = "",
-    var userId: String = "",
+    var userId: String? = "",
     var avatar: String = "",
     var postId: String = "",
     var eventId: String = "",

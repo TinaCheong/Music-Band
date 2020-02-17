@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
@@ -91,9 +93,9 @@ class MainAdapter(val mainViewModel: MainViewModel) :
             Glide
                 .with(MusicBandApplication.instance.applicationContext)
                 .load(posts.song.cover)
-                .centerCrop()
-                .placeholder(R.drawable.ic_album_cover)
-                .error(R.drawable.ic_album_cover)
+                .transform(CenterCrop(), RoundedCorners(12))
+                .placeholder(R.drawable.ic_cover)
+                .error(R.drawable.ic_cover)
                 .into(binding.musicCover)
 
             binding.musicPlayButton.setOnClickListener {

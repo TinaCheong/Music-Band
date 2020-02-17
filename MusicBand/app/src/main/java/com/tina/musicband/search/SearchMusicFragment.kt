@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -34,6 +35,7 @@ class SearchMusicFragment : Fragment() {
 
     lateinit var binding : FragmentSearchMusicBinding
 //    lateinit var handler: Handler
+    private  val songsList = mutableListOf<Songs>()
 
 
     override fun onCreateView(
@@ -123,7 +125,7 @@ class SearchMusicFragment : Fragment() {
             .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    val songsList = mutableListOf<Songs>()
+
                     for (document in it.result!!){
 
                         val songs = document.toObject(Songs::class.java)
@@ -141,8 +143,38 @@ class SearchMusicFragment : Fragment() {
             }
         })
 
+        binding.searchViewBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                search(newText)
+                return true
+            }
+        })
+
 
         return binding.root
+
+    }
+
+    private fun search(keyword: String?){
+
+        val resultList = mutableListOf<Songs>()
+        for(song in songsList){
+            if(song.songTitle.toLowerCase().contains(keyword.toString())){
+
+                resultList.add(song)
+
+            }
+
+            val adapter = SearchMusicAdapter(viewModel)
+            binding.recyclerViewSearchMusicPage.adapter = adapter
+            adapter.submitList(resultList)
+
+        }
 
     }
 
