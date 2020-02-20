@@ -1,6 +1,7 @@
 package com.tina.musicband.main
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,8 +10,10 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.tina.musicband.MainActivity
 import com.tina.musicband.R
 import com.tina.musicband.data.Comments
@@ -34,9 +37,12 @@ class MainFragment : Fragment() {
 
     lateinit var binding: FragmentMainBinding
 
+    val postsList = mutableListOf<Posts>()
+
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,10 +72,11 @@ class MainFragment : Fragment() {
 
         binding.recyclerViewMainPage.adapter = mainAdapter
 
-        FirebaseFirestore.getInstance().collection("posts").get()
+        FirebaseFirestore.getInstance().collection("posts")
+            .orderBy("createdTime", Query.Direction.DESCENDING)
+            .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    val postsList = mutableListOf<Posts>()
 
                     val list = mutableListOf<PostSealedItem>()
 
@@ -84,9 +91,24 @@ class MainFragment : Fragment() {
                         }
 
                     }
+                    showHint()
                     mainAdapter.submitList(list)
                 }
             }
+
+        viewModel.commented.observe(this, Observer {
+            it?.let {
+                binding.mainFab.visibility = View.GONE
+                viewModel.doneCommented()
+            }
+        })
+
+        viewModel.setFab.observe(this, Observer {
+            it?.let {
+                binding.mainFab.visibility = View.VISIBLE
+            }
+        })
+
 
 
         return binding.root
@@ -120,6 +142,19 @@ class MainFragment : Fragment() {
             binding.eventFab.setClickable(true)
 
             isOpen = true
+        }
+
+    }
+
+    private fun showHint(){
+        if(postsList.size == 0){
+            binding.noPostImage.visibility = View.VISIBLE
+            binding.questionMarkImage.visibility = View.VISIBLE
+            binding.noPostText.visibility = View.VISIBLE
+        }else{
+            binding.noPostImage.visibility = View.GONE
+            binding.questionMarkImage.visibility = View.GONE
+            binding.noPostText.visibility = View.GONE
         }
 
     }

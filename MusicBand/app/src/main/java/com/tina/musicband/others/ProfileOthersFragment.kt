@@ -52,9 +52,8 @@ class ProfileOthersFragment : Fragment() {
     private fun setTabLayoutIcons(){
 
         binding.tabLayoutProfileOthers.setupWithViewPager(binding.viewpagerProfileOthers)
-        binding.tabLayoutProfileOthers.getTabAt(0)?.setIcon(R.drawable.ic_others_info)
-        binding.tabLayoutProfileOthers.getTabAt(1)?.setIcon(R.drawable.ic_event_title)
-        binding.tabLayoutProfileOthers.getTabAt(2)?.setIcon(R.drawable.ic_calender)
+        binding.tabLayoutProfileOthers.getTabAt(0)?.setIcon(R.drawable.ic_event_title)
+        binding.tabLayoutProfileOthers.getTabAt(1)?.setIcon(R.drawable.ic_calender)
 
     }
 

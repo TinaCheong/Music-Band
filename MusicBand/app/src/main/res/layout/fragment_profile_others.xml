@@ -16,8 +16,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="159dp"
-            tools:layout_editor_absoluteY="-172dp">
+            tools:layout_editor_absoluteX="26dp"
+            tools:layout_editor_absoluteY="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -28,48 +28,51 @@
 
                 <ImageView
                     android:id="@+id/profile_background"
-                    android:layout_width="0dp"
-                    android:layout_height="180dp"
+                    android:layout_width="410dp"
+                    android:layout_height="220dp"
+                    android:layout_marginEnd="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bg_line"
+                    android:src="@drawable/bg_square"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/profile_avatar"
-                    android:layout_width="129dp"
-                    android:layout_height="129dp"
-                    android:layout_marginBottom="85dp"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="45dp"
                     android:src="@drawable/ic_woman_1"
-                    app:layout_constraintBottom_toTopOf="@+id/posts_count"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="@+id/profile_background"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/profile_username"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="16dp"
                     android:text="Tina Cheong"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/follow_button" />
+                    app:layout_constraintStart_toEndOf="@+id/profile_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/profile_avatar" />
 
                 <TextView
                     android:id="@+id/posts_count"
-                    android:layout_width="wrap_content"
+                    android:layout_width="14dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
                     android:text="2"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/line2"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/line2" />
+                    app:layout_constraintStart_toEndOf="@+id/profile_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
                 <TextView
                     android:id="@+id/posts_count_text"
@@ -77,9 +80,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/posts"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/line2"
                     app:layout_constraintEnd_toEndOf="@+id/posts_count"
-                    app:layout_constraintStart_toStartOf="@+id/posts_count" />
+                    app:layout_constraintHorizontal_bias="0.434"
+                    app:layout_constraintStart_toStartOf="@+id/posts_count"
+                    app:layout_constraintTop_toBottomOf="@+id/posts_count" />
 
                 <TextView
                     android:id="@+id/followers_count"
@@ -92,7 +96,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/line3"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/line2"
-                    app:layout_constraintTop_toTopOf="@+id/line3" />
+                    app:layout_constraintTop_toTopOf="@+id/posts_count" />
 
                 <TextView
                     android:id="@+id/followers_text"
@@ -100,9 +104,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/followers"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/line3"
                     app:layout_constraintEnd_toEndOf="@+id/followers_count"
-                    app:layout_constraintStart_toStartOf="@+id/followers_count" />
+                    app:layout_constraintStart_toStartOf="@+id/followers_count"
+                    app:layout_constraintTop_toBottomOf="@+id/followers_count" />
 
                 <TextView
                     android:id="@+id/following_count"
@@ -115,7 +119,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/line3"
-                    app:layout_constraintTop_toTopOf="@+id/line3" />
+                    app:layout_constraintTop_toTopOf="@+id/posts_count" />
 
                 <TextView
                     android:id="@+id/following_text"
@@ -123,54 +127,225 @@
                     android:layout_height="wrap_content"
                     android:text="@string/following"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/line3"
                     app:layout_constraintEnd_toEndOf="@+id/following_count"
-                    app:layout_constraintStart_toStartOf="@+id/following_count" />
+                    app:layout_constraintStart_toStartOf="@+id/following_count"
+                    app:layout_constraintTop_toBottomOf="@+id/following_count" />
 
                 <View
                     android:id="@+id/line2"
                     android:layout_width="1dp"
                     android:layout_height="50dp"
                     android:background="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/followers_text"
                     app:layout_constraintEnd_toStartOf="@+id/followers_count"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/posts_count"
-                    app:layout_constraintTop_toTopOf="@+id/followers_count" />
+                    app:layout_constraintTop_toTopOf="@+id/posts_count" />
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="1dp"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="24dp"
+                    android:background="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/introduction_detail"
+                    app:layout_constraintStart_toEndOf="@+id/favourite_music_title"
+                    app:layout_constraintTop_toTopOf="@+id/speciality_detail" />
 
                 <View
                     android:id="@+id/line3"
                     android:layout_width="1dp"
                     android:layout_height="50dp"
-                    android:layout_marginTop="32dp"
                     android:background="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/following_count"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/followers_count"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_username" />
+                    app:layout_constraintTop_toTopOf="@+id/followers_count" />
 
                 <ImageView
                     android:id="@+id/follow_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_follow"
                     android:tint="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/following_text" />
+
+                <TextView
+                    android:id="@+id/introduction_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/introduction"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/experience_title" />
+
+                <TextView
+                    android:id="@+id/introduction_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/no_music_no_life"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/introduction_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toBottomOf="@+id/experience_detail" />
+
+                <TextView
+                    android:id="@+id/speciality_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/speciality"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/profile_background" />
+
+                <TextView
+                    android:id="@+id/speciality_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/flute_clarinet"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/speciality_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toTopOf="@+id/speciality_title" />
+
+                <TextView
+                    android:id="@+id/education_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/education"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/speciality_title" />
+
+                <TextView
+                    android:id="@+id/education_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/san_francisco_university"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/education_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toBottomOf="@+id/speciality_detail" />
+
+                <TextView
+                    android:id="@+id/position_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/position"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/education_title" />
+
+                <TextView
+                    android:id="@+id/position_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/second_flute"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/position_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toBottomOf="@+id/education_detail" />
+
+                <TextView
+                    android:id="@+id/favourite_music_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Favourite Music"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/position_title" />
+
+                <TextView
+                    android:id="@+id/favourite_music_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/classic_opera"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/favourite_music_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toBottomOf="@+id/position_detail" />
+
+                <TextView
+                    android:id="@+id/experience_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/experiences"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/favourite_music_title" />
+
+                <TextView
+                    android:id="@+id/experience_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="Orchestra, Pit Orchestra"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/line"
+                    app:layout_constraintTop_toBottomOf="@+id/favourite_music_detail" />
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewpager_profile_others"
-                    android:layout_width="0dp"
+                    android:layout_width="411dp"
                     android:layout_height="500dp"
-                    android:layout_marginTop="32dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/posts_count_text"
-                    app:layout_constraintVertical_bias="1.0">
+                    app:layout_constraintTop_toBottomOf="@+id/line">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabLayout_profile_others"
@@ -189,6 +364,7 @@
                 </androidx.viewpager.widget.ViewPager>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

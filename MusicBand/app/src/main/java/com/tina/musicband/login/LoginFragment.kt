@@ -48,11 +48,18 @@ class LoginFragment : Fragment() {
         binding.facebookLoginButton.setOnClickListener {
             if (auth.currentUser == null) {
                 viewModel.fbLogin(MusicBandApplication.instance.user)
-                findNavController().navigate(R.id.action_global_avatarSelectFragment)
+
             } else {
                 findNavController().navigate(R.id.action_global_mainFragment)
             }
         }
+
+        viewModel.didFinishLogin.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(R.id.action_global_avatarSelectFragment)
+                viewModel.doneNavigateToAvatarPage()
+            }
+        })
 
         viewModel.loginFacebook.observe(this, Observer {
             it?.let {

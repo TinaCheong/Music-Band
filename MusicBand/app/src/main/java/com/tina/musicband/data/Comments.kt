@@ -5,5 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Comments(
-    var comment: String = ""
+    var comment: String = "",
+    var username: String = "",
+    var time: Long = 1
 ) : Parcelable

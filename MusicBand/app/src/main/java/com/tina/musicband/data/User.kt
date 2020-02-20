@@ -18,7 +18,7 @@ data class User (
     var introduction: String = "",
     var experience: String = "",
     var songs: Songs = Songs("", "","", "", ""),
-    var posts: Posts = Posts("","","","","","",123,"","", "","","",comments = Comments(),
+    var posts: Posts = Posts("","","","","","",123,"","", "","","",
         song = Songs("","","","",""))
 
 ): Parcelable

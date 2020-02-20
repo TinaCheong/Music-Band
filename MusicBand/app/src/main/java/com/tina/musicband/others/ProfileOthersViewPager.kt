@@ -6,14 +6,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.tina.musicband.profile.ProfileEventFragment
 import com.tina.musicband.profile.ProfileMusicFragment
 
-const val TAB_NUMBER = 3
+const val TAB_NUMBER = 2
 
 class ProfileOthersViewPager (fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         when(position){
-            0 -> return ProfileOthersInfoFragment()
-            1-> return ProfileMusicFragment()
+            0 -> return ProfileMusicFragment()
             else -> return ProfileEventFragment()
 
         }
