@@ -40,6 +40,8 @@ class AddEventFragment : Fragment() {
     private var imageUri: Uri? = null
     var mStorageRef: StorageReference = FirebaseStorage.getInstance().reference
     lateinit var storageReference: StorageReference
+    private val postId = FirebaseFirestore.getInstance().collection("posts").document().id
+    private val imageReference = FirebaseFirestore.getInstance().collection("posts").document(postId)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -118,13 +120,11 @@ class AddEventFragment : Fragment() {
                 storageReference.putFile(it).addOnSuccessListener {
                     val uri = it.metadata?.reference?.downloadUrl
                     uri?.addOnSuccessListener {
-                        val post = FirebaseFirestore.getInstance().collection("posts")
-                        val imageReference = FirebaseFirestore.getInstance().document(post.id).collection("posts").document()
                         val postList = Posts(
                             userId = UserManager.userToken,
                             userName = UserManager.userName,
                             type = POST_TYPES.EVENT.value,
-                            postId = post.id,
+                            postId = postId,
                             composer = "",
                             title = binding.eventTitleText.text.toString(),
                             description = binding.eventDescriptionText.text.toString(),

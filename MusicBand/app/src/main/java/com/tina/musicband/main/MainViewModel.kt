@@ -41,6 +41,17 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
 
+    private val _commented = MutableLiveData<Boolean>()
+
+    val commented: LiveData<Boolean>
+        get() = _commented
+
+    private val _setFab = MutableLiveData<Boolean>()
+
+    val setFab: LiveData<Boolean>
+        get() = _setFab
+
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -52,6 +63,22 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun leaveComment(){
+        _commented.value = true
+    }
+
+    fun doneCommented(){
+        _commented.value = null
+    }
+
+    fun hideFab(){
+        _setFab.value = null
+    }
+
+    fun showFab(){
+        _setFab.value = true
     }
 
 }

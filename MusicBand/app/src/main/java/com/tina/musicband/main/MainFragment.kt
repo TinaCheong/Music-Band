@@ -1,6 +1,7 @@
 package com.tina.musicband.main
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -40,6 +42,7 @@ class MainFragment : Fragment() {
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,6 +96,18 @@ class MainFragment : Fragment() {
                 }
             }
 
+        viewModel.commented.observe(this, Observer {
+            it?.let {
+                binding.mainFab.visibility = View.GONE
+                viewModel.doneCommented()
+            }
+        })
+
+        viewModel.setFab.observe(this, Observer {
+            it?.let {
+                binding.mainFab.visibility = View.VISIBLE
+            }
+        })
 
 
 

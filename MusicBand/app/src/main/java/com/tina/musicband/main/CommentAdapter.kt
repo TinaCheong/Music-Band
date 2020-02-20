@@ -9,12 +9,13 @@ import com.tina.musicband.data.Comments
 import com.tina.musicband.databinding.ItemCommentMainBinding
 
 
-class CommentAdapter() : ListAdapter<Comments, CommentAdapter.CommentViewHolder>(DiffCallback) {
+class CommentAdapter : ListAdapter<Comments, CommentAdapter.CommentViewHolder>(DiffCallback) {
 
 
     class CommentViewHolder(private var binding: ItemCommentMainBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comments) {
+            binding.comment = comment
             binding.executePendingBindings()
         }
     }

@@ -1,12 +1,13 @@
 package com.tina.musicband.main
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
-import android.os.UserManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.Comments
@@ -29,6 +31,7 @@ import com.tina.musicband.databinding.ItemMusicMainBinding
 import com.tina.musicband.ext.toDisplayFormat
 import java.io.IOException
 import java.lang.Exception
+import java.util.*
 
 private val ITEM_VIEW_TYPE_MUSIC = 0
 private val ITEM_VIEW_TYPE_EVENT = 1
@@ -41,7 +44,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(posts: Posts) {
+        fun bind(posts: Posts, mainViewModel: MainViewModel) {
 
             binding.posts = posts
             binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
@@ -57,9 +60,53 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 .centerCrop()
                 .into(binding.mainImage)
 
-//            val adapter = CommentAdapter()
-//            binding.recyclerViewMainEventComment. adapter = adapter
-//            adapter.submitList()
+            getEventComment(posts)
+
+            binding.eventComment.setOnClickListener {
+                binding.commentBlock.visibility = View.VISIBLE
+                mainViewModel.leaveComment()
+                mainViewModel.hideFab()
+
+            }
+
+            binding.sendButton.setOnClickListener {
+                postEventComment(posts)
+                binding.commentBlock.visibility = View.GONE
+                binding.commentField.text = null
+                mainViewModel.showFab()
+            }
+
+        }
+
+        private fun postEventComment(post: Posts){
+
+            val posts = FirebaseFirestore.getInstance().collection("posts")
+            val commentReference = posts.document(post.postId).collection("comments").document()
+            val comment = Comments(
+                username = post.userName!!, comment = binding.commentField.text.toString(), time = Calendar.getInstance().timeInMillis)
+            commentReference.set(comment)
+
+        }
+
+        private fun getEventComment(post: Posts){
+            FirebaseFirestore.getInstance()
+                .collection("posts")
+                .document(post.postId)
+                .collection("comments")
+                .orderBy("time", Query.Direction.ASCENDING)
+                .addSnapshotListener { snapshot, exception ->
+                    exception?.let {
+                        Log.w(TAG, "Listen failed.", it)
+                    }
+                    val list = mutableListOf<Comments>()
+                    for (document in snapshot!!) {
+                        val commentList = document.toObject(Comments::class.java)
+                        list.add(commentList)
+                    }
+                    val adapter = CommentAdapter()
+                    binding.recyclerViewMainEventComment.adapter = adapter
+                    adapter.submitList(list)
+                }
 
         }
 
@@ -72,7 +119,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
         private val mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
 
-        fun bind(posts: Posts) {
+        fun bind(posts: Posts, mainViewModel: MainViewModel) {
 
             class MusicRunnable : Runnable {
                 override fun run() {
@@ -174,10 +221,26 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 }
             }
 
+            getMusicComment(posts)
 
+            binding.musicComment.setOnClickListener {
+                binding.commentBlock.visibility = View.VISIBLE
+                mainViewModel.leaveComment()
+                mainViewModel.hideFab()
+
+            }
+
+            binding.sendButton.setOnClickListener {
+                postMusicComment(posts)
+                binding.commentBlock.visibility = View.GONE
+                binding.commentField.text = null
+                mainViewModel.showFab()
+            }
 
             binding.executePendingBindings()
         }
+
+
 
         private fun createTIme(time: Int): String {
             var timeLevel: String
@@ -217,6 +280,42 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 }
             }
         }
+
+
+
+
+
+    private fun postMusicComment(post: Posts){
+
+        val posts = FirebaseFirestore.getInstance().collection("posts")
+        val commentReference = posts.document(post.postId).collection("comments").document()
+        val comment = Comments(
+            username = post.userName!!, comment = binding.commentField.text.toString(), time = Calendar.getInstance().timeInMillis)
+        commentReference.set(comment)
+
+    }
+
+    private fun getMusicComment(post: Posts){
+        FirebaseFirestore.getInstance()
+            .collection("posts")
+            .document(post.postId)
+            .collection("comments")
+            .orderBy("time", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
+                exception?.let {
+                    Log.w(TAG, "Listen failed.", it)
+                }
+                val list = mutableListOf<Comments>()
+                for (document in snapshot!!) {
+                    val commentList = document.toObject(Comments::class.java)
+                    list.add(commentList)
+                }
+                val adapter = CommentAdapter()
+                binding.recyclerViewMainMusicComment.adapter = adapter
+                adapter.submitList(list)
+            }
+
+    }
     }
 
 
@@ -251,10 +350,10 @@ class MainAdapter(val mainViewModel: MainViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is EventViewHolder -> {
-                holder.bind((getItem(position) as PostSealedItem.EventItem).posts)
+                holder.bind((getItem(position) as PostSealedItem.EventItem).posts, mainViewModel)
             }
             is MusicViewHolder -> {
-                holder.bind((getItem(position) as PostSealedItem.MusicItem).posts)
+                holder.bind((getItem(position) as PostSealedItem.MusicItem).posts, mainViewModel)
             }
         }
     }

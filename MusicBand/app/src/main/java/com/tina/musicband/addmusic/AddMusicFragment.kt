@@ -39,10 +39,10 @@ class AddMusicFragment : Fragment() {
     private var storageRef: StorageReference = FirebaseStorage.getInstance().reference
     private lateinit var imageStorageReference: StorageReference
     private lateinit var songStorageReference: StorageReference
-    private val song = FirebaseFirestore.getInstance().collection("songs")
-    private val songsReference = FirebaseFirestore.getInstance().document(song.id).collection("songs").document()
-    private val post = FirebaseFirestore.getInstance().collection("posts")
-    private val postsReference = FirebaseFirestore.getInstance().document(post.id).collection("posts").document()
+    private val songId = FirebaseFirestore.getInstance().collection("songs").document().id
+    private val songsReference = FirebaseFirestore.getInstance().collection("songs").document(songId)
+    private val postId = FirebaseFirestore.getInstance().collection("posts").document().id
+    private val postsReference = FirebaseFirestore.getInstance().collection("posts").document(postId)
 
     private var imageUri: Uri? = null
 
@@ -206,7 +206,7 @@ class AddMusicFragment : Fragment() {
                                                 songTitle = binding.musicTitleEdit.text.toString(),
                                                 songDuration = durationText,
                                                 songLink = music.toString(),
-                                                songId = song.id,
+                                                songId = songId,
                                                 cover = coverUri
                                             )
 
@@ -218,7 +218,7 @@ class AddMusicFragment : Fragment() {
                                                     userId = UserManager.userToken,
                                                     userName = UserManager.userName,
                                                     type = POST_TYPES.MUSIC.value,
-                                                    postId = post.id,
+                                                    postId = postId,
                                                     composer = binding.musicComposerEdit.text.toString(),
                                                     title = binding.musicTitleEdit.text.toString(),
                                                     description = binding.musicDescriptionEdit.text.toString(),
