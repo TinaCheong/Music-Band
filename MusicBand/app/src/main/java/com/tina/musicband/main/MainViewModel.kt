@@ -13,9 +13,9 @@ import kotlinx.coroutines.Job
 
 class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
 
-    private val _comments = MutableLiveData<Comments>()
+    private val _comments = MutableLiveData<List<Comments>>()
 
-    val comments: LiveData<Comments>
+    val comments: LiveData<List<Comments>>
         get() = _comments
 
     private val _posts = MutableLiveData<List<Posts>>()

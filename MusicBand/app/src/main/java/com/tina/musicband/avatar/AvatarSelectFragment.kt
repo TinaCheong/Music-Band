@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.tina.musicband.MainActivity
 import com.tina.musicband.R
 import com.tina.musicband.databinding.FragmentAvatarSelectBinding
+import com.tina.musicband.login.UserManager
 
 /**
  * A simple [Fragment] subclass.
@@ -31,6 +32,11 @@ class AvatarSelectFragment : Fragment() {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_avatar_select, container, false
         )
+
+        binding.lifecycleOwner = this
+
+
+        binding.enterNameText.setText(UserManager.userName)
 
         binding.saveButton.setOnClickListener {
             findNavController().navigate(R.id.action_global_mainFragment)

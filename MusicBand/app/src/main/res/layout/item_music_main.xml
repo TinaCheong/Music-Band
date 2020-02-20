@@ -141,6 +141,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="7dp"
                     android:text="64"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/music_like_icon"
                     app:layout_constraintStart_toEndOf="@+id/music_like_icon"
                     app:layout_constraintTop_toTopOf="@+id/music_like_icon" />
@@ -151,9 +152,7 @@
                     android:layout_height="23dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="16dp"
                     android:tint="@color/blue_272343"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/music_like"
                     app:layout_constraintTop_toTopOf="@+id/music_like_icon"
                     app:srcCompat="@drawable/ic_comments" />
@@ -164,6 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/comment"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/music_like"
                     app:layout_constraintStart_toEndOf="@+id/music_comment_icon"
                     app:layout_constraintTop_toTopOf="@+id/music_like" />
@@ -280,6 +280,58 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/music_cover" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view__main_music_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/music_comment" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/comment_block"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_view__main_music_comment">
+
+                    <EditText
+                        android:id="@+id/comment_field"
+                        android:layout_width="295dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/button_style_blue_border"
+                        android:ems="10"
+                        android:hint="Comment..."
+                        android:inputType="textPersonName"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/send_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:tint="@color/gray_DDDDDD_50"
+                        app:layout_constraintBottom_toBottomOf="@+id/comment_field"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/comment_field"
+                        app:layout_constraintTop_toTopOf="@+id/comment_field"
+                        app:srcCompat="@drawable/ic_send" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

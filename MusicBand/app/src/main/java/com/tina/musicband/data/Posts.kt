@@ -19,6 +19,5 @@ data class Posts(
     var image: String = "",
     var composer: String = "",
     var like: Int = 1,
-    var song: Songs = Songs("", "", "", "", ""),
-    var comments: Comments = Comments("comment")
+    var song: Songs = Songs("", "", "", "", "")
 ) : Parcelable

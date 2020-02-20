@@ -129,5 +129,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_card_view" />
 
+        <ImageView
+            android:id="@+id/no_music_image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="24dp"
+            android:tint="@color/white_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/question_mark_image"
+            app:srcCompat="@drawable/ic_song_title" />
+
+        <ImageView
+            android:id="@+id/question_mark_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="110dp"
+            android:tint="@color/white_50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_view_bar"
+            app:srcCompat="@drawable/ic_ic_question_mark_search" />
+
+        <TextView
+            android:id="@+id/no_music_text"
+            android:layout_width="220dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Why not share your favourite songs?:)"
+            android:textColor="@color/gray_DDDDDD_50"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/no_music_image"
+            app:layout_constraintStart_toStartOf="@+id/no_music_image"
+            app:layout_constraintTop_toBottomOf="@+id/no_music_image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

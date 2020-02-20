@@ -20,8 +20,6 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.tina.musicband.MainActivity
-import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
@@ -38,9 +36,14 @@ class AddMusicFragment : Fragment() {
 
     lateinit var binding: LayoutAddMusicMainBinding
     private var audioUri: Uri? = null
-    private var musicStorageRef: StorageReference =
-        FirebaseStorage.getInstance().getReference("songs")
-    lateinit var storageReference: StorageReference
+    private var storageRef: StorageReference = FirebaseStorage.getInstance().reference
+    private lateinit var imageStorageReference: StorageReference
+    private lateinit var songStorageReference: StorageReference
+    private val song = FirebaseFirestore.getInstance().collection("songs")
+    private val songsReference = FirebaseFirestore.getInstance().document(song.id).collection("songs").document()
+    private val post = FirebaseFirestore.getInstance().collection("posts")
+    private val postsReference = FirebaseFirestore.getInstance().document(post.id).collection("posts").document()
+
     private var imageUri: Uri? = null
 
     override fun onCreateView(
@@ -171,12 +174,6 @@ class AddMusicFragment : Fragment() {
                 activity, "Uploading please wait...", Toast.LENGTH_SHORT
             ).show()
 
-            audioUri?.let {
-                storageReference = musicStorageRef.child(
-                    System.currentTimeMillis().toString().plus(".").plus(getFileExtension(it))
-                )
-            }
-
             val durationMillis = findSongDuration(audioUri)
 
             if (durationMillis == 0) {
@@ -186,46 +183,42 @@ class AddMusicFragment : Fragment() {
             durationText = getDurationFromMilli(durationMillis)
             Log.i("Tnaaaa", "durationMillis = $durationMillis")
 
+            imageStorageReference = storageRef.child("images/" + UUID.randomUUID().toString())
+            songStorageReference = storageRef.child("songs/" + UUID.randomUUID().toString())
 
             imageUri?.apply {
-                FirebaseStorage.getInstance().getReference("image").putFile(this)
+               imageStorageReference
+                    .putFile(this)
                     .addOnSuccessListener {
-                        FirebaseStorage.getInstance().getReference("image")
-                            .downloadUrl.addOnSuccessListener { cover ->
+                        imageStorageReference.downloadUrl.addOnSuccessListener { cover ->
                             val coverUri = cover.toString()
 
                             Log.i("Tina", "this=$this")
                             Log.i("Tina", "coverUri=$coverUri")
 
                             audioUri?.apply {
-                                FirebaseStorage.getInstance().getReference("sone").putFile(this)
+                                songStorageReference.putFile(this)
                                     .addOnSuccessListener {
-                                        FirebaseStorage.getInstance().getReference("sone")
+                                        songStorageReference
                                             .downloadUrl.addOnSuccessListener { music ->
-                                            val songUri = music.toString()
 
-                                            Log.d("Tina", "this=$this")
-                                            Log.d("Tina", "songUri=$songUri")
-
-                                            val songsReference =
-                                                FirebaseFirestore.getInstance().collection("songs")
-                                            val song = Songs(
+                                            val songList = Songs(
                                                 songTitle = binding.musicTitleEdit.text.toString(),
                                                 songDuration = durationText,
                                                 songLink = music.toString(),
-                                                songId = "123",
+                                                songId = song.id,
                                                 cover = coverUri
                                             )
 
-                                            songsReference.document().set(song)
+                                            songsReference.set(songList)
+
 
                                             updatePosts(
                                                 Posts(
                                                     userId = UserManager.userToken,
                                                     userName = UserManager.userName,
-                                                    comments = Comments(""),
                                                     type = POST_TYPES.MUSIC.value,
-                                                    postId = "",
+                                                    postId = post.id,
                                                     composer = binding.musicComposerEdit.text.toString(),
                                                     title = binding.musicTitleEdit.text.toString(),
                                                     description = binding.musicDescriptionEdit.text.toString(),
@@ -235,8 +228,7 @@ class AddMusicFragment : Fragment() {
                                                     date = "20200308",
                                                     image = coverUri,
                                                     like = 0,
-                                                    song = song
-                                            )
+                                                    song = songList)
                                             )
 
                                             Toast.makeText(
@@ -280,8 +272,7 @@ class AddMusicFragment : Fragment() {
 
     private fun updatePosts(posts: Posts){
 
-        val postsReference = FirebaseFirestore.getInstance().collection("posts")
-        postsReference.document().set(posts).addOnSuccessListener {
+        postsReference.set(posts).addOnSuccessListener {
             Toast.makeText(activity, "Updated to News Feed", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Toast.makeText(activity, "Failed to Update News Feed", Toast.LENGTH_SHORT).show()
@@ -325,14 +316,14 @@ class AddMusicFragment : Fragment() {
 
     }
 
-    private fun getFileExtension(audioUri: Uri): String? {
-
-        val contentResolver = context?.contentResolver
-        val mine = MimeTypeMap.getSingleton()
-
-        return mine.getExtensionFromMimeType(contentResolver?.getType(audioUri))
-
-    }
+//    private fun getFileExtension(audioUri: Uri): String? {
+//
+//        val contentResolver = context?.contentResolver
+//        val mine = MimeTypeMap.getSingleton()
+//
+//        return mine.getExtensionFromMimeType(contentResolver?.getType(audioUri))
+//
+//    }
 
 
 }

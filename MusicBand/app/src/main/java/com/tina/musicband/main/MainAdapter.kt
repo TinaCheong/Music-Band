@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
+import android.os.UserManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
+import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.ItemEventsMainBinding
@@ -42,7 +44,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
         fun bind(posts: Posts) {
 
             binding.posts = posts
-            binding.usernameText.setText(MusicBandApplication.instance.user.username)
+            binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
             binding.eventTitle.setText(posts.title)
             binding.createdTimeText.setText(posts.createdTime.toDisplayFormat())
             binding.eventDescription.setText(posts.description)
@@ -55,7 +57,13 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 .centerCrop()
                 .into(binding.mainImage)
 
+//            val adapter = CommentAdapter()
+//            binding.recyclerViewMainEventComment. adapter = adapter
+//            adapter.submitList()
+
         }
+
+
     }
 
     class MusicViewHolder(private var binding: ItemMusicMainBinding, val context: Context) :
@@ -83,7 +91,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
 
             binding.musicEndTime.setText(posts.song.songDuration)
 
-            binding.usernameText.setText(MusicBandApplication.instance.user.username)
+            binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
             binding.musicTitle.setText(posts.title)
             binding.musicComposer.setText(posts.composer)
             binding.createdTimeText.setText(posts.createdTime.toDisplayFormat())
@@ -165,6 +173,8 @@ class MainAdapter(val mainViewModel: MainViewModel) :
 
                 }
             }
+
+
 
             binding.executePendingBindings()
         }

@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
@@ -132,7 +133,8 @@ class SearchMusicFragment : Fragment() {
                         songsList.add(songs)
 
                     }
-                        adapter.submitList(songsList)
+                    showHint()
+                    adapter.submitList(songsList)
                 }
             }
 
@@ -156,6 +158,7 @@ class SearchMusicFragment : Fragment() {
         })
 
 
+
         return binding.root
 
     }
@@ -176,6 +179,23 @@ class SearchMusicFragment : Fragment() {
 
         }
 
+    }
+
+    private fun showHint(){
+        if(songsList.size == 0){
+
+            binding.noMusicImage.visibility = View.VISIBLE
+            binding.questionMarkImage.visibility = View.VISIBLE
+            binding.noMusicText.visibility = View.VISIBLE
+
+        }else{
+
+            binding.noMusicImage.visibility = View.GONE
+            binding.questionMarkImage.visibility = View.GONE
+            binding.noMusicText.visibility = View.GONE
+
+
+        }
     }
 
 

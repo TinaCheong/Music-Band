@@ -38,7 +38,7 @@ class AddEventFragment : Fragment() {
 
     lateinit var binding: LayoutAddEventMainBinding
     private var imageUri: Uri? = null
-    var mStorageRef: StorageReference = FirebaseStorage.getInstance().getReference("posts")
+    var mStorageRef: StorageReference = FirebaseStorage.getInstance().reference
     lateinit var storageReference: StorageReference
 
     override fun onCreateView(
@@ -110,25 +110,21 @@ class AddEventFragment : Fragment() {
                 activity, "Uploading please wait...", Toast.LENGTH_SHORT
             ).show()
 
-            imageUri?.let {
-                storageReference = mStorageRef.child(
-                    System.currentTimeMillis().toString().plus(".").plus(getFileExtension(it))
-                )
-            }
+
+            storageReference = mStorageRef.child("images/" + UUID.randomUUID().toString())
+
 
             imageUri?.let {
-                mStorageRef.putFile(it).addOnSuccessListener {
+                storageReference.putFile(it).addOnSuccessListener {
                     val uri = it.metadata?.reference?.downloadUrl
                     uri?.addOnSuccessListener {
-                        val imageReference =
-                            FirebaseFirestore.getInstance().collection("posts")
-                        val document = imageReference.document()
-                        val post = Posts(
+                        val post = FirebaseFirestore.getInstance().collection("posts")
+                        val imageReference = FirebaseFirestore.getInstance().document(post.id).collection("posts").document()
+                        val postList = Posts(
                             userId = UserManager.userToken,
                             userName = UserManager.userName,
-                            comments = Comments(""),
                             type = POST_TYPES.EVENT.value,
-                            postId = document.id,
+                            postId = post.id,
                             composer = "",
                             title = binding.eventTitleText.text.toString(),
                             description = binding.eventDescriptionText.text.toString(),
@@ -136,11 +132,11 @@ class AddEventFragment : Fragment() {
                             createdTime = Calendar.getInstance().timeInMillis,
                             date = viewModel.selectedDate.value,
                             image = it.toString(),
-                            like = 26,
+                            like = 0,
                             eventId = "",
                             song = Songs("","","","","")
                         )
-                       imageReference.document().set(post)
+                       imageReference.set(postList)
 
                         Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT)
                             .show()
@@ -182,13 +178,13 @@ class AddEventFragment : Fragment() {
 
 
 
-    private fun getFileExtension(audioUri: Uri): String? {
-
-        val contentResolver = context?.contentResolver
-        val mine = MimeTypeMap.getSingleton()
-        return mine.getExtensionFromMimeType(contentResolver?.getType(audioUri))
-
-    }
+//    private fun getFileExtension(audioUri: Uri): String? {
+//
+//        val contentResolver = context?.contentResolver
+//        val mine = MimeTypeMap.getSingleton()
+//        return mine.getExtensionFromMimeType(contentResolver?.getType(audioUri))
+//
+//    }
 
 
 }

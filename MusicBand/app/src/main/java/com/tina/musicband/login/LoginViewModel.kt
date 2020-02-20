@@ -77,6 +77,14 @@ class LoginViewModel (private val repository: MusicBandRepository) : ViewModel()
         checkFbLogin()
     }
 
+    private val _didFinishLogin = MutableLiveData<Boolean>()
+    val didFinishLogin: LiveData<Boolean>
+        get() = _didFinishLogin
+
+    fun doneNavigateToAvatarPage() {
+        _didFinishLogin.value = null
+    }
+
     private fun handleFacebookAccessToken(user: User, token: AccessToken) {
 
         if (user.fbToken != null) {
@@ -93,6 +101,7 @@ class LoginViewModel (private val repository: MusicBandRepository) : ViewModel()
                                 .set(user)
                                 .addOnSuccessListener {
                                     Log.d("Firebase User Data", "Input Success")
+                                    _didFinishLogin.value = true
                                 }.addOnFailureListener {
                                     Log.d("Firebase User Data", "Input Fail")
                                 }
