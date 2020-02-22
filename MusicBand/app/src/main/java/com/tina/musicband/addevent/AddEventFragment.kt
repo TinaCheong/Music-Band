@@ -132,8 +132,6 @@ class AddEventFragment : Fragment() {
                             createdTime = Calendar.getInstance().timeInMillis,
                             date = viewModel.selectedDate.value,
                             image = it.toString(),
-                            like = 0,
-                            eventId = "",
                             song = Songs("","","","","")
                         )
                        imageReference.set(postList)

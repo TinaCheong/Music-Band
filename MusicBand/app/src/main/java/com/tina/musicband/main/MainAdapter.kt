@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.Comments
+import com.tina.musicband.data.Like
 import com.tina.musicband.data.Posts
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.ItemEventsMainBinding
@@ -37,7 +38,7 @@ private val ITEM_VIEW_TYPE_MUSIC = 0
 private val ITEM_VIEW_TYPE_EVENT = 1
 
 
-class MainAdapter(val mainViewModel: MainViewModel) :
+class MainAdapter(private val mainViewModel: MainViewModel) :
     ListAdapter<PostSealedItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     class EventViewHolder(private var binding: ItemEventsMainBinding, val context: Context) :
@@ -47,12 +48,13 @@ class MainAdapter(val mainViewModel: MainViewModel) :
         fun bind(posts: Posts, mainViewModel: MainViewModel) {
 
             binding.posts = posts
+            binding.mainViewModel = mainViewModel
+
             binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
             binding.eventTitle.setText(posts.title)
             binding.createdTimeText.setText(posts.createdTime.toDisplayFormat())
             binding.eventDescription.setText(posts.description)
             binding.eventDate.setText(posts.date.toString())
-            binding.eventLike.setText(posts.like.toString())
 
             Glide
                 .with(MusicBandApplication.instance.applicationContext)
@@ -76,19 +78,64 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 mainViewModel.showFab()
             }
 
+            binding.eventLikeIcon.setOnClickListener {
+                FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
+                    .collection("like").document(posts.userId!!)
+                    .set(mapOf("userID" to posts.userId!!))
+                    .addOnSuccessListener {
+
+                        binding.eventLikeIcon.visibility = View.INVISIBLE
+                        binding.eventLikeClickedIcon.visibility = View.VISIBLE
+
+                        FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
+                            .collection("like")
+                            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                                querySnapshot?.size()?.let { it1 ->
+                                    binding.eventLike.setText(it1.toString())
+                                }
+
+                            }
+
+
+                    }
+            }
+
+            binding.eventLikeClickedIcon.setOnClickListener {
+                FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
+                    .collection("like").document(posts.userId!!).delete().addOnSuccessListener {
+
+                        binding.eventLikeIcon.visibility = View.VISIBLE
+                        binding.eventLikeClickedIcon.visibility = View.INVISIBLE
+
+
+                        FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
+                            .collection("like")
+                            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                                querySnapshot?.size()?.let { it1 ->
+                                    binding.eventLike.setText(it1.toString())
+                                }
+                            }
+
+                    }
+            }
+
         }
 
-        private fun postEventComment(post: Posts){
+
+        private fun postEventComment(post: Posts) {
 
             val posts = FirebaseFirestore.getInstance().collection("posts")
             val commentReference = posts.document(post.postId).collection("comments").document()
             val comment = Comments(
-                username = post.userName!!, comment = binding.commentField.text.toString(), time = Calendar.getInstance().timeInMillis)
+                username = post.userName!!,
+                comment = binding.commentField.text.toString(),
+                time = Calendar.getInstance().timeInMillis
+            )
             commentReference.set(comment)
 
         }
 
-        private fun getEventComment(post: Posts){
+        private fun getEventComment(post: Posts) {
             FirebaseFirestore.getInstance()
                 .collection("posts")
                 .document(post.postId)
@@ -116,10 +163,13 @@ class MainAdapter(val mainViewModel: MainViewModel) :
     class MusicViewHolder(private var binding: ItemMusicMainBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val mediaPlayer = MediaPlayer()
+        private var mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
 
-        fun bind(posts: Posts, mainViewModel: MainViewModel) {
+        fun bind(post: Posts, mainViewModel: MainViewModel) {
+
+            binding.post = post
+            binding.mainViewModel = mainViewModel
 
             class MusicRunnable : Runnable {
                 override fun run() {
@@ -136,18 +186,17 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 }
             }
 
-            binding.musicEndTime.setText(posts.song.songDuration)
+            binding.musicEndTime.setText(post.song.songDuration)
 
             binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
-            binding.musicTitle.setText(posts.title)
-            binding.musicComposer.setText(posts.composer)
-            binding.createdTimeText.setText(posts.createdTime.toDisplayFormat())
-            binding.musicDescription.setText(posts.description)
-            binding.musicLike.setText(posts.like.toString())
+            binding.musicTitle.setText(post.title)
+            binding.musicComposer.setText(post.composer)
+            binding.createdTimeText.setText(post.createdTime.toDisplayFormat())
+            binding.musicDescription.setText(post.description)
 
             Glide
                 .with(MusicBandApplication.instance.applicationContext)
-                .load(posts.song.cover)
+                .load(post.song.cover)
                 .transform(CenterCrop(), RoundedCorners(12))
                 .placeholder(R.drawable.ic_cover)
                 .error(R.drawable.ic_cover)
@@ -171,7 +220,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
 
             mediaPlayer.seekTo(0)
 
-            setMediaPlayer(posts.song)
+            prepareMediaPlayer(post.song)
 
             binding.musicSeekBar.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
@@ -221,7 +270,7 @@ class MainAdapter(val mainViewModel: MainViewModel) :
                 }
             }
 
-            getMusicComment(posts)
+            getMusicComment(post)
 
             binding.musicComment.setOnClickListener {
                 binding.commentBlock.visibility = View.VISIBLE
@@ -231,15 +280,52 @@ class MainAdapter(val mainViewModel: MainViewModel) :
             }
 
             binding.sendButton.setOnClickListener {
-                postMusicComment(posts)
+                postMusicComment(post)
                 binding.commentBlock.visibility = View.GONE
                 binding.commentField.text = null
                 mainViewModel.showFab()
             }
 
+            binding.musicLikeIcon.setOnClickListener {
+                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+                    .collection("like").document(post.userId!!)
+                    .set(mapOf("userID" to post.userId!!))
+                    .addOnSuccessListener {
+
+                        binding.musicLikeIcon.visibility = View.INVISIBLE
+                        binding.musicLikeClickedIcon.visibility = View.VISIBLE
+
+                    }
+                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+                    .collection("like")
+                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                        querySnapshot?.size()
+                            ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
+                    }
+
+
+            }
+
+            binding.musicLikeClickedIcon.setOnClickListener {
+                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+                    .collection("like").document(post.userId!!).delete()
+                    .addOnSuccessListener {
+
+                        binding.musicLikeIcon.visibility = View.VISIBLE
+                        binding.musicLikeClickedIcon.visibility = View.INVISIBLE
+
+                    }
+
+                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+                    .collection("like")
+                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                        querySnapshot?.size()
+                            ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
+                    }
+            }
+
             binding.executePendingBindings()
         }
-
 
 
         private fun createTIme(time: Int): String {
@@ -257,7 +343,15 @@ class MainAdapter(val mainViewModel: MainViewModel) :
 
         }
 
-        private fun setMediaPlayer(songs: Songs) {
+        private var mySong = Songs()
+
+        private fun prepareMediaPlayer(songs: Songs) {
+
+            if (songs.songId == mySong.songId) return
+
+            mySong = songs
+
+            mediaPlayer.stop()
 
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
             fetchAudioUrlFromFirebase(songs)
@@ -282,40 +376,40 @@ class MainAdapter(val mainViewModel: MainViewModel) :
         }
 
 
+        private fun postMusicComment(post: Posts) {
 
+            val posts = FirebaseFirestore.getInstance().collection("posts")
+            val commentReference = posts.document(post.postId).collection("comments").document()
+            val comment = Comments(
+                username = post.userName!!,
+                comment = binding.commentField.text.toString(),
+                time = Calendar.getInstance().timeInMillis
+            )
+            commentReference.set(comment)
 
+        }
 
-    private fun postMusicComment(post: Posts){
-
-        val posts = FirebaseFirestore.getInstance().collection("posts")
-        val commentReference = posts.document(post.postId).collection("comments").document()
-        val comment = Comments(
-            username = post.userName!!, comment = binding.commentField.text.toString(), time = Calendar.getInstance().timeInMillis)
-        commentReference.set(comment)
-
-    }
-
-    private fun getMusicComment(post: Posts){
-        FirebaseFirestore.getInstance()
-            .collection("posts")
-            .document(post.postId)
-            .collection("comments")
-            .orderBy("time", Query.Direction.ASCENDING)
-            .addSnapshotListener { snapshot, exception ->
-                exception?.let {
-                    Log.w(TAG, "Listen failed.", it)
+        private fun getMusicComment(post: Posts) {
+            FirebaseFirestore.getInstance()
+                .collection("posts")
+                .document(post.postId)
+                .collection("comments")
+                .orderBy("time", Query.Direction.ASCENDING)
+                .addSnapshotListener { snapshot, exception ->
+                    exception?.let {
+                        Log.w(TAG, "Listen failed.", it)
+                    }
+                    val list = mutableListOf<Comments>()
+                    for (document in snapshot!!) {
+                        val commentList = document.toObject(Comments::class.java)
+                        list.add(commentList)
+                    }
+                    val adapter = CommentAdapter()
+                    binding.recyclerViewMainMusicComment.adapter = adapter
+                    adapter.submitList(list)
                 }
-                val list = mutableListOf<Comments>()
-                for (document in snapshot!!) {
-                    val commentList = document.toObject(Comments::class.java)
-                    list.add(commentList)
-                }
-                val adapter = CommentAdapter()
-                binding.recyclerViewMainMusicComment.adapter = adapter
-                adapter.submitList(list)
-            }
 
-    }
+        }
     }
 
 
@@ -368,11 +462,23 @@ class MainAdapter(val mainViewModel: MainViewModel) :
 
     companion object DiffCallback : DiffUtil.ItemCallback<PostSealedItem>() {
         override fun areItemsTheSame(oldItem: PostSealedItem, newItem: PostSealedItem): Boolean {
-            return oldItem === newItem
+            return if (oldItem is PostSealedItem.EventItem && newItem is PostSealedItem.EventItem) {
+                oldItem.posts.postId == newItem.posts.postId
+            } else if (oldItem is PostSealedItem.MusicItem && newItem is PostSealedItem.MusicItem) {
+                oldItem.posts.postId == newItem.posts.postId
+            } else {
+                false
+            }
         }
 
         override fun areContentsTheSame(oldItem: PostSealedItem, newItem: PostSealedItem): Boolean {
-            return oldItem.id == newItem.id
+            return if (oldItem is PostSealedItem.EventItem && newItem is PostSealedItem.EventItem) {
+                oldItem.posts.postId == newItem.posts.postId
+            } else if (oldItem is PostSealedItem.MusicItem && newItem is PostSealedItem.MusicItem) {
+                oldItem.posts.postId == newItem.posts.postId
+            } else {
+                false
+            }
         }
     }
 
