@@ -3,6 +3,7 @@ package com.tina.musicband.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +13,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.tina.musicband.MainActivity
 import com.tina.musicband.R
-import com.tina.musicband.data.Comments
 import com.tina.musicband.data.Posts
-import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentMainBinding
 import com.tina.musicband.ext.getVmFactory
-import java.sql.Timestamp
 
 enum class POST_TYPES(val value: String) {
     MUSIC("music"),
@@ -37,7 +32,6 @@ class MainFragment : Fragment() {
 
     lateinit var binding: FragmentMainBinding
 
-    val postsList = mutableListOf<Posts>()
 
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
@@ -72,29 +66,36 @@ class MainFragment : Fragment() {
 
         binding.recyclerViewMainPage.adapter = mainAdapter
 
-        FirebaseFirestore.getInstance().collection("posts")
-            .orderBy("createdTime", Query.Direction.DESCENDING)
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-
-                    val list = mutableListOf<PostSealedItem>()
-
-                    for (document in it.result!!){
-
-                        val posts = document.toObject(Posts::class.java)
-                        postsList.add(posts)
-
-                        when(posts.type) {
-                            POST_TYPES.EVENT.value -> list.add(PostSealedItem.EventItem(posts))
-                            POST_TYPES.MUSIC.value -> list.add(PostSealedItem.MusicItem(posts))
-                        }
-
-                    }
-                    showHint()
-                    mainAdapter.submitList(list)
-                }
+        viewModel.postItems.observe(this, Observer {
+            it?.let {
+                hideHint()
+                mainAdapter.submitList(it)
             }
+        })
+
+//        FirebaseFirestore.getInstance().collection("posts")
+//            .orderBy("createdTime", Query.Direction.DESCENDING)
+//            .get()
+//            .addOnCompleteListener {
+//                if(it.isSuccessful){
+//
+//                    val list = mutableListOf<PostSealedItem>()
+//
+//                    for (document in it.result!!){
+//
+//                        val posts = document.toObject(Posts::class.java)
+//                        postsList.add(posts)
+//
+//                        when(posts.type) {
+//                            POST_TYPES.EVENT.value -> list.add(PostSealedItem.EventItem(posts))
+//                            POST_TYPES.MUSIC.value -> list.add(PostSealedItem.MusicItem(posts))
+//                        }
+//
+//                    }
+//                    hideHint()
+//                    mainAdapter.submitList(list)
+//                }
+//            }
 
         viewModel.commented.observe(this, Observer {
             it?.let {
@@ -109,6 +110,9 @@ class MainFragment : Fragment() {
             }
         })
 
+        viewModel.likeStatus.observe(this, Observer {
+            Log.i("Tinaaaa", "viewModel.likeStatue: $it")
+        })
 
 
         return binding.root
@@ -146,8 +150,8 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun showHint(){
-        if(postsList.size == 0){
+    private fun hideHint(){
+        if(viewModel.posts.value?.size == 0){
             binding.noPostImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE
             binding.noPostText.visibility = View.VISIBLE

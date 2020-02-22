@@ -11,13 +11,11 @@ data class Posts(
     var userId: String? = "",
     var avatar: String = "",
     var postId: String = "",
-    var eventId: String = "",
     var createdTime: Long = 1,
     var title: String = "",
     var date: String? = "",
     var description: String = "",
     var image: String = "",
     var composer: String = "",
-    var like: Int = 1,
     var song: Songs = Songs("", "", "", "", "")
 ) : Parcelable

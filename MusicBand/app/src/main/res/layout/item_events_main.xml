@@ -5,12 +5,15 @@
 
     <data>
         <variable
-            name="viewModel"
+            name="mainViewModel"
             type="com.tina.musicband.main.MainViewModel" />
 
         <variable
             name="posts"
             type="com.tina.musicband.data.Posts" />
+
+        <import type="android.view.View">
+        </import>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,17 +177,31 @@
                     app:layout_constraintTop_toBottomOf="@+id/event_description_icon"
                     app:srcCompat="@drawable/ic_like_normal" />
 
+                <ImageView
+                    android:id="@+id/event_like_clicked_icon"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:tint="@color/blue_272343"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/event_description_icon"
+                    app:srcCompat="@drawable/ic_like_clicked" />
+
+
                 <TextView
                     android:id="@+id/event_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="7dp"
-                    android:text="64"
+                    android:text="0"
+                    android:visibility="visible"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/event_like_icon"
-                    app:layout_constraintStart_toEndOf="@+id/event_like_icon"
-                    app:layout_constraintTop_toTopOf="@+id/event_like_icon" />
+                    app:layout_constraintBottom_toBottomOf="@+id/event_like_clicked_icon"
+                    app:layout_constraintStart_toEndOf="@+id/event_like_clicked_icon"
+                    app:layout_constraintTop_toTopOf="@+id/event_like_clicked_icon" />
 
                 <ImageView
                     android:id="@+id/event_comment_icon"

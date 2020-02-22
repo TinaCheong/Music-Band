@@ -223,11 +223,9 @@ class AddMusicFragment : Fragment() {
                                                     title = binding.musicTitleEdit.text.toString(),
                                                     description = binding.musicDescriptionEdit.text.toString(),
                                                     avatar = "",
-                                                    eventId = "",
                                                     createdTime = Calendar.getInstance().timeInMillis,
                                                     date = "20200308",
                                                     image = coverUri,
-                                                    like = 0,
                                                     song = songList)
                                             )
 

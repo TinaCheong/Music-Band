@@ -1,9 +1,14 @@
 package com.tina.musicband.main
 
+import android.view.animation.Transformation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.tina.musicband.data.Comments
+import com.tina.musicband.data.Like
 import com.tina.musicband.data.Posts
 import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.network.LoadApiStatus
@@ -22,6 +27,30 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
 
     val posts: LiveData<List<Posts>>
         get() = _posts
+
+    private val _like = MutableLiveData<Like>()
+
+    val like: LiveData<Like>
+        get() = _like
+
+    val postItems = Transformations.map(_posts) {posts ->
+
+        val items = mutableListOf<PostSealedItem>()
+
+        posts.forEach {
+            when(it.type) {
+                POST_TYPES.MUSIC.value -> {
+                    items.add(PostSealedItem.MusicItem(it))
+                }
+
+                POST_TYPES.EVENT.value -> {
+                    items.add(PostSealedItem.EventItem(it))
+                }
+            }
+        }
+
+        items
+    }
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadApiStatus>()
@@ -51,6 +80,14 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     val setFab: LiveData<Boolean>
         get() = _setFab
 
+    val _likeStatus = MutableLiveData<Boolean>()
+        .apply {
+            value = true
+        }
+
+    val likeStatus: LiveData<Boolean>
+        get() = _likeStatus
+
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -63,6 +100,10 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    init {
+        prepareSnapshotListener()
     }
 
     fun leaveComment(){
@@ -79,6 +120,28 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
 
     fun showFab(){
         _setFab.value = true
+    }
+
+//    fun checkLike(){
+//        _likeStatus.value = null
+//    }
+//
+//    fun doneLike(){
+//        _likeStatus.value = true
+//    }
+
+    fun prepareSnapshotListener() {
+
+        FirebaseFirestore.getInstance().collection("posts")
+            .orderBy("createdTime", Query.Direction.DESCENDING)
+            .addSnapshotListener{
+                querySnapshot, firebaseFirestoreException ->
+
+            if(querySnapshot != null) {
+                _posts.value = querySnapshot.toObjects(Posts::class.java)
+            }
+
+        }
     }
 
 }
