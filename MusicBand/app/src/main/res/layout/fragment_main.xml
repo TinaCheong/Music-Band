@@ -5,6 +5,12 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.main.MainViewModel" />
+        <import type="com.tina.musicband.network.LoadApiStatus"/>
+        <import type="android.view.View"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,12 +40,23 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
+                <ProgressBar
+                    android:id="@+id/main_page_progress_bar"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/no_post_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/no_post_image"
+                    android:visibility="@{viewModel.status == LoadApiStatus.LOADING? View.VISIBLE : View.GONE}"/>
+
                 <ImageView
                     android:id="@+id/no_post_image"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginTop="63dp"
                     android:tint="@color/white_50"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/question_mark_image"
@@ -52,6 +69,7 @@
                     android:layout_marginTop="110dp"
                     android:layout_marginEnd="100dp"
                     android:tint="@color/white_50"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/recycler_view_main_page"
                     app:srcCompat="@drawable/ic_question_mark" />
@@ -62,6 +80,7 @@
                     android:layout_height="95dp"
                     android:gravity="center"
                     android:text="Can't see anything?\n Go meet some friends or post something :)"
+                    android:visibility="invisible"
                     android:textColor="@color/gray_DDDDDD_50"
                     android:textSize="20sp"
                     android:textStyle="bold"

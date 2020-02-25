@@ -1,22 +1,20 @@
 package com.tina.musicband.main
 
-import android.view.animation.Transformation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.tina.musicband.data.Comments
-import com.tina.musicband.data.Like
-import com.tina.musicband.data.Posts
+import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandRepository
+import com.tina.musicband.login.UserManager
 import com.tina.musicband.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
+class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     private val _comments = MutableLiveData<List<Comments>>()
 
@@ -33,12 +31,12 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     val like: LiveData<Like>
         get() = _like
 
-    val postItems = Transformations.map(_posts) {posts ->
+    val postItems = Transformations.map(_posts) { posts ->
 
         val items = mutableListOf<PostSealedItem>()
 
         posts.forEach {
-            when(it.type) {
+            when (it.type) {
                 POST_TYPES.MUSIC.value -> {
                     items.add(PostSealedItem.MusicItem(it))
                 }
@@ -80,6 +78,19 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
     val setFab: LiveData<Boolean>
         get() = _setFab
 
+    private val _profileAvatar = MutableLiveData<Int>()
+
+    val profileAvatar: LiveData<Int>
+        get() = _profileAvatar
+
+    private val _isProfileAvatarPrepared = MutableLiveData<Boolean>()
+    val isProfileAvatarPrepared: LiveData<Boolean>
+        get() = _isProfileAvatarPrepared
+
+    fun doneReadingProfileAvatar() {
+        _isProfileAvatarPrepared.value = null
+    }
+
     val _likeStatus = MutableLiveData<Boolean>()
         .apply {
             value = true
@@ -106,19 +117,19 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
         prepareSnapshotListener()
     }
 
-    fun leaveComment(){
+    fun leaveComment() {
         _commented.value = true
     }
 
-    fun doneCommented(){
+    fun doneCommented() {
         _commented.value = null
     }
 
-    fun hideFab(){
+    fun hideFab() {
         _setFab.value = null
     }
 
-    fun showFab(){
+    fun showFab() {
         _setFab.value = true
     }
 
@@ -130,18 +141,116 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel(){
 //        _likeStatus.value = true
 //    }
 
+    val userAvatarMap = mutableMapOf<String, Int>()
+    val list = mutableListOf<Posts>()
+
     fun prepareSnapshotListener() {
 
-        FirebaseFirestore.getInstance().collection("posts")
-            .orderBy("createdTime", Query.Direction.DESCENDING)
-            .addSnapshotListener{
-                querySnapshot, firebaseFirestoreException ->
+        _status.value = LoadApiStatus.LOADING
 
-            if(querySnapshot != null) {
-                _posts.value = querySnapshot.toObjects(Posts::class.java)
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(UserManager.userToken.toString())
+            .get().addOnSuccessListener {
+                it.toObject(User::class.java)?.let { user ->
+                    userAvatarMap[user.userId] = user.avatar
+                }
+
+                FirebaseFirestore.getInstance()
+                    .collection("posts")
+                    .orderBy("createdTime", Query.Direction.DESCENDING)
+                    .whereEqualTo("userId", UserManager.userToken.toString())
+                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+
+                        if (querySnapshot != null) {
+
+                            _posts.value = querySnapshot.toObjects(Posts::class.java)
+
+                            FirebaseFirestore.getInstance().collection("users")
+                                .document(UserManager.userToken.toString())
+                                .collection("following")
+                                .get()
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+
+                                        val following =
+                                            it.result!!.toObjects(Following::class.java)
+
+                                        for (j in 0 until following.size) {
+                                            val follower = following[j]
+
+                                            FirebaseFirestore.getInstance().collection("posts")
+                                                .orderBy("createdTime", Query.Direction.DESCENDING)
+                                                .whereEqualTo("userId", follower.userId)
+                                                .get()
+                                                .addOnCompleteListener {
+                                                    if (it.isSuccessful) {
+
+                                                        val post =
+                                                            it.result!!.toObjects(Posts::class.java)
+
+                                                        /** GET AVATAR FROM FOLLOWER */
+                                                        FirebaseFirestore.getInstance().collection("users")
+                                                            .document(follower.userId)
+                                                            .get()
+                                                            .addOnSuccessListener {
+                                                                it.toObject(User::class.java)?.let { user ->
+                                                                    userAvatarMap[user.userId] =
+                                                                        user.avatar
+                                                                }
+
+                                                                list.addAll(post)
+
+                                                                if(j == following.count() - 1){
+                                                                    _posts.value?.let { previousList ->
+                                                                        list.addAll(previousList)
+                                                                    }
+
+                                                                    _posts.value = list
+                                                                }
+                                                            }
+
+                                                    }
+
+                                                    _status.value =
+                                                        LoadApiStatus.DONE
+                                                }
+
+                                        }
+
+
+                                    }
+
+                                }
+
+                        }
+
+                    }
+
             }
 
-        }
+
     }
 
+    fun getProfileAvatar() {
+
+        FirebaseFirestore.getInstance().collection("users")
+            .document(UserManager.userToken.toString())
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    val user = it.result!!.toObject(User::class.java)
+
+                    user?.let { user ->
+
+                        userAvatarMap[user.userId] = user.avatar
+                        _profileAvatar.value = userAvatarMap[user.userId]
+                        _isProfileAvatarPrepared.value = true
+                    }
+
+
+                }
+            }
+    }
 }

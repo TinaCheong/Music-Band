@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,17 +43,28 @@ class LoginFragment : Fragment() {
         val fadeInAnimation = AnimationUtils.loadAnimation(activity, R.anim.fade_in_login)
 
         binding.loginLogo.startAnimation(fadeInAnimation)
-        binding.facebookLoginButton.startAnimation(fadeInAnimation)
-        binding.googleLoginButton.startAnimation(fadeInAnimation)
 
-        binding.facebookLoginButton.setOnClickListener {
-            if (auth.currentUser == null) {
+        if (auth.currentUser == null) {
+            binding.googleLoginButton.visibility = View.VISIBLE
+            binding.facebookLoginButton.visibility = View.VISIBLE
+            binding.facebookLoginButton.startAnimation(fadeInAnimation)
+            binding.googleLoginButton.startAnimation(fadeInAnimation)
+            binding.enterButton.visibility = View.INVISIBLE
+
+            binding.facebookLoginButton.setOnClickListener {
                 viewModel.fbLogin(MusicBandApplication.instance.user)
+            }
+        } else {
+            binding.googleLoginButton.visibility = View.INVISIBLE
+            binding.facebookLoginButton.visibility = View.INVISIBLE
+            binding.enterButton.visibility = View.VISIBLE
+            binding.enterButton.startAnimation(fadeInAnimation)
 
-            } else {
+            binding.enterButton.setOnClickListener {
                 findNavController().navigate(R.id.action_global_mainFragment)
             }
         }
+
 
         viewModel.didFinishLogin.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -68,6 +80,9 @@ class LoginFragment : Fragment() {
             }
         })
 
+        binding.googleLoginButton.setOnClickListener {
+            Toast.makeText(activity, "Coming Soon", Toast.LENGTH_SHORT).show()
+        }
 
         return binding.root
     }

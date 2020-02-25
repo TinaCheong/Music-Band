@@ -17,6 +17,7 @@ import com.tina.musicband.R
 import com.tina.musicband.data.Posts
 import com.tina.musicband.databinding.FragmentMainBinding
 import com.tina.musicband.ext.getVmFactory
+import com.tina.musicband.network.LoadApiStatus
 
 enum class POST_TYPES(val value: String) {
     MUSIC("music"),
@@ -47,6 +48,8 @@ class MainFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
+        binding.viewModel = viewModel
+
         // Implement the FAB Animation
         binding.mainFab.setOnClickListener {
             fabAnimation()
@@ -68,34 +71,11 @@ class MainFragment : Fragment() {
 
         viewModel.postItems.observe(this, Observer {
             it?.let {
-                hideHint()
                 mainAdapter.submitList(it)
+                hideHint()
             }
         })
 
-//        FirebaseFirestore.getInstance().collection("posts")
-//            .orderBy("createdTime", Query.Direction.DESCENDING)
-//            .get()
-//            .addOnCompleteListener {
-//                if(it.isSuccessful){
-//
-//                    val list = mutableListOf<PostSealedItem>()
-//
-//                    for (document in it.result!!){
-//
-//                        val posts = document.toObject(Posts::class.java)
-//                        postsList.add(posts)
-//
-//                        when(posts.type) {
-//                            POST_TYPES.EVENT.value -> list.add(PostSealedItem.EventItem(posts))
-//                            POST_TYPES.MUSIC.value -> list.add(PostSealedItem.MusicItem(posts))
-//                        }
-//
-//                    }
-//                    hideHint()
-//                    mainAdapter.submitList(list)
-//                }
-//            }
 
         viewModel.commented.observe(this, Observer {
             it?.let {
@@ -151,7 +131,7 @@ class MainFragment : Fragment() {
     }
 
     private fun hideHint(){
-        if(viewModel.posts.value?.size == 0){
+        if(viewModel.status.value == LoadApiStatus.DONE && viewModel.postItems.value?.size == 0){
             binding.noPostImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE
             binding.noPostText.visibility = View.VISIBLE

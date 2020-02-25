@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.R
 import com.tina.musicband.avatar.AvatarSelectViewModel
+import com.tina.musicband.data.User
 import com.tina.musicband.databinding.DialogAvatarSelectProfileBinding
+import com.tina.musicband.login.UserManager
 
 class AvatarDialog : DialogFragment(){
 
@@ -37,10 +40,16 @@ class AvatarDialog : DialogFragment(){
             dismiss()
         }
 
+        viewModel.setUser(User())
+
         binding.saveButton.setOnClickListener {
+            viewModel.save()
             dismiss()
         }
 
         return binding.root
     }
+
+
+
 }

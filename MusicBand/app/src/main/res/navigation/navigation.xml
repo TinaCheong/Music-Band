@@ -90,7 +90,11 @@
     <fragment
         android:id="@+id/profileOthersFragment"
         android:name="com.tina.musicband.others.ProfileOthersFragment"
-        android:label="ProfileOthersFragment" />
+        android:label="ProfileOthersFragment" >
+        <argument
+            android:name="song"
+            app:argType="com.tina.musicband.data.Songs" />
+    </fragment>
     <action
         android:id="@+id/action_global_profileOthersFragment"
         app:destination="@id/profileOthersFragment" />

@@ -6,19 +6,16 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class User (
     var username: String? = "",
-    var userId: String? = "",
+    var userId: String = "",
     var fbToken: String = "",
     var googleToken: String = "",
-    var background: String = "",
-    var avatar: String = "",
-    var speciality: String = "",
-    var education: String = "",
-    var position: String = "",
-    var favouriteMusic: String = "",
-    var introduction: String = "",
-    var experience: String = "",
-    var songs: Songs = Songs("", "","", "", ""),
-    var posts: Posts = Posts("","","","","",123,"","","", "","",
-        song = Songs("","","","",""))
+    var background: Int = 0,
+    var avatar: Int = 0,
+    var speciality: String = "None",
+    var education: String = "None",
+    var position: String = "None",
+    var favouriteMusic: String = "None",
+    var introduction: String = "None",
+    var experience: String = "None"
 
 ): Parcelable

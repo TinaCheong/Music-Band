@@ -79,7 +79,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/select_view_circle"
-                    android:src="@drawable/ic_woman_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -207,10 +206,10 @@
                     android:id="@+id/event_comment_icon"
                     android:layout_width="23dp"
                     android:layout_height="23dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="8dp"
                     android:tint="@color/blue_272343"
-                    app:layout_constraintStart_toEndOf="@+id/event_like"
+                    app:layout_constraintEnd_toStartOf="@+id/event_comment"
                     app:layout_constraintTop_toTopOf="@+id/event_like_icon"
                     app:srcCompat="@drawable/ic_comments" />
 
@@ -218,11 +217,11 @@
                     android:id="@+id/event_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="24dp"
                     android:text="@string/comment"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/event_like"
-                    app:layout_constraintStart_toEndOf="@+id/event_comment_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/event_like" />
 
                 <androidx.recyclerview.widget.RecyclerView

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import com.tina.musicband.R
+import com.tina.musicband.data.User
 import com.tina.musicband.databinding.DialogAvatarSelectProfileBinding
 import com.tina.musicband.databinding.DialogBgSelectProfileBinding
 
@@ -32,11 +33,14 @@ class BackgroundDialog : DialogFragment() {
 
         binding.viewModel = viewModel
 
+        viewModel.setUser(User())
+
         binding.closeButton.setOnClickListener {
             dismiss()
         }
 
         binding.saveButton.setOnClickListener {
+            viewModel.save()
             dismiss()
         }
 

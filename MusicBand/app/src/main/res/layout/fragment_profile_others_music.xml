@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blue_272343"
-        tools:context=".profile.ProfileMusicFragment">
+        tools:context=".others.ProfileOthersMusicFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view__music_profile"
+            android:id="@+id/recycler_view__music_others"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +40,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="115dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="120dp"
+            android:visibility="invisible"
             android:tint="@color/white_50"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +53,7 @@
             android:layout_height="63dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Why not share your favourite songs?:)"
+            android:text="~Coming Soon~"
             android:textColor="@color/gray_DDDDDD_50"
             android:textSize="20sp"
             android:textStyle="bold"

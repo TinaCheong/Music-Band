@@ -12,8 +12,8 @@ class ProfileOthersViewPager (fragmentManager: FragmentManager) : FragmentPagerA
 
     override fun getItem(position: Int): Fragment {
         when(position){
-            0 -> return ProfileMusicFragment()
-            else -> return ProfileEventFragment()
+            0 -> return ProfileOthersMusicFragment()
+            else -> return ProfileOthersEventFragment()
 
         }
     }

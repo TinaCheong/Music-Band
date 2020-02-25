@@ -4,21 +4,21 @@
     <item
         android:id="@+id/navigation_main"
         android:icon="@drawable/ic_post_selector"
-        android:title=""/>
+        android:title="News Feed"/>
 
     <item
         android:id="@+id/navigation_music_search"
         android:icon="@drawable/ic_music_search_selector"
-        android:title=""/>
+        android:title="Search"/>
 
     <item
         android:id="@+id/navigation_quick_match"
         android:icon="@drawable/ic_speed_match_selector"
-        android:title=""/>
+        android:title="Resonance"/>
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_user_profile_selector"
-        android:title=""/>
+        android:title="Profile"/>
 
 </menu>
