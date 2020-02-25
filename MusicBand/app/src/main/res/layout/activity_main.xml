@@ -117,16 +117,17 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="65dp"
             android:background="@color/blue_272343"
             android:elevation="4dp"
             android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.LOGIN || viewModel.currentFragmentType == CurrentFragmentType.SELECT_AVATAR || viewModel.currentFragmentType == CurrentFragmentType.ADD_EVENT || viewModel.currentFragmentType == CurrentFragmentType.ADD_MUSIC? View.GONE: View.VISIBLE}"
             app:itemIconTint="@drawable/bottom_nav_item_selector"
-            app:labelVisibilityMode="unlabeled"
+            app:labelVisibilityMode="labeled"
+            app:itemTextColor="@color/white_50"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:itemIconSize="28dp"
+            app:itemIconSize="24dp"
             app:menu="@menu/bottom_navigation_menu">
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 

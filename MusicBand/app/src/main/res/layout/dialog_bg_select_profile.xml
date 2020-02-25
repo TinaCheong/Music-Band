@@ -47,11 +47,12 @@
 
                 <View
                     android:id="@+id/view_square_1"
-                    android:layout_width="310dp"
+                    android:layout_width="320dp"
                     android:layout_height="90dp"
                     android:alpha="0"
                     android:background="@drawable/select_view_round_corner_blue"
                     android:clickable="true"
+                    android:tag="0"
                     android:onClick="@{viewModel::selectBackground}"
                     app:layout_constraintBottom_toBottomOf="@+id/bg_square"
                     app:layout_constraintEnd_toEndOf="@+id/bg_square"
@@ -73,9 +74,10 @@
 
                 <View
                     android:id="@+id/view_square_2"
-                    android:layout_width="310dp"
+                    android:layout_width="320dp"
                     android:layout_height="90dp"
                     android:alpha="0"
+                    android:tag="1"
                     android:background="@drawable/select_view_round_corner_blue"
                     android:clickable="true"
                     android:onClick="@{viewModel::selectBackground}"
@@ -99,9 +101,10 @@
 
                 <View
                     android:id="@+id/view_square_3"
-                    android:layout_width="310dp"
+                    android:layout_width="320dp"
                     android:layout_height="90dp"
                     android:alpha="0"
+                    android:tag="2"
                     android:background="@drawable/select_view_round_corner_blue"
                     android:clickable="true"
                     android:onClick="@{viewModel::selectBackground}"
@@ -125,9 +128,10 @@
 
                 <View
                     android:id="@+id/view_square_4"
-                    android:layout_width="310dp"
+                    android:layout_width="320dp"
                     android:layout_height="90dp"
                     android:alpha="0"
+                    android:tag="3"
                     android:background="@drawable/select_view_round_corner_blue"
                     android:clickable="true"
                     android:onClick="@{viewModel::selectBackground}"

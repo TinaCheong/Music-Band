@@ -30,6 +30,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/no_post_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="63dp"
+                android:tint="@color/white_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/question_mark_image"
+                app:srcCompat="@drawable/ic_no_post" />
+
+            <ImageView
+                android:id="@+id/question_mark_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="110dp"
+                android:layout_marginEnd="100dp"
+                android:tint="@color/white_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/recycler_view__event_profile"
+                app:srcCompat="@drawable/ic_question_mark" />
+
+            <TextView
+                android:id="@+id/no_post_text"
+                android:layout_width="279dp"
+                android:layout_height="95dp"
+                android:gravity="center"
+                android:text="Can't see anything?\n Go meet some friends or post something :)"
+                android:textColor="@color/gray_DDDDDD_50"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/no_post_image"
+                app:layout_constraintStart_toStartOf="@+id/no_post_image"
+                app:layout_constraintTop_toBottomOf="@+id/no_post_image" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

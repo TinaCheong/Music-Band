@@ -139,6 +139,8 @@ class AddEventFragment : Fragment() {
                         Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT)
                             .show()
 
+                        findNavController().navigate(R.id.action_global_mainFragment)
+
 
                     }
 

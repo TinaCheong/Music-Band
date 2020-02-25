@@ -21,10 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.tina.musicband.MainActivity
 import com.tina.musicband.MusicBandApplication
+import com.tina.musicband.NavigationDirections
 import com.tina.musicband.R
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentSearchMusicBinding
 import com.tina.musicband.ext.getVmFactory
+import com.tina.musicband.network.LoadApiStatus
 import java.lang.Exception
 
 /**
@@ -37,6 +39,7 @@ class SearchMusicFragment : Fragment() {
     lateinit var binding : FragmentSearchMusicBinding
 //    lateinit var handler: Handler
     private  val songsList = mutableListOf<Songs>()
+    private var status = LoadApiStatus.LOADING
 
 
     override fun onCreateView(
@@ -122,10 +125,15 @@ class SearchMusicFragment : Fragment() {
         val adapter = SearchMusicAdapter(viewModel)
         binding.recyclerViewSearchMusicPage.adapter = adapter
 
+        binding.searchPageProgressBar.visibility = View.VISIBLE
+
         FirebaseFirestore.getInstance().collection("songs")
             .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
+
+                    status == LoadApiStatus.DONE
+                    binding.searchPageProgressBar.visibility = View.GONE
 
                     for (document in it.result!!){
 
@@ -140,7 +148,7 @@ class SearchMusicFragment : Fragment() {
 
         viewModel.selectedSong.observe(this, Observer {
             it?.let {
-            findNavController().navigate(R.id.action_global_profileOthersFragment)
+            findNavController().navigate(NavigationDirections.actionGlobalProfileOthersFragment(it))
             viewModel.doneNavigate()
             }
         })
@@ -182,7 +190,7 @@ class SearchMusicFragment : Fragment() {
     }
 
     private fun showHint(){
-        if(songsList.size == 0){
+        if(status == LoadApiStatus.DONE && songsList.size == 0){
 
             binding.noMusicImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE

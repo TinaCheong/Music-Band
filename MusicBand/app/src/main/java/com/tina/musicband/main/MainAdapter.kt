@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
+import android.os.UserManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +24,10 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
-import com.tina.musicband.data.Comments
-import com.tina.musicband.data.Like
-import com.tina.musicband.data.Posts
-import com.tina.musicband.data.Songs
+import com.tina.musicband.avatar.getAvatar
+import com.tina.musicband.avatar.getAvatarDrawable
+import com.tina.musicband.avatar.getDrawable
+import com.tina.musicband.data.*
 import com.tina.musicband.databinding.ItemEventsMainBinding
 import com.tina.musicband.databinding.ItemMusicMainBinding
 import com.tina.musicband.ext.toDisplayFormat
@@ -36,6 +37,7 @@ import java.util.*
 
 private val ITEM_VIEW_TYPE_MUSIC = 0
 private val ITEM_VIEW_TYPE_EVENT = 1
+
 
 
 class MainAdapter(private val mainViewModel: MainViewModel) :
@@ -50,11 +52,12 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             binding.posts = posts
             binding.mainViewModel = mainViewModel
 
-            binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
+            binding.usernameText.setText(posts.userName)
             binding.eventTitle.setText(posts.title)
             binding.createdTimeText.setText(posts.createdTime.toDisplayFormat())
             binding.eventDescription.setText(posts.description)
             binding.eventDate.setText(posts.date.toString())
+
 
             Glide
                 .with(MusicBandApplication.instance.applicationContext)
@@ -119,6 +122,17 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                     }
             }
 
+            if(mainViewModel.userAvatarMap.size != 0) {
+                binding.userAvatar.setImageDrawable(
+                    mainViewModel.userAvatarMap[posts.userId]?.getAvatarDrawable()
+                )
+            }else {
+
+                binding.userAvatar.setImageDrawable(
+                    mainViewModel.profileAvatar.value?.getAvatarDrawable())
+
+            }
+
         }
 
 
@@ -158,6 +172,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
         }
 
 
+
     }
 
     class MusicViewHolder(private var binding: ItemMusicMainBinding, val context: Context) :
@@ -188,7 +203,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
             binding.musicEndTime.setText(post.song.songDuration)
 
-            binding.usernameText.setText(com.tina.musicband.login.UserManager.userName)
+            binding.usernameText.setText(post.userName)
             binding.musicTitle.setText(post.title)
             binding.musicComposer.setText(post.composer)
             binding.createdTimeText.setText(post.createdTime.toDisplayFormat())
@@ -324,8 +339,15 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                     }
             }
 
+
+            binding.userAvatar.setImageDrawable(
+
+                mainViewModel.userAvatarMap[post.userId]?.getAvatarDrawable()
+
+            )
+
             binding.executePendingBindings()
-        }
+    }
 
 
         private fun createTIme(time: Int): String {

@@ -41,7 +41,6 @@
                     android:id="@+id/profile_edit_avatar"
                     android:layout_width="129dp"
                     android:layout_height="129dp"
-                    android:src="@drawable/ic_woman_1"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar_edit"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -128,7 +127,6 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:padding="8dp"
-                    android:text="@string/no_music_no_life"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
@@ -147,7 +145,6 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:padding="8dp"
-                    android:text="@string/flute_clarinet"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
@@ -165,7 +162,6 @@
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="@string/san_francisco_university"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
@@ -183,7 +179,6 @@
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="@string/second_flute"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
@@ -201,7 +196,6 @@
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="@string/classic_opera"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
@@ -210,112 +204,39 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/profile_favourite_music" />
 
-                <RadioGroup
-                    android:id="@+id/radio_group_experience"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_experience">
-
-                    <RadioButton
-                        android:id="@+id/button_orchestra_part1"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/orchestra"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_pit_orchestra"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/pit_orchestra"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_concert_band"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/concert_band"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_military_band"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/military_band"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-                </RadioGroup>
-
-                <RadioGroup
-                    android:id="@+id/button_orchestra_part2"
+                <EditText
+                    android:id="@+id/experience_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
                     android:layout_marginEnd="16dp"
+                    android:backgroundTint="@color/white"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/radio_group_experience"
-                    app:layout_constraintTop_toTopOf="@+id/radio_group_experience">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_experience"/>
 
-                    <RadioButton
-                        android:id="@+id/button_string_ensemble"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/string_ensemble"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_wind_ensemble"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/wing_ensemble"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_concerto"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/concerto"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <RadioButton
-                        android:id="@+id/button_none"
-                        android:layout_width="180dp"
-                        android:layout_height="42dp"
-                        android:buttonTint="@color/white"
-                        android:text="@string/none"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                </RadioGroup>
 
                 <Button
                     android:id="@+id/save_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="32dp"
-                    android:background="@color/white"
+                    android:background="@drawable/select_view_round_corner"
                     android:text="@string/save"
                     android:textColor="@color/blue_272343"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button_orchestra_part2"
+                    app:layout_constraintStart_toEndOf="@+id/back_button"
+                    app:layout_constraintTop_toBottomOf="@+id/experience_edit"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
@@ -340,6 +261,7 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="Tina Cheong"
+                    android:enabled="false"
                     android:padding="8dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
@@ -373,11 +295,13 @@
 
                 <Button
                     android:id="@+id/back_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:background="@color/white"
+                    android:background="@drawable/select_view_round_corner"
                     android:text="@string/back"
+                    app:layout_constraintBottom_toBottomOf="@+id/save_button"
+                    app:layout_constraintEnd_toStartOf="@+id/save_button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/save_button" />
 

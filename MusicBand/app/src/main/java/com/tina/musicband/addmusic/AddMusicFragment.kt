@@ -207,7 +207,8 @@ class AddMusicFragment : Fragment() {
                                                 songDuration = durationText,
                                                 songLink = music.toString(),
                                                 songId = songId,
-                                                cover = coverUri
+                                                cover = coverUri,
+                                                userId = UserManager.userToken
                                             )
 
                                             songsReference.set(songList)
@@ -235,6 +236,8 @@ class AddMusicFragment : Fragment() {
                                                 Toast.LENGTH_SHORT
                                             )
                                                 .show()
+
+                                            findNavController().navigate(R.id.action_global_mainFragment)
 
                                         }.addOnFailureListener {
                                             Log.d("FirebaseStorage", "Failed to get song uri")

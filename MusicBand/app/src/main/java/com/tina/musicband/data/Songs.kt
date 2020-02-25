@@ -1,6 +1,5 @@
 package com.tina.musicband.data
 
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -10,5 +9,6 @@ data class Songs(
     var songDuration: String = "",
     var songLink: String = "",
     var songId : String = "",
-    var cover : String? = ""
+    var cover : String? = "",
+    var userId : String? = ""
 ) : Parcelable

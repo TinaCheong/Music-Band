@@ -96,7 +96,9 @@ class LoginViewModel (private val repository: MusicBandRepository) : ViewModel()
                         auth.currentUser?.let {
                             UserManager.userToken = it.uid
                             UserManager.userName = it.displayName
-                            FirebaseFirestore.getInstance().collection("Users")
+                            user.username = it.displayName
+                            user.userId = it.uid
+                            FirebaseFirestore.getInstance().collection("users")
                                 .document(it.uid)
                                 .set(user)
                                 .addOnSuccessListener {
