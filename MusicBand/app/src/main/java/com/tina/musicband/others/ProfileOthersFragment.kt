@@ -11,17 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tina.musicband.MainActivity
 import com.tina.musicband.R
 import com.tina.musicband.avatar.getAvatarDrawable
+import com.tina.musicband.data.Follower
 import com.tina.musicband.data.Songs
 import com.tina.musicband.data.User
-import com.tina.musicband.databinding.FragmentProfileBinding
 import com.tina.musicband.databinding.FragmentProfileOthersBinding
 import com.tina.musicband.dialog.getBackgroundDrawable
 import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.login.UserManager
-import com.tina.musicband.profile.ViewPagerAdapter
 
 /**
  * A simple [Fragment] subclass.
@@ -60,6 +58,8 @@ class ProfileOthersFragment : Fragment() {
             getFollowerCount(this)
 
             getFollowingCount(this)
+
+            checkFollower(this)
 
         }
 
@@ -203,5 +203,37 @@ class ProfileOthersFragment : Fragment() {
 
     }
 
+    private fun checkFollower(song: Songs){
 
-}
+        FirebaseFirestore.getInstance().collection("users")
+            .document(song.userId!!)
+            .collection("follower")
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+
+                    val followers = it.result!!.toObjects(Follower::class.java)
+
+                    for(follower in followers){
+
+                        if(follower.userId == UserManager.userToken.toString()){
+
+                            binding.followClickedButton.visibility = View.VISIBLE
+                            break
+                        }
+
+                    }
+
+
+                    }
+
+                }
+
+
+            }
+
+
+    }
+
+
+

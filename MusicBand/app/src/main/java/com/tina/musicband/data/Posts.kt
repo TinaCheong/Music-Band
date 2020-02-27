@@ -12,10 +12,10 @@ data class Posts(
     var avatar: String = "",
     var postId: String = "",
     var createdTime: Long = 1,
-    var title: String = "",
+    var title: String = "None",
     var date: String? = "",
-    var description: String = "",
+    var description: String = "None",
     var image: String = "",
-    var composer: String = "",
-    var song: Songs = Songs("", "", "", "", "")
+    var composer: String = "None",
+    var song: Songs = Songs("No Title", "", "", "", "")
 ) : Parcelable

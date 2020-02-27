@@ -7,7 +7,6 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
-import android.os.UserManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,13 +23,12 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
-import com.tina.musicband.avatar.getAvatar
 import com.tina.musicband.avatar.getAvatarDrawable
-import com.tina.musicband.avatar.getDrawable
 import com.tina.musicband.data.*
 import com.tina.musicband.databinding.ItemEventsMainBinding
 import com.tina.musicband.databinding.ItemMusicMainBinding
 import com.tina.musicband.ext.toDisplayFormat
+import com.tina.musicband.login.UserManager
 import java.io.IOException
 import java.lang.Exception
 import java.util.*
@@ -39,13 +37,13 @@ private val ITEM_VIEW_TYPE_MUSIC = 0
 private val ITEM_VIEW_TYPE_EVENT = 1
 
 
-
 class MainAdapter(private val mainViewModel: MainViewModel) :
     ListAdapter<PostSealedItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     class EventViewHolder(private var binding: ItemEventsMainBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
+        val adapter = CommentAdapter()
 
         fun bind(posts: Posts, mainViewModel: MainViewModel) {
 
@@ -63,9 +61,12 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                 .with(MusicBandApplication.instance.applicationContext)
                 .load(posts.image)
                 .centerCrop()
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.image_placeholder)
                 .into(binding.mainImage)
 
             getEventComment(posts)
+            checkEventLike(posts)
 
             binding.eventComment.setOnClickListener {
                 binding.commentBlock.visibility = View.VISIBLE
@@ -84,20 +85,11 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             binding.eventLikeIcon.setOnClickListener {
                 FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
                     .collection("like").document(posts.userId!!)
-                    .set(mapOf("userID" to posts.userId!!))
+                    .set(mapOf("userId" to UserManager.userToken.toString()))
                     .addOnSuccessListener {
 
                         binding.eventLikeIcon.visibility = View.INVISIBLE
                         binding.eventLikeClickedIcon.visibility = View.VISIBLE
-
-                        FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
-                            .collection("like")
-                            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                                querySnapshot?.size()?.let { it1 ->
-                                    binding.eventLike.setText(it1.toString())
-                                }
-
-                            }
 
 
                     }
@@ -105,31 +97,32 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
             binding.eventLikeClickedIcon.setOnClickListener {
                 FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
-                    .collection("like").document(posts.userId!!).delete().addOnSuccessListener {
+                    .collection("like").document(UserManager.userToken.toString()).delete()
+                    .addOnSuccessListener {
 
                         binding.eventLikeIcon.visibility = View.VISIBLE
                         binding.eventLikeClickedIcon.visibility = View.INVISIBLE
 
-
-                        FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
-                            .collection("like")
-                            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                                querySnapshot?.size()?.let { it1 ->
-                                    binding.eventLike.setText(it1.toString())
-                                }
-                            }
-
                     }
             }
 
-            if(mainViewModel.userAvatarMap.size != 0) {
+            FirebaseFirestore.getInstance().collection("posts").document(posts.postId)
+                .collection("like")
+                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    querySnapshot?.size()?.let { it1 ->
+                        binding.eventLike.setText(it1.toString())
+                    }
+                }
+
+            if (mainViewModel.userAvatarMap.size != 0) {
                 binding.userAvatar.setImageDrawable(
                     mainViewModel.userAvatarMap[posts.userId]?.getAvatarDrawable()
                 )
-            }else {
+            } else {
 
                 binding.userAvatar.setImageDrawable(
-                    mainViewModel.profileAvatar.value?.getAvatarDrawable())
+                    mainViewModel.profileAvatar.value?.getAvatarDrawable()
+                )
 
             }
 
@@ -141,12 +134,24 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             val posts = FirebaseFirestore.getInstance().collection("posts")
             val commentReference = posts.document(post.postId).collection("comments").document()
             val comment = Comments(
-                username = post.userName!!,
+                username = com.tina.musicband.login.UserManager.userName.toString(),
                 comment = binding.commentField.text.toString(),
                 time = Calendar.getInstance().timeInMillis
             )
-            commentReference.set(comment)
 
+            commentReference.set(comment).addOnCompleteListener {
+
+                if (it.isSuccessful) {
+
+                    Log.i(
+                        "Tinaaa",
+                        "comment username = ${com.tina.musicband.login.UserManager.userName.toString()}"
+                    )
+
+                }
+
+
+            }
         }
 
         private fun getEventComment(post: Posts) {
@@ -164,13 +169,38 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                         val commentList = document.toObject(Comments::class.java)
                         list.add(commentList)
                     }
-                    val adapter = CommentAdapter()
                     binding.recyclerViewMainEventComment.adapter = adapter
                     adapter.submitList(list)
                 }
 
         }
 
+        private fun checkEventLike(post: Posts) {
+            FirebaseFirestore.getInstance().collection("posts")
+                .document(post.postId)
+                .collection("like")
+                .get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        val like = it.result!!.toObjects(Like::class.java)
+
+                        for (document in like) {
+
+                            if (document.userId == com.tina.musicband.login.UserManager.userToken.toString()) {
+
+                                binding.eventLikeClickedIcon.visibility = View.VISIBLE
+                                break
+                            }
+
+                        }
+
+
+                    }
+                }
+
+
+        }
 
 
     }
@@ -180,6 +210,8 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
         private var mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
+        val adapter = CommentAdapter()
+        var loadSong = ""
 
         fun bind(post: Posts, mainViewModel: MainViewModel) {
 
@@ -219,9 +251,21 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
             binding.musicPlayButton.setOnClickListener {
 
-                mediaPlayer.start()
-                val runnable = Thread(MusicRunnable())
-                runnable.start()
+                if (post.song.songId == loadSong) {
+
+                    mediaPlayer.start()
+
+                } else {
+                    loadSong = post.song.songId
+
+                    prepareMediaPlayer(post.song)
+                    mediaPlayer.setOnPreparedListener {
+                        it.start()
+                    }
+                    val runnable = Thread(MusicRunnable())
+                    runnable.start()
+                }
+
                 binding.musicPlayButton.visibility = View.INVISIBLE
                 binding.musicPauseButton.visibility = View.VISIBLE
             }
@@ -235,7 +279,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
             mediaPlayer.seekTo(0)
 
-            prepareMediaPlayer(post.song)
+
 
             binding.musicSeekBar.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
@@ -286,6 +330,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             }
 
             getMusicComment(post)
+            checkMusicLike(post)
 
             binding.musicComment.setOnClickListener {
                 binding.commentBlock.visibility = View.VISIBLE
@@ -304,40 +349,40 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             binding.musicLikeIcon.setOnClickListener {
                 FirebaseFirestore.getInstance().collection("posts").document(post.postId)
                     .collection("like").document(post.userId!!)
-                    .set(mapOf("userID" to post.userId!!))
+                    .set(mapOf("userId" to UserManager.userToken.toString()))
                     .addOnSuccessListener {
 
                         binding.musicLikeIcon.visibility = View.INVISIBLE
                         binding.musicLikeClickedIcon.visibility = View.VISIBLE
 
                     }
-                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
-                    .collection("like")
-                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                        querySnapshot?.size()
-                            ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
-                    }
-
-
             }
+
 
             binding.musicLikeClickedIcon.setOnClickListener {
                 FirebaseFirestore.getInstance().collection("posts").document(post.postId)
-                    .collection("like").document(post.userId!!).delete()
+                    .collection("like").document(UserManager.userToken.toString()).delete()
                     .addOnSuccessListener {
 
                         binding.musicLikeIcon.visibility = View.VISIBLE
                         binding.musicLikeClickedIcon.visibility = View.INVISIBLE
 
                     }
-
-                FirebaseFirestore.getInstance().collection("posts").document(post.postId)
-                    .collection("like")
-                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                        querySnapshot?.size()
-                            ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
-                    }
             }
+
+            FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+                .collection("like")
+                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    querySnapshot?.size()
+                        ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
+                }
+
+//            FirebaseFirestore.getInstance().collection("posts").document(post.postId)
+//                .collection("like")
+//                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+//                    querySnapshot?.size()
+//                        ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
+//                }
 
 
             binding.userAvatar.setImageDrawable(
@@ -347,7 +392,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             )
 
             binding.executePendingBindings()
-    }
+        }
 
 
         private fun createTIme(time: Int): String {
@@ -365,15 +410,8 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
         }
 
-        private var mySong = Songs()
 
         private fun prepareMediaPlayer(songs: Songs) {
-
-            if (songs.songId == mySong.songId) return
-
-            mySong = songs
-
-            mediaPlayer.stop()
 
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
             fetchAudioUrlFromFirebase(songs)
@@ -403,7 +441,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             val posts = FirebaseFirestore.getInstance().collection("posts")
             val commentReference = posts.document(post.postId).collection("comments").document()
             val comment = Comments(
-                username = post.userName!!,
+                username = com.tina.musicband.login.UserManager.userName.toString(),
                 comment = binding.commentField.text.toString(),
                 time = Calendar.getInstance().timeInMillis
             )
@@ -426,10 +464,36 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                         val commentList = document.toObject(Comments::class.java)
                         list.add(commentList)
                     }
-                    val adapter = CommentAdapter()
                     binding.recyclerViewMainMusicComment.adapter = adapter
                     adapter.submitList(list)
                 }
+
+        }
+
+        private fun checkMusicLike(post: Posts) {
+            FirebaseFirestore.getInstance().collection("posts")
+                .document(post.postId)
+                .collection("like")
+                .get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        val like = it.result!!.toObjects(Like::class.java)
+
+                        for (document in like) {
+
+                            if (document.userId == com.tina.musicband.login.UserManager.userToken.toString()) {
+
+                                binding.musicLikeClickedIcon.visibility = View.VISIBLE
+                                break
+                            }
+
+                        }
+
+
+                    }
+                }
+
 
         }
     }

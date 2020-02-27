@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +21,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.avatar.getAvatarDrawable
-import com.tina.musicband.avatar.getDrawable
-import com.tina.musicband.data.Matching
+import com.tina.musicband.data.Following
 import com.tina.musicband.data.Songs
 import com.tina.musicband.data.User
 import com.tina.musicband.databinding.ItemUserMatchBinding
@@ -37,6 +37,7 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
         private val mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
+        var loadedSong = true
 
         fun bind(user: User) {
 
@@ -62,6 +63,8 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
                 )
 
+            checkFollowing(user)
+
 
             FirebaseFirestore.getInstance().collection("songs")
                 .whereEqualTo("userId", user.userId)
@@ -82,7 +85,7 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
                                 .error(R.drawable.ic_cover)
                                 .into(binding.musicCover)
 
-                            setMediaPlayer(song)
+                            prepareMediaPlayer(song)
                         }
 
 
@@ -93,10 +96,13 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
 
             binding.musicPlayButton.setOnClickListener {
+                mediaPlayer.setOnPreparedListener {
+                        it.start()
+                    }
 
-                mediaPlayer.start()
                 val runnable = Thread(MusicRunnable())
                 runnable.start()
+
                 binding.musicPlayButton.visibility = View.INVISIBLE
                 binding.musicPauseButton.visibility = View.VISIBLE
             }
@@ -115,7 +121,16 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
                         FirebaseFirestore.getInstance().collection("users").document(user.userId)
                             .collection("follower").document(UserManager.userToken.toString())
-                            .set(mapOf("userId" to UserManager.userToken.toString()))
+                            .set(mapOf("userId" to UserManager.userToken.toString())).addOnCompleteListener {
+
+                                if(it.isSuccessful){
+
+                                    Toast.makeText(MusicBandApplication.instance.applicationContext, "Follow Success", Toast.LENGTH_SHORT).show()
+
+                                }
+
+                            }
+
 
                         binding.followButton.visibility = View.INVISIBLE
                         binding.followClickedButton.visibility = View.VISIBLE
@@ -130,6 +145,16 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
                             FirebaseFirestore.getInstance().collection("users").document(user.userId)
                                 .collection("follower").document(UserManager.userToken.toString())
                                 .delete()
+                                .addOnCompleteListener {
+
+                                    if(it.isSuccessful){
+
+                                        Toast.makeText(MusicBandApplication.instance.applicationContext, "Unfollow user", Toast.LENGTH_SHORT).show()
+
+                                    }
+
+                                }
+
 
                             binding.followButton.visibility = View.VISIBLE
                             binding.followClickedButton.visibility = View.INVISIBLE
@@ -210,15 +235,8 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
             }
 
-        private var mySong = Songs()
 
-            private fun setMediaPlayer(songs: Songs) {
-
-                if (songs.songId == mySong.songId) return
-
-                mySong = songs
-
-                mediaPlayer.stop()
+            private fun prepareMediaPlayer(songs: Songs) {
 
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
                 fetchAudioUrlFromFirebase(songs)
@@ -241,6 +259,35 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
                     }
                 }
             }
+
+        private fun checkFollowing(user: User){
+
+            FirebaseFirestore.getInstance().collection("users")
+                .document(UserManager.userToken.toString())
+                .collection("following")
+                .get()
+                .addOnCompleteListener {
+                    if(it.isSuccessful){
+
+                        val following = it.result!!.toObjects(Following::class.java)
+
+                        for(document in following){
+
+                            if(document.userId == user.userId){
+
+                                binding.followClickedButton.visibility = View.VISIBLE
+                                break
+
+                            }
+
+
+                        }
+
+                    }
+                }
+
+
+        }
         }
 
 

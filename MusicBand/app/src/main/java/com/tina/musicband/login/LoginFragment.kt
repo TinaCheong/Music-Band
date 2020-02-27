@@ -21,6 +21,7 @@ import com.tina.musicband.R
 import com.tina.musicband.databinding.FragmentLoginBinding
 import com.tina.musicband.databinding.FragmentSearchMusicBinding
 import com.tina.musicband.ext.getVmFactory
+import com.tina.musicband.network.LoadApiStatus
 
 class LoginFragment : Fragment() {
 
@@ -36,6 +37,7 @@ class LoginFragment : Fragment() {
             inflater, R.layout.fragment_login, container, false
         )
 
+        binding.viewModel = viewModel
 
         binding.lifecycleOwner = this
 
@@ -64,6 +66,13 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_global_mainFragment)
             }
         }
+
+        viewModel.status.observe(this, Observer {
+            if(it == LoadApiStatus.LOADING){
+                binding.loginProgressBar.visibility = View.VISIBLE
+                binding.facebookLoginButton.visibility = View.INVISIBLE
+            }
+        })
 
 
         viewModel.didFinishLogin.observe(viewLifecycleOwner, Observer {

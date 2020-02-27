@@ -27,6 +27,7 @@ import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.LayoutAddMusicMainBinding
 import com.tina.musicband.login.UserManager
 import com.tina.musicband.main.POST_TYPES
+import com.tina.musicband.network.LoadApiStatus
 import java.lang.Exception
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -43,6 +44,7 @@ class AddMusicFragment : Fragment() {
     private val songsReference = FirebaseFirestore.getInstance().collection("songs").document(songId)
     private val postId = FirebaseFirestore.getInstance().collection("posts").document().id
     private val postsReference = FirebaseFirestore.getInstance().collection("posts").document(postId)
+    private var status = LoadApiStatus.LOADING
 
     private var imageUri: Uri? = null
 
@@ -155,11 +157,16 @@ class AddMusicFragment : Fragment() {
 
     private fun uploadAudioToFirebase() {
 
-        if (binding.musicUploadHint.toString().equals("No file selected")) {
+        if (binding.musicUploadHint.visibility == View.VISIBLE || binding.coverUploadHint.visibility == View.VISIBLE) {
+
             Toast.makeText(
-                activity, "Please select a song", Toast.LENGTH_SHORT
+                activity, "Please select a file", Toast.LENGTH_SHORT
             ).show()
-        } else {
+
+        }
+        else {
+
+            setProgressBar()
             uploadFile()
         }
     }
@@ -169,6 +176,8 @@ class AddMusicFragment : Fragment() {
         var durationText = ""
 
         if (audioUri != null) {
+
+            status
 
             Toast.makeText(
                 activity, "Uploading please wait...", Toast.LENGTH_SHORT
@@ -243,6 +252,8 @@ class AddMusicFragment : Fragment() {
                                             Log.d("FirebaseStorage", "Failed to get song uri")
                                         }
 
+                                        status = LoadApiStatus.DONE
+
                                     }.addOnFailureListener {
                                     Toast.makeText(
                                         activity,
@@ -314,6 +325,16 @@ class AddMusicFragment : Fragment() {
 
             return -1
         }
+
+    }
+
+    private fun setProgressBar(){
+
+        if(status == LoadApiStatus.LOADING){
+            binding.addMusicProgressBar.visibility = View.VISIBLE
+            binding.submitButton.visibility = View.INVISIBLE
+        }
+
 
     }
 

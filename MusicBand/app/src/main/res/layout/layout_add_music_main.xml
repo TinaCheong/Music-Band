@@ -67,6 +67,18 @@
             app:layout_constraintStart_toEndOf="@+id/music_description_icon"
             app:layout_constraintTop_toTopOf="@+id/music_description_icon" />
 
+        <ProgressBar
+            android:id="@+id/add_music_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:translationZ="90dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/submit_button"
+            app:layout_constraintEnd_toEndOf="@+id/submit_button"
+            app:layout_constraintStart_toStartOf="@+id/submit_button"
+            app:layout_constraintTop_toTopOf="@+id/submit_button">
+        </ProgressBar>
+
         <Button
             android:id="@+id/submit_button"
             android:layout_width="0dp"

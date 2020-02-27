@@ -20,6 +20,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
+            app:iconifiedByDefault="false"
             android:background="@drawable/search_view_round_corner"
             android:theme="@style/AppSearchView"
             app:layout_constraintEnd_toEndOf="parent"
