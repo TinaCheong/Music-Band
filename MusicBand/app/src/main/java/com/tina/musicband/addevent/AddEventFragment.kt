@@ -29,6 +29,7 @@ import com.tina.musicband.databinding.LayoutAddEventMainBinding
 import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.login.UserManager
 import com.tina.musicband.main.POST_TYPES
+import com.tina.musicband.network.LoadApiStatus
 import com.tina.musicband.search.SearchMusicViewModel
 import java.util.*
 
@@ -42,6 +43,7 @@ class AddEventFragment : Fragment() {
     lateinit var storageReference: StorageReference
     private val postId = FirebaseFirestore.getInstance().collection("posts").document().id
     private val imageReference = FirebaseFirestore.getInstance().collection("posts").document(postId)
+    private var status: LoadApiStatus = LoadApiStatus.LOADING
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +67,7 @@ class AddEventFragment : Fragment() {
         }
 
         binding.submitButton.setOnClickListener {
+            setProgressBar()
             uploadImageToFirebase()
         }
 
@@ -108,6 +111,8 @@ class AddEventFragment : Fragment() {
 
         if (imageUri != null) {
 
+            status
+
             Toast.makeText(
                 activity, "Uploading please wait...", Toast.LENGTH_SHORT
             ).show()
@@ -135,6 +140,8 @@ class AddEventFragment : Fragment() {
                             song = Songs("","","","","")
                         )
                        imageReference.set(postList)
+
+                        status = LoadApiStatus.DONE
 
                         Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT)
                             .show()
@@ -186,5 +193,14 @@ class AddEventFragment : Fragment() {
 //
 //    }
 
+    private fun setProgressBar(){
+
+        if(status == LoadApiStatus.LOADING){
+            binding.addEventProgressBar.visibility = View.VISIBLE
+            binding.submitButton.visibility = View.INVISIBLE
+        }
+
+
+    }
 
 }

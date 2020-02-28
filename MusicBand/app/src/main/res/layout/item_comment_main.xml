@@ -7,6 +7,8 @@
         <variable
             name="comment"
             type="com.tina.musicband.data.Comments" />
+        <import type="com.tina.musicband.login.UserManager">
+        </import>
 
     </data>
 

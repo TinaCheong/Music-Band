@@ -40,7 +40,7 @@ class SearchMusicFragment : Fragment() {
 //    lateinit var handler: Handler
     private  val songsList = mutableListOf<Songs>()
     private var status = LoadApiStatus.LOADING
-
+    lateinit var adapter : SearchMusicAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,8 +121,8 @@ class SearchMusicFragment : Fragment() {
 //
 //        val runnable = Thread(MusicRunnable())
 //        runnable.start()
+        adapter = SearchMusicAdapter(viewModel)
 
-        val adapter = SearchMusicAdapter(viewModel)
         binding.recyclerViewSearchMusicPage.adapter = adapter
 
         binding.searchPageProgressBar.visibility = View.VISIBLE
@@ -175,13 +175,13 @@ class SearchMusicFragment : Fragment() {
 
         val resultList = mutableListOf<Songs>()
         for(song in songsList){
-            if(song.songTitle.toLowerCase().contains(keyword.toString())){
+            if(song.songTitle.toLowerCase().contains(keyword.toString()) ||
+                song.songTitle.toUpperCase().contains(keyword.toString())){
 
                 resultList.add(song)
 
             }
 
-            val adapter = SearchMusicAdapter(viewModel)
             binding.recyclerViewSearchMusicPage.adapter = adapter
             adapter.submitList(resultList)
 

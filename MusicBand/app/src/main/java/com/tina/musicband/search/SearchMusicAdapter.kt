@@ -1,40 +1,29 @@
 package com.tina.musicband.search
 
 import android.annotation.SuppressLint
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.*
 import com.tina.musicband.data.Songs
-import com.tina.musicband.data.User
 import com.tina.musicband.databinding.ItemMusicPlayerSearchBinding
-import com.tina.musicband.others.ProfileOthersFragment
-import kotlinx.android.synthetic.main.item_music_player_search.view.*
-import okhttp3.internal.notify
-import okhttp3.internal.notifyAll
 import java.io.IOException
 import java.lang.Exception
 
 class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder>(DiffCallback) {
+
 
 
     class SongsViewHolder(private var binding: ItemMusicPlayerSearchBinding, private val searchMusicViewModel: SearchMusicViewModel) :
@@ -42,6 +31,7 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
 
         private val mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
+        var loadedSong = ""
 
         fun bind(songs: Songs) {
 
@@ -71,22 +61,42 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
                 .error(R.drawable.ic_cover)
                 .into(binding.musicCover)
 
-            setMediaPlayer(songs)
+
 
             binding.musicPlayButton.setOnClickListener {
+//                mediaPlayer.start()
+                if (songs.songId == loadedSong) {
 
-                mediaPlayer.start()
-                val runnable = Thread(MusicRunnable())
-                runnable.start()
+                    mediaPlayer.start()
+
+                } else {
+
+                    loadedSong = songs.songId
+                    prepareMediaPlayer(songs)
+                    mediaPlayer.setOnPreparedListener {
+                        it.start()
+                    }
+
+                    val runnable = Thread(MusicRunnable())
+                    runnable.start()
+
+                }
+
+
                 binding.musicPlayButton.visibility = View.INVISIBLE
                 binding.musicPauseButton.visibility = View.VISIBLE
             }
 
+
             binding.musicPauseButton.setOnClickListener {
                 mediaPlayer.pause()
+//                mediaPlayer.stop()
+//                mediaPlayer.reset()
+//                mediaPlayer.release()
                 binding.musicPlayButton.visibility = View.VISIBLE
                 binding.musicPauseButton.visibility = View.INVISIBLE
-            }
+                }
+
 
 
             mediaPlayer.seekTo(0)
@@ -160,7 +170,8 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
 
         }
 
-        private fun setMediaPlayer(songs: Songs) {
+
+        private fun prepareMediaPlayer(songs: Songs) {
 
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
             fetchAudioUrlFromFirebase(songs)
@@ -173,9 +184,6 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
             storageReference.downloadUrl.addOnSuccessListener {
                 try {
                     mediaPlayer.setDataSource(songs.songLink)
-//                    mediaPlayer.setOnPreparedListener {
-//                        it.start()
-//                    }
                     mediaPlayer.prepareAsync()
 
                 } catch (e: IOException) {

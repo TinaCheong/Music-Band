@@ -173,6 +173,8 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                                 .addOnCompleteListener {
                                     if (it.isSuccessful) {
 
+                                        _status.value = LoadApiStatus.DONE
+
                                         val following =
                                             it.result!!.toObjects(Following::class.java)
 
@@ -212,8 +214,8 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
                                                     }
 
-                                                    _status.value =
-                                                        LoadApiStatus.DONE
+//                                                    _status.value =
+//                                                        LoadApiStatus.DONE
                                                 }
 
                                         }

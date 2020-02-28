@@ -34,6 +34,7 @@ class MainFragment : Fragment() {
     lateinit var binding: FragmentMainBinding
 
 
+
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
 
@@ -72,9 +73,17 @@ class MainFragment : Fragment() {
         viewModel.postItems.observe(this, Observer {
             it?.let {
                 mainAdapter.submitList(it)
+            }
+        })
+
+        viewModel.posts.observe(this, Observer {
+            it?.let {
                 hideHint()
             }
         })
+
+
+
 
 
         viewModel.commented.observe(this, Observer {
@@ -131,7 +140,7 @@ class MainFragment : Fragment() {
     }
 
     private fun hideHint(){
-        if(viewModel.status.value == LoadApiStatus.DONE && viewModel.postItems.value?.size == 0){
+        if(viewModel.posts.value?.size == 0){
             binding.noPostImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE
             binding.noPostText.visibility = View.VISIBLE
@@ -142,6 +151,7 @@ class MainFragment : Fragment() {
         }
 
     }
+
 
 
 }
