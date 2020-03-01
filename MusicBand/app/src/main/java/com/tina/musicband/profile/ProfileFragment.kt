@@ -76,6 +76,14 @@ class ProfileFragment : Fragment() {
         getFollowerCount()
         getFollowingCount()
 
+        binding.followersCount.setOnClickListener {
+            findNavController().navigate(R.id.action_global_followerProfileFragment)
+        }
+
+        binding.followingCount.setOnClickListener {
+            findNavController().navigate(R.id.action_global_followingProfileFragment)
+        }
+
 
         // Inflate the layout for this fragment
         return binding.root
@@ -113,6 +121,7 @@ class ProfileFragment : Fragment() {
                     }
 
                     binding.postsCount.text = postCount.toString()
+                    postCount = 0
                 }
             }
 
@@ -131,6 +140,7 @@ class ProfileFragment : Fragment() {
                     }
 
                     binding.followingCount.text = followingCount.toString()
+                    followingCount = 0
                 }
             }
 
@@ -150,6 +160,7 @@ class ProfileFragment : Fragment() {
                     }
 
                     binding.followersCount.text = followersCount.toString()
+                    followersCount = 0
                 }
             }
 

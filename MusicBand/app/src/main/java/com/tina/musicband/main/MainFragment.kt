@@ -14,10 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.tina.musicband.R
-import com.tina.musicband.data.Posts
 import com.tina.musicband.databinding.FragmentMainBinding
 import com.tina.musicband.ext.getVmFactory
-import com.tina.musicband.network.LoadApiStatus
 
 enum class POST_TYPES(val value: String) {
     MUSIC("music"),
@@ -78,7 +76,7 @@ class MainFragment : Fragment() {
 
         viewModel.posts.observe(this, Observer {
             it?.let {
-                hideHint()
+                showHint()
             }
         })
 
@@ -139,7 +137,7 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun hideHint(){
+    private fun showHint(){
         if(viewModel.posts.value?.size == 0){
             binding.noPostImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE

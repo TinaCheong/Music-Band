@@ -9,14 +9,14 @@ import com.tina.musicband.others.ProfileOthersViewModel
 @Suppress("UNCHECKED_CAST")
 class ProfileOthersViewModelFactory(
     private val repository: MusicBandRepository,
-    private val song: Songs
+    private val userID : String
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         with(modelClass) {
             when {
                 isAssignableFrom(ProfileOthersViewModel::class.java) ->
-                    ProfileOthersViewModel(repository, song)
+                    ProfileOthersViewModel(repository, userID)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

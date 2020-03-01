@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:text="~Coming Soon~"
+            android:text="~No Data~"
             android:textColor="@color/gray_DDDDDD_50"
             android:textSize="20sp"
             android:textStyle="bold"

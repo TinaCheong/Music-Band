@@ -44,5 +44,31 @@
             app:layout_constraintTop_toBottomOf="@+id/recycler_view_quick_match">
         </me.relex.circleindicator.CircleIndicator2>
 
+        <ImageView
+            android:id="@+id/add_all_friend"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="100dp"
+            android:tint="@color/white_50"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recycler_view_quick_match"
+            app:srcCompat="@drawable/ic_add_all_friends" />
+
+        <TextView
+            android:id="@+id/add_all_friend_text"
+            android:layout_width="279dp"
+            android:layout_height="95dp"
+            android:gravity="center"
+            android:text="Wow!\n It's look like you are\n a people person!"
+            android:textColor="@color/white_50"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/add_all_friend"
+            app:layout_constraintStart_toStartOf="@+id/add_all_friend"
+            app:layout_constraintTop_toBottomOf="@+id/add_all_friend" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

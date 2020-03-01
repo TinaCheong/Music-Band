@@ -29,9 +29,11 @@ import com.tina.musicband.databinding.ItemEventsMainBinding
 import com.tina.musicband.databinding.ItemMusicMainBinding
 import com.tina.musicband.ext.toDisplayFormat
 import com.tina.musicband.login.UserManager
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.IOException
 import java.lang.Exception
 import java.util.*
+import kotlin.math.roundToInt
 
 private val ITEM_VIEW_TYPE_MUSIC = 0
 private val ITEM_VIEW_TYPE_EVENT = 1
@@ -68,7 +70,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             getEventComment(posts)
             checkEventLike(posts)
 
-            binding.eventComment.setOnClickListener {
+            binding.comment.setOnClickListener {
                 binding.commentBlock.visibility = View.VISIBLE
                 mainViewModel.leaveComment()
                 mainViewModel.hideFab()
@@ -314,7 +316,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             object : Handler() {
                 override fun handleMessage(msg: Message) {
                     val currentPosition = msg.what
-                    val percent = (currentPosition.toFloat() / 100000 * 100).toInt()
+                    val percent = (1 / ( mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
                     binding.musicSeekBar.progress = percent
                     val startTime = createTIme(currentPosition)
 
@@ -332,7 +334,7 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             getMusicComment(post)
             checkMusicLike(post)
 
-            binding.musicComment.setOnClickListener {
+            binding.comment.setOnClickListener {
                 binding.commentBlock.visibility = View.VISIBLE
                 mainViewModel.leaveComment()
                 mainViewModel.hideFab()

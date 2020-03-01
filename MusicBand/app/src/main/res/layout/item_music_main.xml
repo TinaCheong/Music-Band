@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="mainViewModel"
             type="com.tina.musicband.main.MainViewModel" />
+
         <variable
             name="post"
             type="com.tina.musicband.data.Posts" />
-        <import type="android.view.View">
-        </import>
+
+        <import type="android.view.View"></import>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,33 +160,43 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="7dp"
-                    android:textStyle="bold"
                     android:text="0"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/music_like_icon"
                     app:layout_constraintStart_toEndOf="@+id/music_like_icon"
                     app:layout_constraintTop_toTopOf="@+id/music_like_icon" />
 
-                <ImageView
-                    android:id="@+id/music_comment_icon"
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="8dp"
-                    android:tint="@color/blue_272343"
-                    app:layout_constraintEnd_toStartOf="@+id/music_comment"
-                    app:layout_constraintTop_toTopOf="@+id/music_like_icon"
-                    app:srcCompat="@drawable/ic_comments" />
 
-                <TextView
-                    android:id="@+id/music_comment"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:text="@string/comment"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/music_like"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/music_like" />
+                    app:layout_constraintTop_toTopOf="@+id/music_like_icon">
+
+                    <ImageView
+                        android:id="@+id/music_comment_icon"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="8dp"
+                        android:tint="@color/blue_272343"
+                        app:layout_constraintEnd_toStartOf="@+id/music_comment"
+                        app:layout_constraintTop_toTopOf="@+id/comment"
+                        app:srcCompat="@drawable/ic_comments" />
+
+                    <TextView
+                        android:id="@+id/music_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:text="@string/comment"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/comment"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/comment" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
                     android:id="@+id/music_composer_icon"
@@ -303,20 +315,20 @@
                     android:id="@+id/recycler_view__main_music_comment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/music_comment" />
+                    app:layout_constraintTop_toBottomOf="@+id/comment" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/comment_block"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
                     android:layout_marginBottom="16dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

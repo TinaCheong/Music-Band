@@ -21,6 +21,7 @@ import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.ItemMusicPlayerSearchBinding
 import java.io.IOException
 import java.lang.Exception
+import kotlin.math.roundToInt
 
 class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListAdapter<Songs, SearchMusicAdapter.SongsViewHolder>(DiffCallback) {
 
@@ -135,7 +136,7 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
             object : Handler() {
                 override fun handleMessage(msg: Message) {
                     val currentPosition = msg.what
-                    val percent = (currentPosition.toFloat() / 100000 * 100).toInt()
+                    val percent = (1 / ( mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
                     binding.musicSeekBar.progress = percent
                     val startTime = createTIme(currentPosition)
 

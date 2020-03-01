@@ -12,7 +12,7 @@ fun Fragment.getVmFactory(): ViewModelFactory {
     return ViewModelFactory(repository)
 }
 
-fun Fragment.getVmFactory(song: Songs): ProfileOthersViewModelFactory {
+fun Fragment.getVmFactory(userID: String): ProfileOthersViewModelFactory {
     val repository = (requireContext().applicationContext as MusicBandApplication).repository
-    return ProfileOthersViewModelFactory(repository, song)
+    return ProfileOthersViewModelFactory(repository, userID)
 }

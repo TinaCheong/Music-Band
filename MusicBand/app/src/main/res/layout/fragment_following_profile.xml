@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_272343"
+        tools:context=".following.FollowingProfileFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_following_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/no_following_icon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="45dp"
+            android:src="@drawable/ic_no_follow"
+            android:tint="@color/white_50"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/question_mark_icon" />
+
+        <ImageView
+            android:id="@+id/question_mark_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="120dp"
+            android:layout_marginEnd="110dp"
+            android:visibility="invisible"
+            android:src="@drawable/ic_ic_question_mark_search"
+            android:tint="@color/white_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/no_following_text"
+            android:layout_width="279dp"
+            android:layout_height="95dp"
+            android:gravity="center"
+            android:text="Wanna follow someone?\n Go and explore the music world :)"
+            android:visibility="invisible"
+            android:textColor="@color/white_50"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/no_following_icon"
+            app:layout_constraintStart_toStartOf="@+id/no_following_icon"
+            app:layout_constraintTop_toBottomOf="@+id/no_following_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

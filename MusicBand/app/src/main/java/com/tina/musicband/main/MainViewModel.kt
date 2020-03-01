@@ -26,6 +26,11 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val posts: LiveData<List<Posts>>
         get() = _posts
 
+    private val _userPosts = MutableLiveData<List<PostSealedItem>>()
+
+    val userPosts: LiveData<List<PostSealedItem>>
+        get() = _userPosts
+
     private val _like = MutableLiveData<Like>()
 
     val like: LiveData<Like>
@@ -234,10 +239,10 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     }
 
-    fun getProfileAvatar() {
+    fun getProfileAvatar(userID: String) {
 
         FirebaseFirestore.getInstance().collection("users")
-            .document(UserManager.userToken.toString())
+            .document(userID)
             .get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -255,4 +260,38 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                 }
             }
     }
-}
+
+    fun fetchPostByUserID(userID : String){
+
+        if (userID.isEmpty()) return
+
+        FirebaseFirestore.getInstance().collection("posts")
+            .whereEqualTo("userId", userID)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    val posts = it.result!!.toObjects(Posts::class.java)
+
+                    val items = mutableListOf<PostSealedItem>()
+
+                    posts.forEach {
+                        when (it.type) {
+                            POST_TYPES.MUSIC.value -> {
+                                items.add(PostSealedItem.MusicItem(it))
+                            }
+
+                            POST_TYPES.EVENT.value -> {
+                                items.add(PostSealedItem.EventItem(it))
+                            }
+                        }
+                    }
+
+                    _userPosts.value = items
+                }
+                }
+
+            }
+
+
+    }

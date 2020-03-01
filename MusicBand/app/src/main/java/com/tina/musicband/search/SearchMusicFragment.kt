@@ -147,8 +147,8 @@ class SearchMusicFragment : Fragment() {
             }
 
         viewModel.selectedSong.observe(this, Observer {
-            it?.let {
-            findNavController().navigate(NavigationDirections.actionGlobalProfileOthersFragment(it))
+            it?.userId?.let {userID ->
+            findNavController().navigate(NavigationDirections.actionGlobalProfileOthersFragment(userID))
             viewModel.doneNavigate()
             }
         })

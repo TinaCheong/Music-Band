@@ -4,6 +4,6 @@ class Matching (
     var username: String,
     var userId: String,
     var avatar: String
-//  var song : Songs
+//  var userID : Songs
 
 )
