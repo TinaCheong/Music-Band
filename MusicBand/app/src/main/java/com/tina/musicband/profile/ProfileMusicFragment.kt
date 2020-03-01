@@ -41,8 +41,6 @@ class ProfileMusicFragment : Fragment() {
 
         binding.recyclerViewMusicProfile.adapter = adapter
 
-
-
         binding.lifecycleOwner = this
 
         FirebaseFirestore.getInstance().collection("songs")
@@ -63,7 +61,9 @@ class ProfileMusicFragment : Fragment() {
                 }
             }
 
-        // Inflate the layout for this fragment
+
+
+
         return binding.root
     }
 

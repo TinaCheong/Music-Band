@@ -249,7 +249,7 @@ class AddMusicFragment : Fragment() {
                                             findNavController().navigate(R.id.action_global_mainFragment)
 
                                         }.addOnFailureListener {
-                                            Log.d("FirebaseStorage", "Failed to get song uri")
+                                            Log.d("FirebaseStorage", "Failed to get userID uri")
                                         }
 
                                         status = LoadApiStatus.DONE

@@ -9,6 +9,8 @@ enum class CurrentFragmentType {
     ADD_MUSIC,
     SELECT_AVATAR,
     LOGIN,
-    OTHERS_PROFILE
+    OTHERS_PROFILE,
+    FOLLOWING,
+    FOLLOWER
 
 }

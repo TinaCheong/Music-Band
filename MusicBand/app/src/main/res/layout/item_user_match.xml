@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:text="Loading..."
+                    android:text="No data"
                     android:textColor="@color/blue_272343"
                     android:textSize="16sp"
                     android:textStyle="bold"

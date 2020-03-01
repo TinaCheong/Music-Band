@@ -183,7 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="52dp"
-            android:text="Enter your name"
+            android:text="Your Username"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.viewpager.widget.PagerAdapter
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.R
 import com.tina.musicband.avatar.getAvatarDrawable
 import com.tina.musicband.data.Follower
+import com.tina.musicband.data.Following
 import com.tina.musicband.data.Songs
 import com.tina.musicband.data.User
 import com.tina.musicband.databinding.FragmentProfileOthersBinding
@@ -29,10 +31,20 @@ class ProfileOthersFragment : Fragment() {
     private lateinit var binding: FragmentProfileOthersBinding
     private lateinit var adapter: PagerAdapter
     private var postCount: Int = 0
-    private var followingCount : Int = 0
-    private var followerCount : Int = 0
+    private var followingCount: Int = 0
+    private var followerCount: Int = 0
+    private var selectedUser = User()
 
-    private val viewModel by viewModels<ProfileOthersViewModel> { getVmFactory(ProfileOthersFragmentArgs.fromBundle(arguments!!).song) }
+    private val viewModel by viewModels<ProfileOthersViewModel> {
+        getVmFactory(
+            userID
+        )
+    }
+
+    private val userID by lazy {
+        requireArguments().getString("userID")!!
+//        ProfileOthersFragmentArgs.fromBundle(arguments!!).userID
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +61,7 @@ class ProfileOthersFragment : Fragment() {
 
         setTabLayoutIcons()
 
-        viewModel.song.value?.apply {
+        viewModel.userID.value?.apply {
 
             readUserDataFromSong(this)
 
@@ -63,22 +75,39 @@ class ProfileOthersFragment : Fragment() {
 
         }
 
+        binding.followButton.setOnClickListener {
+            addFollower(selectedUser)
+            Toast.makeText(activity, "Follow Success", Toast.LENGTH_SHORT).show()
+
+        }
+
+        binding.followClickedButton.setOnClickListener {
+            unfollow(selectedUser)
+            Toast.makeText(activity, "Unfollow User", Toast.LENGTH_SHORT).show()
+
+        }
 
 
 
-                return binding.root
-            }
 
 
-    private fun changePages(){
+        return binding.root
+    }
 
-        adapter = ProfileOthersViewPager(childFragmentManager)
+
+    private fun changePages() {
+
+        adapter = ProfileOthersViewPager(childFragmentManager, userID)
         binding.viewpagerProfileOthers.adapter = adapter
-        binding.viewpagerProfileOthers.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.tabLayoutProfileOthers))
+        binding.viewpagerProfileOthers.addOnPageChangeListener(
+            TabLayout.TabLayoutOnPageChangeListener(
+                binding.tabLayoutProfileOthers
+            )
+        )
 
     }
 
-    private fun setTabLayoutIcons(){
+    private fun setTabLayoutIcons() {
 
         binding.tabLayoutProfileOthers.setupWithViewPager(binding.viewpagerProfileOthers)
         binding.tabLayoutProfileOthers.getTabAt(0)?.setIcon(R.drawable.ic_event_title)
@@ -86,12 +115,12 @@ class ProfileOthersFragment : Fragment() {
 
     }
 
-    fun readUserDataFromSong(songs: Songs){
+    fun readUserDataFromSong(userID: String) {
 
         FirebaseFirestore.getInstance().collection("users")
-            .document(songs.userId!!).get()
+            .document(userID).get()
             .addOnCompleteListener {
-                if(it.isSuccessful){
+                if (it.isSuccessful) {
 
                     val user = it.result!!.toObject(User::class.java)
 
@@ -109,55 +138,23 @@ class ProfileOthersFragment : Fragment() {
                             this.profileAvatar.setImageDrawable(it.avatar.getAvatarDrawable())
 
                         }
+
+                        selectedUser = user
                     }
-
-                    binding.followButton.setOnClickListener {
-                        FirebaseFirestore.getInstance().collection("users")
-                            .document(UserManager.userToken.toString())
-                            .collection("following").document(user!!.userId)
-                            .set(mapOf("userId" to user.userId))
-                            .addOnSuccessListener {
-
-                                FirebaseFirestore.getInstance().collection("users").document(user.userId)
-                                    .collection("follower").document(UserManager.userToken.toString())
-                                    .set(mapOf("userId" to UserManager.userToken.toString()))
-
-                                binding.followButton.visibility = View.INVISIBLE
-                                binding.followClickedButton.visibility = View.VISIBLE
-                            }
-                    }
-
-
-                    binding.followClickedButton.setOnClickListener {
-                        FirebaseFirestore.getInstance().collection("posts")
-                            .document(UserManager.userToken.toString())
-                            .collection("following").document(user!!.userId).delete()
-                            .addOnSuccessListener {
-
-                                FirebaseFirestore.getInstance().collection("users").document(user.userId)
-                                    .collection("follower").document(UserManager.userToken.toString())
-                                    .delete()
-
-                                binding.followButton.visibility = View.VISIBLE
-                                binding.followClickedButton.visibility = View.INVISIBLE
-
-                            }
-                    }
-
 
                 }
 
             }
     }
 
-    private fun getPostCount(song: Songs){
+    private fun getPostCount(userID: String) {
 
         FirebaseFirestore.getInstance().collection("posts")
-            .whereEqualTo("userId", song.userId)
+            .whereEqualTo("userId", userID)
             .get()
             .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
+                if (it.isSuccessful) {
+                    for (document in it.result!!) {
                         postCount++
                     }
 
@@ -166,57 +163,74 @@ class ProfileOthersFragment : Fragment() {
             }
     }
 
-    private fun getFollowingCount(song: Songs){
+    private fun getFollowingCount(userID : String) {
+
 
         FirebaseFirestore.getInstance().collection("users")
-            .document(song.userId!!)
+            .document(userID)
             .collection("following")
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+
+                if (documentSnapshot != null) {
+
+                    val followings = documentSnapshot.toObjects(Following::class.java)
+
+                    for (following in followings) {
+
                         followingCount++
+
                     }
 
                     binding.followingCount.text = followingCount.toString()
+
                 }
             }
 
+
+
     }
 
-    private fun getFollowerCount(song: Songs){
+    private fun getFollowerCount(userID : String) {
 
         FirebaseFirestore.getInstance().collection("users")
-            .document(song.userId!!)
+            .document(userID)
             .collection("follower")
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+
+                if (documentSnapshot != null) {
+
+                    val followers = documentSnapshot.toObjects(Follower::class.java)
+
+                    for (follower in followers) {
+
                         followerCount++
 
                     }
 
                     binding.followersCount.text = followerCount.toString()
+                    followerCount = 0
+
                 }
             }
 
+
     }
 
-    private fun checkFollower(song: Songs){
+
+    private fun checkFollower(userID: String) {
 
         FirebaseFirestore.getInstance().collection("users")
-            .document(song.userId!!)
+            .document(userID)
             .collection("follower")
             .get()
             .addOnCompleteListener {
-                if(it.isSuccessful){
+                if (it.isSuccessful) {
 
                     val followers = it.result!!.toObjects(Follower::class.java)
 
-                    for(follower in followers){
+                    for (follower in followers) {
 
-                        if(follower.userId == UserManager.userToken.toString()){
+                        if (follower.userId == UserManager.userToken.toString()) {
 
                             binding.followClickedButton.visibility = View.VISIBLE
                             break
@@ -225,15 +239,52 @@ class ProfileOthersFragment : Fragment() {
                     }
 
 
-                    }
-
                 }
-
 
             }
 
 
     }
+
+
+    private fun addFollower(user: User) {
+
+        FirebaseFirestore.getInstance().collection("users")
+            .document(UserManager.userToken.toString())
+            .collection("following").document(user!!.userId)
+            .set(mapOf("userId" to user.userId))
+            .addOnSuccessListener {
+
+                FirebaseFirestore.getInstance().collection("users").document(user.userId)
+                    .collection("follower").document(UserManager.userToken.toString())
+                    .set(mapOf("userId" to UserManager.userToken.toString()))
+
+                binding.followButton.visibility = View.INVISIBLE
+                binding.followClickedButton.visibility = View.VISIBLE
+
+            }
+    }
+
+    private fun unfollow(user: User) {
+
+        FirebaseFirestore.getInstance().collection("posts")
+            .document(UserManager.userToken.toString())
+            .collection("following").document(user!!.userId).delete()
+            .addOnSuccessListener {
+
+                FirebaseFirestore.getInstance().collection("users")
+                    .document(user.userId)
+                    .collection("follower")
+                    .document(UserManager.userToken.toString())
+                    .delete()
+
+                binding.followButton.visibility = View.VISIBLE
+                binding.followClickedButton.visibility = View.INVISIBLE
+
+
+            }
+    }
+}
 
 
 

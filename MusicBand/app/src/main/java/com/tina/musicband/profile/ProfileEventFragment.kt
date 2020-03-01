@@ -52,7 +52,7 @@ class ProfileEventFragment : Fragment() {
 
 
 //        viewModel.loadProfileAvatar()
-        viewModel.getProfileAvatar()
+        viewModel.getProfileAvatar(UserManager.userToken.toString())
 
         viewModel.isProfileAvatarPrepared.observe(this, Observer {
             it?.let {
@@ -64,6 +64,7 @@ class ProfileEventFragment : Fragment() {
         // Inflate the layout for this fragment
         return binding.root
     }
+
 
     private fun fetchPosts() {
         FirebaseFirestore.getInstance().collection("posts")

@@ -28,6 +28,7 @@ import com.tina.musicband.databinding.ItemUserMatchBinding
 import com.tina.musicband.login.UserManager
 import java.io.IOException
 import java.lang.Exception
+import kotlin.math.roundToInt
 
 class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(DiffCallback) {
 
@@ -37,7 +38,8 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
         private val mediaPlayer = MediaPlayer()
         lateinit var handler: Handler
-        var loadedSong = true
+        var loadedSong: Boolean? = null
+        var userUploadSong = Songs()
 
         fun bind(user: User) {
 
@@ -61,47 +63,30 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
                 user.avatar.getAvatarDrawable()
 
-                )
+            )
 
             checkFollowing(user)
 
-
-            FirebaseFirestore.getInstance().collection("songs")
-                .whereEqualTo("userId", user.userId)
-                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                    if (querySnapshot != null) {
-                        var songList = querySnapshot.toObjects(Songs::class.java)
-
-                        for (song in songList) {
-
-                            binding.musicTitleText.setText(song.songTitle)
-                            binding.musicEndTime.setText(song.songDuration)
-                            Glide
-                                .with(MusicBandApplication.instance.applicationContext)
-                                .load(song.cover)
-                                .transform(CenterCrop(), RoundedCorners(12))
-                                .placeholder(R.drawable.ic_cover)
-                                .error(R.drawable.ic_cover)
-                                .into(binding.musicCover)
-
-                            prepareMediaPlayer(song)
-                        }
-
-
-                    }
-
-                }
-
-
+            getUserSong(user)
 
             binding.musicPlayButton.setOnClickListener {
-                mediaPlayer.setOnPreparedListener {
+                if (loadedSong != null) {
+
+                    mediaPlayer.start()
+
+                } else {
+
+                    loadedSong = true
+                    prepareMediaPlayer(userUploadSong)
+                    mediaPlayer.setOnPreparedListener {
                         it.start()
                     }
 
-                val runnable = Thread(MusicRunnable())
-                runnable.start()
+                    val runnable = Thread(MusicRunnable())
+                    runnable.start()
+
+
+                }
 
                 binding.musicPlayButton.visibility = View.INVISIBLE
                 binding.musicPauseButton.visibility = View.VISIBLE
@@ -113,167 +98,127 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
                 binding.musicPauseButton.visibility = View.INVISIBLE
             }
 
+            mediaPlayer.seekTo(0)
+
             binding.followButton.setOnClickListener {
-                FirebaseFirestore.getInstance().collection("users").document(UserManager.userToken.toString())
-                    .collection("following").document(user.userId)
-                    .set(mapOf("userId" to user.userId))
-                    .addOnSuccessListener {
-
-                        FirebaseFirestore.getInstance().collection("users").document(user.userId)
-                            .collection("follower").document(UserManager.userToken.toString())
-                            .set(mapOf("userId" to UserManager.userToken.toString())).addOnCompleteListener {
-
-                                if(it.isSuccessful){
-
-                                    Toast.makeText(MusicBandApplication.instance.applicationContext, "Follow Success", Toast.LENGTH_SHORT).show()
-
-                                }
-
-                            }
+                followUser(user)
+            }
 
 
-                        binding.followButton.visibility = View.INVISIBLE
-                        binding.followClickedButton.visibility = View.VISIBLE
-                    }
+            binding.followClickedButton.setOnClickListener {
+                unfollowUser(user)
+            }
 
 
-                binding.followClickedButton.setOnClickListener {
-                    FirebaseFirestore.getInstance().collection("posts").document(UserManager.userToken.toString())
-                        .collection("following").document(user.userId).delete()
-                        .addOnSuccessListener {
-
-                            FirebaseFirestore.getInstance().collection("users").document(user.userId)
-                                .collection("follower").document(UserManager.userToken.toString())
-                                .delete()
-                                .addOnCompleteListener {
-
-                                    if(it.isSuccessful){
-
-                                        Toast.makeText(MusicBandApplication.instance.applicationContext, "Unfollow user", Toast.LENGTH_SHORT).show()
-
-                                    }
-
-                                }
-
-
-                            binding.followButton.visibility = View.VISIBLE
-                            binding.followClickedButton.visibility = View.INVISIBLE
-
-                        }
-
-
-                    mediaPlayer.seekTo(0)
-
-
-                    binding.musicSeekBar.setOnSeekBarChangeListener(object :
-                        SeekBar.OnSeekBarChangeListener {
-                        override fun onProgressChanged(
-                            seekBar: SeekBar?,
-                            progress: Int,
-                            fromUser: Boolean
-                        ) {
-                            if (fromUser) {
-                                mediaPlayer.seekTo(progress)
+            binding.musicSeekBar.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    if (fromUser) {
+                        mediaPlayer.seekTo(progress)
 //                        binding.musicSeekBar.setProgress(progress)
-                            }
-                        }
+                    }
+                }
 
-                        override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                            if (mediaPlayer != null) {
-                                mediaPlayer.pause()
-                            }
-                        }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.pause()
+                    }
+                }
 
-                        override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                            if (mediaPlayer != null) {
-                                mediaPlayer.start()
-                            }
-                        }
-                    })
-
-
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.start()
+                    }
+                }
+            })
 
 
-                    handler = @SuppressLint("HandlerLeak")
-                    object : Handler() {
-                        override fun handleMessage(msg: Message) {
-                            val currentPosition = msg.what
-                            val percent = (currentPosition.toFloat() / 100000 * 100).toInt()
-                            binding.musicSeekBar.progress = percent
-                            val startTime = createTIme(currentPosition)
-
-                            if (startTime.contains("-")) {
-                                binding.musicStartTime.setText("00:00")
-                            } else {
-                                binding.musicStartTime.setText(startTime)
-
-                            }
 
 
-                        }
+            handler = @SuppressLint("HandlerLeak")
+            object : Handler() {
+                override fun handleMessage(msg: Message) {
+                    val currentPosition = msg.what
+                    val percent = (1 / ( mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
+                    binding.musicSeekBar.progress = percent
+                    val startTime = createTIme(currentPosition)
+
+                    if (startTime.contains("-")) {
+                        binding.musicStartTime.setText("00:00")
+                    } else {
+                        binding.musicStartTime.setText(startTime)
+
                     }
 
-                    binding.executePendingBindings()
 
                 }
             }
+
+            binding.executePendingBindings()
+
         }
 
 
-            private fun createTIme(time: Int): String {
-                var timeLevel: String
-                val min = time / 1000 / 60
-                val sec = time / 1000 % 60
-                timeLevel = String.format("%02d:%02d", min, sec)
+        private fun createTIme(time: Int): String {
+            var timeLevel: String
+            val min = time / 1000 / 60
+            val sec = time / 1000 % 60
+            timeLevel = String.format("%02d:%02d", min, sec)
 
 //        if(sec<10){
 //            timeLevel += "0"
 //            timeLevel += sec
 //        }
 
-                return timeLevel
+            return timeLevel
 
-            }
+        }
 
 
-            private fun prepareMediaPlayer(songs: Songs) {
+        private fun prepareMediaPlayer(songs: Songs) {
 
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                fetchAudioUrlFromFirebase(songs)
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            fetchAudioUrlFromFirebase(songs)
 
-            }
+        }
 
-            private fun fetchAudioUrlFromFirebase(songs: Songs) {
-                val storage = FirebaseStorage.getInstance()
-                val storageReference = storage.getReferenceFromUrl(songs.songLink)
-                storageReference.downloadUrl.addOnSuccessListener {
-                    try {
-                        mediaPlayer.setDataSource(songs.songLink)
+        private fun fetchAudioUrlFromFirebase(songs: Songs) {
+
+            if (songs.songLink.isEmpty()) return
+            val storage = FirebaseStorage.getInstance()
+            val storageReference = storage.getReferenceFromUrl(songs.songLink)
+            storageReference.downloadUrl.addOnSuccessListener {
+                try {
+                    mediaPlayer.setDataSource(songs.songLink)
 //                    mediaPlayer.setOnPreparedListener {
 //                        it.start()
 //                    }
-                        mediaPlayer.prepareAsync()
+                    mediaPlayer.prepareAsync()
 
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
+        }
 
-        private fun checkFollowing(user: User){
+        private fun checkFollowing(user: User) {
 
             FirebaseFirestore.getInstance().collection("users")
                 .document(UserManager.userToken.toString())
                 .collection("following")
                 .get()
                 .addOnCompleteListener {
-                    if(it.isSuccessful){
+                    if (it.isSuccessful) {
 
                         val following = it.result!!.toObjects(Following::class.java)
 
-                        for(document in following){
+                        for (document in following) {
 
-                            if(document.userId == user.userId){
+                            if (document.userId == user.userId) {
 
                                 binding.followClickedButton.visibility = View.VISIBLE
                                 break
@@ -288,30 +233,128 @@ class QuickMatchAdapter : ListAdapter<User, QuickMatchAdapter.EventViewHolder>(D
 
 
         }
+
+        private fun getUserSong(user: User) {
+
+            FirebaseFirestore.getInstance().collection("songs")
+                .whereEqualTo("userId", user.userId)
+                .limit(1)
+                .get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        val song = it.result!!.toObjects(Songs::class.java)
+
+                        if(song.size != 0) {
+                            binding.musicTitleText.setText(song[0].songTitle)
+                            binding.musicEndTime.setText(song[0].songDuration)
+                            Glide
+                                .with(MusicBandApplication.instance.applicationContext)
+                                .load(song[0].cover)
+                                .transform(CenterCrop(), RoundedCorners(12))
+                                .placeholder(R.drawable.ic_cover)
+                                .error(R.drawable.ic_cover)
+                                .into(binding.musicCover)
+
+                            userUploadSong = song[0]
+                        }
+
+                    }
+                }
+
+
         }
 
+        private fun followUser(user: User) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-            return EventViewHolder(
-                ItemUserMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
+            FirebaseFirestore.getInstance().collection("users")
+                .document(UserManager.userToken.toString())
+                .collection("following").document(user.userId)
+                .set(mapOf("userId" to user.userId))
+                .addOnSuccessListener {
+
+                    FirebaseFirestore.getInstance().collection("users").document(user.userId)
+                        .collection("follower").document(UserManager.userToken.toString())
+                        .set(mapOf("userId" to UserManager.userToken.toString()))
+                        .addOnCompleteListener {
+
+                            if (it.isSuccessful) {
+
+                                Toast.makeText(
+                                    MusicBandApplication.instance.applicationContext,
+                                    "Follow Success",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
+
+                        }
+
+
+                    binding.followButton.visibility = View.INVISIBLE
+                    binding.followClickedButton.visibility = View.VISIBLE
+                }
+
+
         }
 
+        private fun unfollowUser(user: User) {
 
-        override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-            holder.bind(getItem(position))
+            FirebaseFirestore.getInstance().collection("posts")
+                .document(UserManager.userToken.toString())
+                .collection("following").document(user.userId).delete()
+                .addOnSuccessListener {
+
+                    FirebaseFirestore.getInstance().collection("users")
+                        .document(user.userId)
+                        .collection("follower").document(UserManager.userToken.toString())
+                        .delete()
+                        .addOnCompleteListener {
+
+                            if (it.isSuccessful) {
+
+                                Toast.makeText(
+                                    MusicBandApplication.instance.applicationContext,
+                                    "Unfollow user",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
+
+                        }
+
+
+                    binding.followButton.visibility = View.VISIBLE
+                    binding.followClickedButton.visibility = View.INVISIBLE
+
+                }
+
         }
-
-
-        companion object DiffCallback : DiffUtil.ItemCallback<User>() {
-            override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-                return oldItem === newItem
-            }
-
-            override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
-                return oldItem.userId == newItem.userId
-            }
-        }
-
 
     }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+        return EventViewHolder(
+            ItemUserMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
+    }
+
+
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+
+    companion object DiffCallback : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem.userId == newItem.userId
+        }
+    }
+
+
+}

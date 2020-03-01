@@ -8,12 +8,12 @@ import com.tina.musicband.profile.ProfileMusicFragment
 
 const val TAB_NUMBER = 2
 
-class ProfileOthersViewPager (fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class ProfileOthersViewPager (fragmentManager: FragmentManager,private val userID: String) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         when(position){
-            0 -> return ProfileOthersMusicFragment()
-            else -> return ProfileOthersEventFragment()
+            0 -> return ProfileOthersMusicFragment(userID)
+            else -> return ProfileOthersEventFragment(userID)
 
         }
     }

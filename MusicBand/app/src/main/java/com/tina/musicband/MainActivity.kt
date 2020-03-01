@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
 
         setupNavController()
 
+        binding.backButton.setOnClickListener {
+            findNavController(R.id.myNavHostFragment).navigateUp()
+        }
+
     }
     private fun setupNavController() {
         findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener { navController: NavController, _: NavDestination, _: Bundle? ->
@@ -72,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.addEventFragment -> CurrentFragmentType.ADD_EVENT
                 R.id.addMusicFragment -> CurrentFragmentType.ADD_MUSIC
                 R.id.profileOthersFragment -> CurrentFragmentType.OTHERS_PROFILE
+                R.id.followerProfileFragment -> CurrentFragmentType.FOLLOWER
+                R.id.followingProfileFragment -> CurrentFragmentType.FOLLOWING
 
                 else -> viewModel.currentFragmentType.value
             }

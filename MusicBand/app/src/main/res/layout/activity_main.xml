@@ -92,6 +92,42 @@
                     app:layout_constraintTop_toTopOf="parent">
                 </ImageView>
 
+                <ImageView
+                    android:id="@+id/back_button"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="3dp"
+                    android:tint="@color/white"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.FOLLOWER || viewModel.currentFragmentType == CurrentFragmentType.FOLLOWING? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_back_arrow" />
+
+                <ImageView
+                    android:id="@+id/toolbar_logo_follower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.FOLLOWER? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/back_button"
+                    app:layout_constraintTop_toTopOf="@+id/back_button"
+                    app:srcCompat="@drawable/logo_followers" />
+
+                <ImageView
+                    android:id="@+id/toolbar_logo_following"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.FOLLOWING? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/back_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/back_button"
+                    app:srcCompat="@drawable/logo_followings" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -120,7 +156,7 @@
             android:layout_height="65dp"
             android:background="@color/blue_272343"
             android:elevation="4dp"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.LOGIN || viewModel.currentFragmentType == CurrentFragmentType.SELECT_AVATAR || viewModel.currentFragmentType == CurrentFragmentType.ADD_EVENT || viewModel.currentFragmentType == CurrentFragmentType.ADD_MUSIC? View.GONE: View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.LOGIN || viewModel.currentFragmentType == CurrentFragmentType.SELECT_AVATAR || viewModel.currentFragmentType == CurrentFragmentType.ADD_EVENT || viewModel.currentFragmentType == CurrentFragmentType.ADD_MUSIC || viewModel.currentFragmentType == CurrentFragmentType.FOLLOWER || viewModel.currentFragmentType == CurrentFragmentType.FOLLOWING? View.GONE: View.VISIBLE}"
             app:itemIconTint="@drawable/bottom_nav_item_selector"
             app:labelVisibilityMode="labeled"
             app:itemTextColor="@color/white_50"
@@ -130,7 +166,6 @@
             app:itemIconSize="24dp"
             app:menu="@menu/bottom_navigation_menu">
         </com.google.android.material.bottomnavigation.BottomNavigationView>
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
