@@ -2,51 +2,51 @@ package com.tina.musicband.dialog
 
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.User
+import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.login.UserManager
-
-enum class BACKGROUND(val value: Int){
-    SQUARE(0),
-    LINE(1),
-    TRIANGLE(2),
-    FLOWER(3),
-    }
-
-fun BACKGROUND.getDrawable(): Drawable {
-    return when(this) {
-        BACKGROUND.SQUARE -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.bg_square)
-        BACKGROUND.LINE -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.bg_line)
-        BACKGROUND.TRIANGLE -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.bg_triangle)
-        BACKGROUND.FLOWER -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.bg_flower)
-    }
-}
-
-fun Int.getBackgroundDrawable() : Drawable {
-    return when(this) {
-        BACKGROUND.SQUARE.value -> BACKGROUND.SQUARE.getDrawable()
-        BACKGROUND.LINE.value -> BACKGROUND.LINE.getDrawable()
-        BACKGROUND.TRIANGLE.value -> BACKGROUND.TRIANGLE.getDrawable()
-        else -> BACKGROUND.FLOWER.getDrawable()
-    }
-}
-
-fun String.getBackground() : Int {
-    return if (this.toInt() < 0 || this.toInt() > 3 ) BACKGROUND.FLOWER.value else this.toInt()
-}
+import com.tina.musicband.network.LoadApiStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
-class BackgroundDialogViewModel : ViewModel() {
+class BackgroundDialogViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     private var selectedBackground : View? = null
     private var user: User? = null
+
+    private val _status = MutableLiveData<LoadApiStatus>()
+
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
+    private val _error = MutableLiveData<String>()
+
+    val error: LiveData<String>
+        get() = _error
+
+    private val _setting = MutableLiveData<Boolean>()
+
+    val setting: LiveData<Boolean>
+        get() = _setting
+
+    private var viewModelJob = Job()
+
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     fun selectBackground(view: View){
 
@@ -63,12 +63,35 @@ class BackgroundDialogViewModel : ViewModel() {
         this.user = user
     }
 
-    fun save() {
-        user?.let {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(UserManager.userToken!!)
-                .update("background", it.background)
+    fun saveBackground() {
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = repository.changeAvatarAndBackground(user!!)) {
+                is com.tina.musicband.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    _setting.value = true
+                }
+                is com.tina.musicband.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.tina.musicband.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
         }
 
+    }
+
+    fun finishSetting(){
+
+        _setting.value = null
     }
 }

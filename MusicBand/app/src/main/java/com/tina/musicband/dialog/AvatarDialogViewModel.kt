@@ -1,16 +1,49 @@
 package com.tina.musicband.dialog
 
 import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.avatar.getAvatar
 import com.tina.musicband.data.User
+import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.login.UserManager
+import com.tina.musicband.network.LoadApiStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class AvatarDialogViewModel : ViewModel() {
+class AvatarDialogViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     private var selectedIcon : View? = null
     private var user: User? = null
+
+    private val _status = MutableLiveData<LoadApiStatus>()
+
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
+    private val _error = MutableLiveData<String>()
+
+    val error: LiveData<String>
+        get() = _error
+
+    private val _setting = MutableLiveData<Boolean>()
+
+    val setting: LiveData<Boolean>
+        get() = _setting
+
+    private var viewModelJob = Job()
+
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     fun selectAvatar(view: View){
 
@@ -27,12 +60,36 @@ class AvatarDialogViewModel : ViewModel() {
         this.user = user
     }
 
-    fun save() {
-        user?.let {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(UserManager.userToken!!)
-                .update("avatar", it.avatar)
+    fun saveAvatar() {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = repository.changeAvatarAndBackground(user!!)) {
+                is com.tina.musicband.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    _setting.value = true
+                }
+                is com.tina.musicband.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.tina.musicband.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
         }
 
+    }
+
+    fun finishSetting(){
+
+        _setting.value = null
     }
 }

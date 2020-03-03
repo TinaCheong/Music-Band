@@ -7,6 +7,8 @@ import com.tina.musicband.MusicBandViewModel
 import com.tina.musicband.addevent.AddEventViewModel
 import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.source.MusicBandRepository
+import com.tina.musicband.dialog.AvatarDialogViewModel
+import com.tina.musicband.dialog.BackgroundDialogViewModel
 import com.tina.musicband.login.LoginViewModel
 import com.tina.musicband.main.MainAdapter
 import com.tina.musicband.main.MainViewModel
@@ -41,6 +43,12 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(AvatarSelectViewModel::class.java) ->
                     AvatarSelectViewModel(repository)
+
+                isAssignableFrom(AvatarDialogViewModel::class.java) ->
+                    AvatarDialogViewModel(repository)
+
+                isAssignableFrom(BackgroundDialogViewModel::class.java) ->
+                    BackgroundDialogViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
