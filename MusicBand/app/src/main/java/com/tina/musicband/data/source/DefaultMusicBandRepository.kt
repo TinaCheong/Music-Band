@@ -21,7 +21,7 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
     }
 
     override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.changeAvatarAndBackground(user)
     }
 
     override suspend fun getFollowers(): Result<List<Follower>> {

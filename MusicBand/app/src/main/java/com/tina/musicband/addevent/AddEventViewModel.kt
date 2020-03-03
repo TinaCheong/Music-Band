@@ -26,10 +26,10 @@ class AddEventViewModel(private val repository: MusicBandRepository) : ViewModel
     val posts: LiveData<Posts>
         get() = _posts
 
-    private val _imageUri = MutableLiveData<Uri>()
+    private val _imagePath = MutableLiveData<Uri>()
 
     val imagePath: LiveData<Uri>
-        get() = _imageUri
+        get() = _imagePath
 
     private val _uploadStatus = MutableLiveData<Boolean>()
 
@@ -165,7 +165,7 @@ class AddEventViewModel(private val repository: MusicBandRepository) : ViewModel
 
     fun setImagePath(uri: Uri?){
 
-        _imageUri.value = uri
+        _imagePath.value = uri
     }
 
 

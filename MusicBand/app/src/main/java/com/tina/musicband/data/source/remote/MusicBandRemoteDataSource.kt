@@ -79,8 +79,24 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> = suspendCoroutine { continuation ->
+            FirebaseFirestore.getInstance().collection("users")
+                .document(com.tina.musicband.login.UserManager.userToken.toString())
+                .update("avatar", user.avatar, "background", user.background)
+                .addOnCompleteListener { task->
+                    if (task.isSuccessful) {
+
+                        continuation.resume(Result.Success(true))
+
+                    } else {
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error changing avatar or background. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                        }
+                    }
+                }
+
     }
 
     override suspend fun getFollowers(): Result<List<Follower>> {
