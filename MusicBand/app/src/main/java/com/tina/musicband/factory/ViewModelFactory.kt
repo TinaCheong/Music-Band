@@ -1,6 +1,5 @@
 package com.tina.musicband.factory
 
-import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tina.musicband.MusicBandViewModel
@@ -9,8 +8,8 @@ import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.dialog.AvatarDialogViewModel
 import com.tina.musicband.dialog.BackgroundDialogViewModel
+import com.tina.musicband.follower.FollowerProfileViewModel
 import com.tina.musicband.login.LoginViewModel
-import com.tina.musicband.main.MainAdapter
 import com.tina.musicband.main.MainViewModel
 import com.tina.musicband.profile.ProfileViewModel
 import com.tina.musicband.search.SearchMusicViewModel
@@ -49,6 +48,9 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(BackgroundDialogViewModel::class.java) ->
                     BackgroundDialogViewModel(repository)
+
+                isAssignableFrom(FollowerProfileViewModel::class.java) ->
+                    FollowerProfileViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
