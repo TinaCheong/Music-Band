@@ -1,12 +1,17 @@
 package com.tina.musicband.data.source.local
 
 import android.content.Context
+import android.net.Uri
 import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandDataSource
 import com.tina.musicband.main.PostSealedItem
 
 class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
-    override suspend fun publishEvents(posts: Posts): Result<Boolean> {
+    override suspend fun uploadImage(imageUri: Uri): Result<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun publishPost(post: Posts): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

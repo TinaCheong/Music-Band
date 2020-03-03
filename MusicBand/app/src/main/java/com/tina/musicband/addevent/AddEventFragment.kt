@@ -39,11 +39,6 @@ class AddEventFragment : Fragment() {
 
     lateinit var binding: LayoutAddEventMainBinding
     private var imageUri: Uri? = null
-    var mStorageRef: StorageReference = FirebaseStorage.getInstance().reference
-    lateinit var storageReference: StorageReference
-    private val postId = FirebaseFirestore.getInstance().collection("posts").document().id
-    private val imageReference = FirebaseFirestore.getInstance().collection("posts").document(postId)
-    private var status: LoadApiStatus = LoadApiStatus.LOADING
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,20 +61,25 @@ class AddEventFragment : Fragment() {
             openImageFile()
         }
 
-        binding.submitButton.setOnClickListener {
-            setProgressBar()
-            uploadImageToFirebase()
-        }
 
+        viewModel.uploadStatus.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it?.let {
+
+                Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_global_mainFragment)
+                viewModel.finishUpload()
+
+            }
+        })
 
         setUpDatePicker()
 
         return binding.root
     }
 
-    fun openImageFile() {
+    private fun openImageFile() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.setType("image/*")
+        intent.type = "image/*"
         startActivityForResult(intent, 102)
     }
 
@@ -89,6 +89,7 @@ class AddEventFragment : Fragment() {
 
             data.getData().let {
                 imageUri = it
+                viewModel.setImagePath(it)
             }
             Glide.with(this).load(imageUri).centerCrop().into(binding.imageBorder)
             binding.imageUploadHint.visibility = View.GONE
@@ -96,72 +97,8 @@ class AddEventFragment : Fragment() {
         }
     }
 
-    private fun uploadImageToFirebase() {
-
-        if (binding.imageUploadHint.toString().equals("No file selected")) {
-            Toast.makeText(
-                activity, "Please select an image", Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            uploadFile()
-        }
-    }
-
-    private fun uploadFile(){
-
-        if (imageUri != null) {
-
-            status
-
-            Toast.makeText(
-                activity, "Uploading please wait...", Toast.LENGTH_SHORT
-            ).show()
 
 
-            storageReference = mStorageRef.child("images/" + UUID.randomUUID().toString())
-
-
-            imageUri?.let {
-                storageReference.putFile(it).addOnSuccessListener {
-                    val uri = it.metadata?.reference?.downloadUrl
-                    uri?.addOnSuccessListener {
-                        val postList = Posts(
-                            userId = UserManager.userToken,
-                            userName = UserManager.userName,
-                            type = POST_TYPES.EVENT.value,
-                            postId = postId,
-                            composer = "",
-                            title = binding.eventTitleText.text.toString(),
-                            description = binding.eventDescriptionText.text.toString(),
-                            avatar = "",
-                            createdTime = Calendar.getInstance().timeInMillis,
-                            date = viewModel.selectedDate.value,
-                            image = it.toString(),
-                            song = Songs("","","","","")
-                        )
-                       imageReference.set(postList)
-
-                        status = LoadApiStatus.DONE
-
-                        Toast.makeText(activity, "Upload Succeeded", Toast.LENGTH_SHORT)
-                            .show()
-
-                        findNavController().navigate(R.id.action_global_mainFragment)
-
-
-                    }
-
-                }
-
-
-            }
-
-        } else {
-            Toast.makeText(activity, "No file selected to upload", Toast.LENGTH_SHORT).show()
-        }
-
-
-    }
 
     private fun setUpDatePicker(){
         val calendar = Calendar.getInstance()
@@ -184,15 +121,5 @@ class AddEventFragment : Fragment() {
     }
 
 
-
-    private fun setProgressBar(){
-
-        if(status == LoadApiStatus.LOADING){
-            binding.addEventProgressBar.visibility = View.VISIBLE
-            binding.submitButton.visibility = View.INVISIBLE
-        }
-
-
-    }
-
 }
+

@@ -27,6 +27,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("Boolean", "LOGGER_VISIABLE", "false")
+        }
+        debug{
+            buildConfigField("Boolean", "LOGGER_VISIABLE", "true")
         }
     }
     dataBinding {

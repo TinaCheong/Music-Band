@@ -1,5 +1,6 @@
 package com.tina.musicband.data.source
 
+import android.net.Uri
 import com.tina.musicband.data.*
 import com.tina.musicband.main.PostSealedItem
 
@@ -7,8 +8,12 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
                                  private val localDataSource: MusicBandDataSource)
     : MusicBandRepository {
 
-    override suspend fun publishEvents(posts: Posts): Result<Boolean> {
-        return remoteDataSource.publishEvents(posts)
+    override suspend fun uploadImage(imageUri: Uri): Result<String> {
+        return remoteDataSource.uploadImage(imageUri)
+    }
+
+    override suspend fun publishPost(post: Posts): Result<Boolean> {
+        return remoteDataSource.publishPost(post)
     }
 
     override suspend fun publishMusic(posts: Posts): Result<Boolean> {

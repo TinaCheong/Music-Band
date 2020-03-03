@@ -1,13 +1,16 @@
 package com.tina.musicband.data.source
 
+import android.net.Uri
 import com.tina.musicband.data.*
 import com.tina.musicband.main.PostSealedItem
 
 interface MusicBandDataSource {
 
-    suspend fun publishEvents(posts: Posts): Result<Boolean>
+    suspend fun publishPost(post: Posts): Result<Boolean>
 
     suspend fun publishMusic(posts: Posts): Result<Boolean>
+
+    suspend fun uploadImage(imageUri: Uri): Result<String>
 
     suspend fun changeAvatarAndBackground(user: User): Result<Boolean>
 
