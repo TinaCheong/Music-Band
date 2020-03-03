@@ -138,13 +138,6 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         _setFab.value = true
     }
 
-//    fun checkLike(){
-//        _likeStatus.value = null
-//    }
-//
-//    fun doneLike(){
-//        _likeStatus.value = true
-//    }
 
     val userAvatarMap = mutableMapOf<String, Int>()
     val list = mutableListOf<Posts>()

@@ -29,7 +29,7 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
     }
 
     override suspend fun getFollowings(): Result<List<Following>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.getFollowings()
     }
 
     override suspend fun fetchOtherUsersDataFromSong(userID: String): Result<User> {

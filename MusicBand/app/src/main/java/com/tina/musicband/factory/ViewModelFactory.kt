@@ -9,6 +9,7 @@ import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.dialog.AvatarDialogViewModel
 import com.tina.musicband.dialog.BackgroundDialogViewModel
 import com.tina.musicband.follower.FollowerProfileViewModel
+import com.tina.musicband.following.FollowingProfileViewModel
 import com.tina.musicband.login.LoginViewModel
 import com.tina.musicband.main.MainViewModel
 import com.tina.musicband.profile.ProfileViewModel
@@ -51,6 +52,9 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(FollowerProfileViewModel::class.java) ->
                     FollowerProfileViewModel(repository)
+
+                isAssignableFrom(FollowingProfileViewModel::class.java) ->
+                    FollowingProfileViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

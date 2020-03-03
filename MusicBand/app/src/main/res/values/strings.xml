@@ -11,6 +11,10 @@
     <string name="facebook_login">Facebook Login</string>
     <string name="google_login">Google Login</string>
 
+    <!-- Follower and Following Fragment -->
+    <string name="no_following">Wanna follow someone?\n Go and explore the music world :)</string>
+    <string name="no_follower">Cannot find follower?\n Why not you find someone? :)</string>
+
     <!-- Profile Fragment -->
     <string name="username">Username</string>
     <string name="posts">Posts</string>

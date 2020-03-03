@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.R
 import com.tina.musicband.data.Following
 import com.tina.musicband.databinding.FragmentFollowerProfileBinding
 import com.tina.musicband.databinding.FragmentFollowingProfileBinding
+import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.login.UserManager
 
 /**
@@ -20,7 +22,7 @@ import com.tina.musicband.login.UserManager
 class FollowingProfileFragment : Fragment() {
 
     lateinit var binding: FragmentFollowingProfileBinding
-    var followingList = mutableListOf<Following>()
+    val viewModel by viewModels<FollowingProfileViewModel> { getVmFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,40 +33,15 @@ class FollowingProfileFragment : Fragment() {
             inflater, R.layout.fragment_following_profile, container, false
         )
 
+        binding.lifecycleOwner = this
+
+        binding.viewModel = viewModel
+
         binding.recyclerViewFollowingPage.adapter = FollowingAdapter()
 
 
-
-        FirebaseFirestore.getInstance().collection("users")
-            .document(UserManager.userToken.toString())
-            .collection("following")
-            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                if (querySnapshot != null) {
-
-                    followingList = querySnapshot.toObjects(Following::class.java)
-
-                    showHint()
-                    (binding.recyclerViewFollowingPage.adapter as FollowingAdapter).submitList(followingList)
-
-                }
-            }
-
-        // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun showHint(){
-        if(followingList.size == 0) {
-            binding.noFollowingIcon.visibility = View.VISIBLE
-            binding.noFollowingText.visibility = View.VISIBLE
-            binding.questionMarkIcon.visibility = View.VISIBLE
-        } else {
-            binding.noFollowingIcon.visibility = View.GONE
-            binding.noFollowingText.visibility = View.GONE
-            binding.questionMarkIcon.visibility = View.GONE
-        }
-
-    }
 
 }

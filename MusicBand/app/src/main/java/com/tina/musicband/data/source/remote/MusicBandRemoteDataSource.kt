@@ -116,8 +116,20 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
             }
     }
 
-    override suspend fun getFollowings(): Result<List<Following>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun getFollowings(): Result<List<Following>> = suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance().collection(PATH_USERS)
+            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .collection(COLLECTION_FOLLOWING)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+
+                if (querySnapshot != null) {
+
+                    val list = querySnapshot.toObjects(Following::class.java)
+
+                    continuation.resume(Result.Success(list))
+
+                }
+            }
     }
 
     override suspend fun fetchOtherUsersDataFromSong(userID: String): Result<User> {
