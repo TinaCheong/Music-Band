@@ -96,7 +96,7 @@ class AddEventFragment : Fragment() {
         }
     }
 
-    fun uploadImageToFirebase() {
+    private fun uploadImageToFirebase() {
 
         if (binding.imageUploadHint.toString().equals("No file selected")) {
             Toast.makeText(
@@ -184,14 +184,6 @@ class AddEventFragment : Fragment() {
     }
 
 
-
-//    private fun getFileExtension(audioUri: Uri): String? {
-//
-//        val contentResolver = context?.contentResolver
-//        val mine = MimeTypeMap.getSingleton()
-//        return mine.getExtensionFromMimeType(contentResolver?.getType(audioUri))
-//
-//    }
 
     private fun setProgressBar(){
 

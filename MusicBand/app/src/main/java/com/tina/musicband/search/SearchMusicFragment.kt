@@ -190,7 +190,7 @@ class SearchMusicFragment : Fragment() {
     }
 
     private fun showHint(){
-        if(status == LoadApiStatus.DONE && songsList.size == 0){
+        if(songsList.size == 0){
 
             binding.noMusicImage.visibility = View.VISIBLE
             binding.questionMarkImage.visibility = View.VISIBLE

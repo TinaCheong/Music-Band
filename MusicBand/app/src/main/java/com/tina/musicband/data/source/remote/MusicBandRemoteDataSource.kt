@@ -9,7 +9,13 @@ import com.tina.musicband.data.source.MusicBandDataSource
 
 object MusicBandRemoteDataSource : MusicBandDataSource {
 
-    private const val PATH_ARTICLES = "posts"
+    private const val PATH_POSTS = "posts"
+    private const val PATH_SONGS = "songs"
+    private const val PATH_USERS = "users"
+    private const val COLLECTION_COMMENTS = "comments"
+    private const val COLLECTION_LIKE = "like"
+    private const val COLLECTION_FOLLOWER = "follower"
+    private const val COLLECTION_FOLLOWING = "following"
 
     override suspend fun publishEvents(posts: Posts): Result<Boolean> {
 
