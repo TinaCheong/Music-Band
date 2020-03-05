@@ -31,7 +31,7 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun fetchOtherUsersDataFromSong(userID: String): Result<User> {
+    override suspend fun retrieveUsersData(userID: String): Result<User> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

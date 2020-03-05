@@ -42,7 +42,7 @@ class FollowerProfileViewModel (private val repository: MusicBandRepository): Vi
         getFollowersResult()
     }
 
-    fun getFollowersResult(){
+    private fun getFollowersResult(){
 
         coroutineScope.launch {
 

@@ -48,6 +48,7 @@
     <!-- Search Music Fragment-->
     <string name="start_time">00:00</string>
     <string name="end_time">05:00</string>
+    <string name="no_music_text">Why not share your favourite songs?:)</string>
 
     <!-- Main Events Item and Main Music Item-->
     <string name="created_time">Created Time</string>

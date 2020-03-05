@@ -17,7 +17,7 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
     }
 
     override suspend fun publishMusic(posts: Posts): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.publishMusic(posts)
     }
 
     override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> {
@@ -32,60 +32,60 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.getFollowings()
     }
 
-    override suspend fun fetchOtherUsersDataFromSong(userID: String): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun retrieveUsersData(userID: String): Result<User> {
+        return remoteDataSource.retrieveUsersData(userID)
     }
 
     override suspend fun retrievePostsCount(userID: String): Result<Int> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrievePostsCount(userID)
     }
 
     override suspend fun retrieveFollowingsCount(userID: String): Result<Int> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrieveFollowingsCount(userID)
     }
 
     override suspend fun retrieveFollowersCount(userID: String): Result<Int> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrieveFollowersCount(userID)
     }
 
     override suspend fun checkIfUserIsFollowed(userID: String): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return  remoteDataSource.checkIfUserIsFollowed(userID)
     }
 
     override suspend fun followUser(userID: String): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.followUser(userID)
     }
 
     override suspend fun unfollowUser(userID: String): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.unfollowUser(userID)
     }
 
     override suspend fun updateUsersData(data: Map<String, String>): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.updateUsersData(data)
     }
 
     override suspend fun updateBackgroundAndAvatar(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.updateBackgroundAndAvatar()
     }
 
     override suspend fun getProfileData(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.getProfileData()
     }
 
     override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrieveUsersPosts(userID)
     }
 
     override suspend fun retrieveUsersSongs(userID: String): Result<List<Songs>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrieveUsersSongs(userID)
     }
 
     override suspend fun getAllSongs(): Result<List<Songs>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.getAllSongs()
     }
 
     override suspend fun retrieveUsersAvatar(userID: String): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteDataSource.retrieveUsersAvatar(userID)
     }
 
 }

@@ -18,7 +18,7 @@ interface MusicBandDataSource {
 
     suspend fun getFollowings(): Result<List<Following>>
 
-    suspend fun fetchOtherUsersDataFromSong(userID: String): Result<User>
+    suspend fun retrieveUsersData(userID: String): Result<User>
 
     suspend fun retrievePostsCount(userID: String): Result<Int>
 
