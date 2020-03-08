@@ -21,11 +21,12 @@
     <string name="followers">Followers</string>
     <string name="following">Following</string>
 
-    <!-- Profile Edit Fragment and Profile Others Info Fragments-->
+    <!-- Profile Edit Fragment and Profile Others Fragments-->
     <string name="speciality">Speciality</string>
     <string name="education">Education</string>
     <string name="position">Position</string>
     <string name="favourite_genres_of_music">Favourite Genres of Music</string>
+    <string name="favourite_music">Favourite Music</string>
     <string name="introduction">Introduction</string>
     <string name="experiences">Experiences</string>
     <string name="no_music_no_life">No music, no life</string>
@@ -44,6 +45,7 @@
     <string name="anna_tin">Anna Tin</string>
     <string name="back">Back</string>
     <string name="loading">Loading...</string>
+    <string name="no_data">~No data~</string>
 
     <!-- Search Music Fragment-->
     <string name="start_time">00:00</string>
@@ -61,6 +63,9 @@
 
     <!-- Match User Item -->
     <string name="alice_chan">Alice Chan</string>
+
+    <!-- Main Fragment -->
+    <string name="no_post_text">Cannot see anything?\n Go meet some friends or post something :)</string>
 
     <!-- Main Add Event Layout -->
     <string name="no_file_selected">No file selected</string>

@@ -29,6 +29,7 @@ import com.tina.musicband.databinding.ItemEventsMainBinding
 import com.tina.musicband.databinding.ItemMusicMainBinding
 import com.tina.musicband.ext.toDisplayFormat
 import com.tina.musicband.login.UserManager
+import com.tina.musicband.util.Logger
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.IOException
 import java.lang.Exception
@@ -48,6 +49,8 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
         val adapter = CommentAdapter()
 
         fun bind(posts: Posts, mainViewModel: MainViewModel) {
+
+            Logger.i("POST_USER_NAME:${posts.userName}")
 
             binding.posts = posts
             binding.mainViewModel = mainViewModel
@@ -92,8 +95,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
                         binding.eventLikeIcon.visibility = View.INVISIBLE
                         binding.eventLikeClickedIcon.visibility = View.VISIBLE
-
-
                     }
             }
 
@@ -115,18 +116,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                         binding.eventLike.setText(it1.toString())
                     }
                 }
-
-            if (mainViewModel.userAvatarMap.size != 0) {
-                binding.userAvatar.setImageDrawable(
-                    mainViewModel.userAvatarMap[posts.userId]?.getAvatarDrawable()
-                )
-            } else {
-
-                binding.userAvatar.setImageDrawable(
-                    mainViewModel.profileAvatar.value?.getAvatarDrawable()
-                )
-
-            }
 
         }
 
@@ -151,8 +140,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                     )
 
                 }
-
-
             }
         }
 
@@ -200,8 +187,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
 
                     }
                 }
-
-
         }
 
 
@@ -216,6 +201,8 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
         var loadSong = ""
 
         fun bind(post: Posts, mainViewModel: MainViewModel) {
+
+            Logger.i("POST_USER_NAME:${post.userName}")
 
             binding.post = post
             binding.mainViewModel = mainViewModel
@@ -316,7 +303,8 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             object : Handler() {
                 override fun handleMessage(msg: Message) {
                     val currentPosition = msg.what
-                    val percent = (1 / ( mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
+                    val percent =
+                        (1 / (mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
                     binding.musicSeekBar.progress = percent
                     val startTime = createTIme(currentPosition)
 
@@ -379,19 +367,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                         ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
                 }
 
-//            FirebaseFirestore.getInstance().collection("posts").document(post.postId)
-//                .collection("like")
-//                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//                    querySnapshot?.size()
-//                        ?.let { it1 -> binding.musicLike.setText(it1.toString()) }
-//                }
-
-
-            binding.userAvatar.setImageDrawable(
-
-                mainViewModel.userAvatarMap[post.userId]?.getAvatarDrawable()
-
-            )
 
             binding.executePendingBindings()
         }
@@ -402,11 +377,6 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
             val min = time / 1000 / 60
             val sec = time / 1000 % 60
             timeLevel = String.format("%02d:%02d", min, sec)
-
-//        if(sec<10){
-//            timeLevel += "0"
-//            timeLevel += sec
-//        }
 
             return timeLevel
 

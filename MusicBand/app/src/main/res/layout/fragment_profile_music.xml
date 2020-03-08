@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.search.SearchMusicViewModel" />
+        <import type="android.view.View">
+        </import>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +27,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:songs="@{viewModel.songs}"/>
 
         <ImageView
             android:id="@+id/no_music_image"
@@ -31,6 +36,7 @@
             android:layout_height="130dp"
             android:layout_marginTop="16dp"
             android:tint="@color/white_50"
+            android:visibility="@{viewModel.songs.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/question_mark_image"
@@ -43,6 +49,7 @@
             android:layout_marginStart="115dp"
             android:layout_marginTop="140dp"
             android:tint="@color/white_50"
+            android:visibility="@{viewModel.songs.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_ic_question_mark_search" />
@@ -53,9 +60,10 @@
             android:layout_height="63dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Why not share your favourite songs?:)"
+            android:text="@string/no_music_text"
             android:textColor="@color/gray_DDDDDD_50"
             android:textSize="20sp"
+            android:visibility="@{viewModel.songs.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/no_music_image"
             app:layout_constraintStart_toStartOf="@+id/no_music_image"

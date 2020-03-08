@@ -8,6 +8,26 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
                                  private val localDataSource: MusicBandDataSource)
     : MusicBandRepository {
 
+    override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
+        return remoteDataSource.detectProfileDataChange(callbackHandler)
+    }
+
+    override fun getFollowings(callbackHandler: ((List<Following>) -> Unit)?) {
+        return remoteDataSource.getFollowings(callbackHandler)
+    }
+
+    override fun getFollowers(callbackHandler: ((List<Follower>) -> Unit)?) {
+        return remoteDataSource.getFollowers(callbackHandler)
+    }
+
+    override fun retrieveFollowingsCount(userID: String, callbackHandler: ((Int) -> Unit)?) {
+        return remoteDataSource.retrieveFollowingsCount(userID, callbackHandler)
+    }
+
+    override fun retrieveFollowersCount(userID: String, callbackHandler: ((Int) -> Unit)?) {
+        return remoteDataSource.retrieveFollowersCount(userID, callbackHandler)
+    }
+
     override suspend fun uploadImage(imageUri: Uri): Result<String> {
         return remoteDataSource.uploadImage(imageUri)
     }
@@ -24,28 +44,12 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.changeAvatarAndBackground(user)
     }
 
-    override suspend fun getFollowers(): Result<List<Follower>> {
-        return remoteDataSource.getFollowers()
-    }
-
-    override suspend fun getFollowings(): Result<List<Following>> {
-        return remoteDataSource.getFollowings()
-    }
-
     override suspend fun retrieveUsersData(userID: String): Result<User> {
         return remoteDataSource.retrieveUsersData(userID)
     }
 
     override suspend fun retrievePostsCount(userID: String): Result<Int> {
         return remoteDataSource.retrievePostsCount(userID)
-    }
-
-    override suspend fun retrieveFollowingsCount(userID: String): Result<Int> {
-        return remoteDataSource.retrieveFollowingsCount(userID)
-    }
-
-    override suspend fun retrieveFollowersCount(userID: String): Result<Int> {
-        return remoteDataSource.retrieveFollowersCount(userID)
     }
 
     override suspend fun checkIfUserIsFollowed(userID: String): Result<Boolean> {
@@ -60,16 +64,12 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.unfollowUser(userID)
     }
 
-    override suspend fun updateUsersData(data: Map<String, String>): Result<Boolean> {
+    override suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean> {
         return remoteDataSource.updateUsersData(data)
     }
 
     override suspend fun updateBackgroundAndAvatar(): Result<User> {
         return remoteDataSource.updateBackgroundAndAvatar()
-    }
-
-    override suspend fun getProfileData(): Result<User> {
-        return remoteDataSource.getProfileData()
     }
 
     override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> {

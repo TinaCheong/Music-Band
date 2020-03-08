@@ -45,28 +45,40 @@ class SearchMusicViewModel(private val repository: MusicBandRepository) : ViewMo
         viewModelJob.cancel()
     }
 
-    init {
-        getAllSongsResult()
-    }
 
+    fun retrieveSongsByUserID(userID: String) {
 
-    fun fetchSongsByID(userID: String) {
+        coroutineScope.launch {
 
-        if (userID.isEmpty()) return
+            _status.value = LoadApiStatus.LOADING
 
-        FirebaseFirestore.getInstance().collection("songs")
-            .whereEqualTo("userId", userID)
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
+            val result = repository.retrieveUsersSongs(userID)
 
-                    _songs.value = it.result!!.toObjects(Songs::class.java)
+            _songs.value = when (result) {
+                is com.tina.musicband.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    result.data
                 }
-
+                is com.tina.musicband.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                is com.tina.musicband.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
             }
+        }
     }
 
-    private fun getAllSongsResult(){
+    fun getAllSongsResult(){
 
         coroutineScope.launch {
 

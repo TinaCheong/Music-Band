@@ -7,6 +7,26 @@ import com.tina.musicband.data.source.MusicBandDataSource
 import com.tina.musicband.main.PostSealedItem
 
 class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
+    override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getFollowers(callbackHandler: ((List<Follower>) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getFollowings(callbackHandler: ((List<Following>) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun retrieveFollowingsCount(userID: String, callbackHandler: ((Int) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun retrieveFollowersCount(userID: String, callbackHandler: ((Int) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override suspend fun uploadImage(imageUri: Uri): Result<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -23,27 +43,11 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun getFollowers(): Result<List<Follower>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun getFollowings(): Result<List<Following>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override suspend fun retrieveUsersData(userID: String): Result<User> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun retrievePostsCount(userID: String): Result<Int> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun retrieveFollowingsCount(userID: String): Result<Int> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun retrieveFollowersCount(userID: String): Result<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -59,15 +63,11 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun updateUsersData(data: Map<String, String>): Result<Boolean> {
+    override suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun updateBackgroundAndAvatar(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun getProfileData(): Result<User> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

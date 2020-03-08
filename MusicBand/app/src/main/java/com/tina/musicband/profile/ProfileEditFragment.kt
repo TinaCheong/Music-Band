@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tina.musicband.R
@@ -38,42 +39,23 @@ class ProfileEditFragment : Fragment() {
             inflater, R.layout.fragment_profile_edit, container, false
         )
 
-        binding.usernameEdit.setText(com.tina.musicband.login.UserManager.userName)
+        binding.viewModel = viewModel
 
-        readProfileData()
+        binding.lifecycleOwner = this
 
         binding.saveButton.setOnClickListener {
 
-            val updateData = mapOf(
-                "username" to binding.usernameEdit.text.toString(),
-                "education" to binding.educationText.text.toString(),
-                "favouriteMusic" to binding.favouriteMusicText.text.toString(),
-                "introduction" to binding.introductionText.text.toString(),
-                "position" to binding.positionText.text.toString(),
-                "speciality" to binding.specialityText.text.toString(),
-                "experience" to binding.experienceEdit.text.toString()
-            )
-
-
-            FirebaseFirestore.getInstance().collection("users")
-                .document(com.tina.musicband.login.UserManager.userToken.toString())
-                .update(updateData)
-                .addOnCompleteListener {
-
-                    if (it.isSuccessful) {
-
-                        Toast.makeText(activity, "Save Success", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_global_profileFragment)
-
-                    }
-
-                }
-
+            viewModel.updateUserData()
         }
 
-        updateUser()
+        viewModel.uploadStatus.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Toast.makeText(activity, "Save Success", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_global_profileFragment)
+                viewModel.finishUpdate()
+            }
 
-
+        })
 
         binding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_global_profileFragment)
@@ -87,57 +69,7 @@ class ProfileEditFragment : Fragment() {
             findNavController().navigate(R.id.action_global_backgroundDialog)
         }
 
-
         // Inflate the layout for this fragment
         return binding.root
-    }
-
-    private fun updateUser() {
-        FirebaseFirestore.getInstance().collection("users")
-            .document(com.tina.musicband.login.UserManager.userToken.toString())
-            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-
-                if(documentSnapshot != null){
-
-                    val user = documentSnapshot.toObject(com.tina.musicband.data.User::class.java)
-
-                    binding.profileEditBackground.setImageDrawable(
-                        user?.background?.getBackgroundDrawable()
-                    )
-
-                    binding.profileEditAvatar.setImageDrawable(
-                        user?.avatar?.getAvatarDrawable()
-                    )
-
-
-                }
-
-            }
-
-    }
-
-    private fun readProfileData(){
-
-        FirebaseFirestore.getInstance().collection("users")
-            .document(com.tina.musicband.login.UserManager.userToken.toString())
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-
-                    val user = it.result!!.toObject(User::class.java)
-
-                    user?.let {
-                        binding.educationText.setText(it.education)
-                        binding.favouriteMusicText.setText(it.favouriteMusic)
-                        binding.introductionText.setText(it.introduction)
-                        binding.positionText.setText(it.position)
-                        binding.specialityText.setText(it.speciality)
-                        binding.experienceEdit.setText(it.experience)
-
-                    }
-
-                }
-            }
-
     }
 }

@@ -13,6 +13,7 @@ import com.tina.musicband.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
@@ -67,11 +68,10 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val error: LiveData<String>
         get() = _error
 
-    // status for the loading icon of swl
-    private val _refreshStatus = MutableLiveData<Boolean>()
+    private val _user = MutableLiveData<User>()
 
-    val refreshStatus: LiveData<Boolean>
-        get() = _refreshStatus
+    val user: LiveData<User>
+        get() = _user
 
     private val _commented = MutableLiveData<Boolean>()
 
@@ -89,6 +89,7 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         get() = _profileAvatar
 
     private val _isProfileAvatarPrepared = MutableLiveData<Boolean>()
+
     val isProfileAvatarPrepared: LiveData<Boolean>
         get() = _isProfileAvatarPrepared
 
@@ -96,7 +97,7 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         _isProfileAvatarPrepared.value = null
     }
 
-    val _likeStatus = MutableLiveData<Boolean>()
+    private val _likeStatus = MutableLiveData<Boolean>()
         .apply {
             value = true
         }
@@ -105,22 +106,15 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         get() = _likeStatus
 
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    // When the [ViewModel] is finished, we cancel our coroutine [viewModelJob], which tells the
-    // service to stop
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
-    init {
-        prepareSnapshotListener()
-    }
 
     fun leaveComment() {
         _commented.value = true
@@ -142,6 +136,17 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val userAvatarMap = mutableMapOf<String, Int>()
     val list = mutableListOf<Posts>()
 
+    fun retrieveUser() {
+        _status.value = LoadApiStatus.LOADING
+        coroutineScope.launch {
+            FirebaseFirestore
+                .getInstance()
+                .collection("users")
+                .document(UserManager.userToken.toString())
+                .get()
+        }
+    }
+
     fun prepareSnapshotListener() {
 
         _status.value = LoadApiStatus.LOADING
@@ -149,7 +154,8 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         FirebaseFirestore.getInstance()
             .collection("users")
             .document(UserManager.userToken.toString())
-            .get().addOnSuccessListener {
+            .get()
+            .addOnSuccessListener {
                 it.toObject(User::class.java)?.let { user ->
                     userAvatarMap[user.userId] = user.avatar
                 }
@@ -176,6 +182,7 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                                         val following =
                                             it.result!!.toObjects(Following::class.java)
 
+
                                         for (j in 0 until following.size) {
                                             val follower = following[j]
 
@@ -194,97 +201,94 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                                                             .document(follower.userId)
                                                             .get()
                                                             .addOnSuccessListener {
-                                                                it.toObject(User::class.java)?.let { user ->
-                                                                    userAvatarMap[user.userId] =
-                                                                        user.avatar
-                                                                }
+                                                                it.toObject(User::class.java)
+                                                                    ?.let { user ->
+                                                                        userAvatarMap[user.userId] =
+                                                                            user.avatar
+                                                                    }
 
                                                                 list.addAll(post)
 
-                                                                if(j == following.count() - 1){
+                                                                if (j == following.count() - 1) {
                                                                     _posts.value?.let { previousList ->
                                                                         list.addAll(previousList)
                                                                     }
-
                                                                     _posts.value = list
                                                                 }
                                                             }
-
                                                     }
 
-//                                                    _status.value =
-//                                                        LoadApiStatus.DONE
                                                 }
-
                                         }
-
-
                                     }
 
                                 }
-
                         }
 
                     }
-
-            }
-
-
-    }
-
-    fun getProfileAvatar(userID: String) {
-
-        FirebaseFirestore.getInstance().collection("users")
-            .document(userID)
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-
-                    val user = it.result!!.toObject(User::class.java)
-
-                    user?.let { user ->
-
-                        userAvatarMap[user.userId] = user.avatar
-                        _profileAvatar.value = userAvatarMap[user.userId]
-                        _isProfileAvatarPrepared.value = true
-                    }
-
-
-                }
             }
     }
 
-    fun fetchPostByUserID(userID : String){
+    fun readUserDataResult(userID: String){
 
-        if (userID.isEmpty()) return
+        coroutineScope.launch {
 
-        FirebaseFirestore.getInstance().collection("posts")
-            .whereEqualTo("userId", userID)
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
+            _status.value = LoadApiStatus.LOADING
 
-                    val posts = it.result!!.toObjects(Posts::class.java)
-
-                    val items = mutableListOf<PostSealedItem>()
-
-                    posts.forEach {
-                        when (it.type) {
-                            POST_TYPES.MUSIC.value -> {
-                                items.add(PostSealedItem.MusicItem(it))
-                            }
-
-                            POST_TYPES.EVENT.value -> {
-                                items.add(PostSealedItem.EventItem(it))
-                            }
-                        }
-                    }
-
-                    _userPosts.value = items
+            _user.value = when (val result = repository.retrieveUsersData(userID)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    userAvatarMap[result.data.userId] = result.data.avatar
+                    result.data
                 }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                    null
                 }
-
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
             }
-
+        }
 
     }
+
+    fun retrievePostByUserID(userID : String){
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            _userPosts.value = when (val result = repository.retrieveUsersPosts(userID)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+            }
+        }
+
+    }
+}

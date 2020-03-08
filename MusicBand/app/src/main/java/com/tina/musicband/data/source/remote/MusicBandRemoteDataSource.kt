@@ -4,17 +4,22 @@ import android.icu.util.Calendar
 import android.net.Uri
 import android.os.UserManager
 import android.view.View
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import com.tina.musicband.R
 import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandDataSource
 import com.tina.musicband.follower.FollowerAdapter
+import com.tina.musicband.main.POST_TYPES
 import com.tina.musicband.main.PostSealedItem
 import com.tina.musicband.util.Logger
 import java.util.*
+import kotlin.concurrent.timerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -30,8 +35,7 @@ private const val COLLECTION_FOLLOWING = "following"
 
 object MusicBandRemoteDataSource : MusicBandDataSource {
 
-    override suspend fun uploadImage(imageUri: Uri): Result<String> =
-        suspendCoroutine { continuation ->
+    override suspend fun uploadImage(imageUri: Uri): Result<String> = suspendCoroutine { continuation ->
             val storageReference = FirebaseStorage.getInstance()
                 .reference.child("images/" + UUID.randomUUID().toString())
 
@@ -49,8 +53,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
             }
         }
 
-    override suspend fun publishPost(post: Posts): Result<Boolean> =
-        suspendCoroutine { continuation ->
+    override suspend fun publishPost(post: Posts): Result<Boolean> = suspendCoroutine { continuation ->
             val posts = FirebaseFirestore.getInstance().collection(PATH_POSTS)
             val document = posts.document()
 
@@ -73,18 +76,14 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                             continuation.resume(Result.Error(it))
                         }
                     }
-
-
                 }
-
         }
 
     override suspend fun publishMusic(posts: Posts): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> =
-        suspendCoroutine { continuation ->
+    override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection("users")
                 .document(com.tina.musicband.login.UserManager.userToken.toString())
                 .update("avatar", user.avatar, "background", user.background)
@@ -101,10 +100,9 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                         }
                     }
                 }
-
         }
 
-    override suspend fun getFollowers(): Result<List<Follower>> = suspendCoroutine { continuation ->
+    override fun getFollowers(callbackHandler:((List<Follower>)->Unit)?) {
         FirebaseFirestore.getInstance().collection(PATH_USERS)
             .document(com.tina.musicband.login.UserManager.userToken.toString())
             .collection(COLLECTION_FOLLOWER)
@@ -114,14 +112,12 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                     val list = querySnapshot.toObjects(Follower::class.java)
 
-                    continuation.resume(Result.Success(list))
-
+                    callbackHandler?.invoke(list)
                 }
             }
     }
 
-    override suspend fun getFollowings(): Result<List<Following>> =
-        suspendCoroutine { continuation ->
+    override fun getFollowings(callbackHandler:((List<Following>)->Unit)?) {
             FirebaseFirestore.getInstance().collection(PATH_USERS)
                 .document(com.tina.musicband.login.UserManager.userToken.toString())
                 .collection(COLLECTION_FOLLOWING)
@@ -131,14 +127,13 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                         val list = querySnapshot.toObjects(Following::class.java)
 
-                        continuation.resume(Result.Success(list))
+                        callbackHandler?.invoke(list)
 
                     }
                 }
         }
 
-    override suspend fun retrieveUsersData(userID: String): Result<User> =
-        suspendCoroutine { continuation ->
+    override suspend fun retrieveUsersData(userID: String): Result<User> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection(PATH_USERS)
                 .document(userID)
                 .get()
@@ -163,8 +158,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                 }
         }
 
-    override suspend fun retrievePostsCount(userID: String): Result<Int> =
-        suspendCoroutine { continuation ->
+    override suspend fun retrievePostsCount(userID: String): Result<Int> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection(PATH_POSTS)
                 .whereEqualTo("userId", userID)
                 .get()
@@ -190,33 +184,28 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                     }
                 }
-        }
+    }
 
-    override suspend fun retrieveFollowingsCount(userID: String): Result<Int> =
-        suspendCoroutine { continuation ->
-            FirebaseFirestore.getInstance().collection(PATH_USERS)
-                .document(userID)
-                .collection(COLLECTION_FOLLOWING)
-                .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+    override fun retrieveFollowingsCount(userID: String, callbackHandler:((Int)->Unit)?) {
+        FirebaseFirestore.getInstance().collection(PATH_USERS)
+            .document(userID)
+            .collection(COLLECTION_FOLLOWING)
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                var count = 0
+                if (documentSnapshot != null) {
 
-                    if (documentSnapshot != null) {
+                    val followings = documentSnapshot.toObjects(Following::class.java)
 
-                        var count = 0
+                    for (following in followings) {
 
-                        val followings = documentSnapshot.toObjects(Following::class.java)
-
-                        for (following in followings) {
-
-                            count++
-
-                        }
-                        continuation.resume(Result.Success(count))
+                        count++
                     }
                 }
-        }
+                callbackHandler?.invoke(count)
+            }
+    }
 
-    override suspend fun retrieveFollowersCount(userID: String): Result<Int> =
-        suspendCoroutine { continuation ->
+    override fun retrieveFollowersCount(userID: String, callbackHandler:((Int)->Unit)?) {
             FirebaseFirestore.getInstance().collection(PATH_USERS)
                 .document(userID)
                 .collection(COLLECTION_FOLLOWER)
@@ -233,7 +222,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                             count++
 
                         }
-                        continuation.resume(Result.Success(count))
+                        callbackHandler?.invoke(count)
                     }
                 }
         }
@@ -341,7 +330,6 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                                     continuation.resume(Result.Success(false))
 
-
                                 } else {
 
                                     it.exception?.let {
@@ -366,24 +354,108 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                 }
         }
 
-    override suspend fun updateUsersData(data: Map<String, String>): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean> =
+        suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance().collection("users")
+            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .update(data)
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    continuation.resume(Result.Success(true))
+
+                } else {
+
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Fail to update data ${it.message}")
+                        continuation.resume(Result.Error(it))
+
+                    }
+                }
+
+            }
     }
 
     override suspend fun updateBackgroundAndAvatar(): Result<User> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun getProfileData(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
+
+        FirebaseFirestore.getInstance().collection(PATH_USERS)
+            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+
+                if (documentSnapshot != null) {
+
+                    val user = documentSnapshot.toObject(User::class.java)
+
+                    callbackHandler?.invoke(user!!)
+                }
+            }
     }
 
-    override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> = suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance().collection("posts")
+            .whereEqualTo("userId", userID)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+                    val posts = task.result?.toObjects(Posts::class.java)
+
+                    val items = mutableListOf<PostSealedItem>()
+
+                    posts?.forEach {
+                        when (it.type) {
+                            POST_TYPES.MUSIC.value -> {
+                                items.add(PostSealedItem.MusicItem(it))
+                            }
+
+                            POST_TYPES.EVENT.value -> {
+                                items.add(PostSealedItem.EventItem(it))
+                            }
+                        }
+                    }
+
+                    continuation.resume(Result.Success(items))
+
+                } else {
+
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting songs ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                }
+            }
     }
 
-    override suspend fun retrieveUsersSongs(userID: String): Result<List<Songs>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
+    override suspend fun retrieveUsersSongs(userID: String): Result<List<Songs>> = suspendCoroutine { continuation ->
+        FirebaseFirestore.getInstance().collection(PATH_SONGS)
+            .whereEqualTo("userId", userID)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+                    val songs = task.result!!.toObjects(Songs::class.java)
+
+                    continuation.resume(Result.Success(songs))
+
+                } else {
+
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting songs ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                }
+
+            }
     }
 
     override suspend fun getAllSongs(): Result<List<Songs>> = suspendCoroutine { continuation ->
@@ -400,7 +472,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                     task.exception?.let {
 
-                        Logger.w("[${this::class.simpleName}] Error adding follower ${it.message}")
+                        Logger.w("[${this::class.simpleName}] Error getting songs ${it.message}")
                         continuation.resume(Result.Error(it))
                     }
 

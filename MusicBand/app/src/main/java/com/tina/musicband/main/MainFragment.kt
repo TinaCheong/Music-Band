@@ -28,13 +28,8 @@ enum class POST_TYPES(val value: String) {
 class MainFragment : Fragment() {
 
     private var isOpen = false
-
     lateinit var binding: FragmentMainBinding
-
-
-
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
-
 
     @SuppressLint("RestrictedApi")
     override fun onCreateView(
@@ -48,6 +43,8 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        viewModel.prepareSnapshotListener()
 
         // Implement the FAB Animation
         binding.mainFab.setOnClickListener {
@@ -63,25 +60,7 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_global_addEventFragment)
         }
 
-
-        val mainAdapter = MainAdapter(viewModel)
-
-        binding.recyclerViewMainPage.adapter = mainAdapter
-
-        viewModel.postItems.observe(this, Observer {
-            it?.let {
-                mainAdapter.submitList(it)
-            }
-        })
-
-        viewModel.posts.observe(this, Observer {
-            it?.let {
-                showHint()
-            }
-        })
-
-
-
+        binding.recyclerViewMainPage.adapter = MainAdapter(viewModel)
 
 
         viewModel.commented.observe(this, Observer {
@@ -96,11 +75,6 @@ class MainFragment : Fragment() {
                 binding.mainFab.visibility = View.VISIBLE
             }
         })
-
-        viewModel.likeStatus.observe(this, Observer {
-            Log.i("Tinaaaa", "viewModel.likeStatue: $it")
-        })
-
 
         return binding.root
     }
@@ -136,20 +110,6 @@ class MainFragment : Fragment() {
         }
 
     }
-
-    private fun showHint(){
-        if(viewModel.posts.value?.size == 0){
-            binding.noPostImage.visibility = View.VISIBLE
-            binding.questionMarkImage.visibility = View.VISIBLE
-            binding.noPostText.visibility = View.VISIBLE
-        }else{
-            binding.noPostImage.visibility = View.GONE
-            binding.questionMarkImage.visibility = View.GONE
-            binding.noPostText.visibility = View.GONE
-        }
-
-    }
-
 
 
 }

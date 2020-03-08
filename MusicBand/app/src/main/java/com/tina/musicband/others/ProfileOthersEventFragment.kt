@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.tina.musicband.R
 import com.tina.musicband.databinding.FragmentProfileOthersEventBinding
 import com.tina.musicband.ext.getVmFactory
@@ -34,39 +33,17 @@ class ProfileOthersEventFragment(private val userID : String): Fragment() {
 
         binding.lifecycleOwner = this
 
+        binding.viewModel = viewModel
+
         binding.recyclerViewEventOthers.adapter = MainAdapter(viewModel)
 
-        viewModel.fetchPostByUserID(userID)
+        viewModel.retrievePostByUserID(userID)
 
-        viewModel.getProfileAvatar(userID)
-
-        viewModel.userPosts.observe(viewLifecycleOwner, Observer {
-
-            (binding.recyclerViewEventOthers.adapter as? MainAdapter)?.submitList(it)
-            showHint()
-
-        })
+        viewModel.readUserDataResult(userID)
 
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun showHint(){
-
-        if (viewModel.userPosts.value?.size == 0) {
-
-            binding.noPostImage.visibility = View.VISIBLE
-            binding.noPostText.visibility = View.VISIBLE
-
-        } else {
-
-            binding.noPostImage.visibility = View.GONE
-            binding.noPostText.visibility = View.GONE
-
-        }
-
-
-    }
 
 }

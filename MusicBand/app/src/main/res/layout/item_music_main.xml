@@ -79,6 +79,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/select_view_circle"
+                    app:setAvatar="@{mainViewModel.userAvatarMap[post.userId]}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

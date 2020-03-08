@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.data.User
 import com.tina.musicband.data.source.MusicBandRepository
+import com.tina.musicband.data.source.remote.MusicBandRemoteDataSource
 import com.tina.musicband.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -148,66 +149,16 @@ class ProfileOthersViewModel(private val repository: MusicBandRepository , priva
 
     private fun retrieveFollowingsCountResult(){
 
-        coroutineScope.launch {
-
-            _status.value = LoadApiStatus.LOADING
-
-            val result = repository.retrieveFollowingsCount(userID.value!!)
-
-            _followingsCount.value = when (result) {
-                is com.tina.musicband.data.Result.Success -> {
-                    _error.value = null
-                    _status.value = LoadApiStatus.DONE
-                    result.data
-                }
-                is com.tina.musicband.data.Result.Fail -> {
-                    _error.value = result.error
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                is com.tina.musicband.data.Result.Error -> {
-                    _error.value = result.exception.toString()
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                else -> {
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-            }
+        repository.retrieveFollowingsCount(userID.value!!) { followingCount ->
+            _followingsCount.value = followingCount
         }
     }
 
     private fun retrieveFollowersCountResult(){
 
-        coroutineScope.launch {
-
-            _status.value = LoadApiStatus.LOADING
-
-            val result = repository.retrieveFollowersCount(userID.value!!)
-
-            _followersCount.value = when (result) {
-                is com.tina.musicband.data.Result.Success -> {
-                    _error.value = null
-                    _status.value = LoadApiStatus.DONE
-                    result.data
-                }
-                is com.tina.musicband.data.Result.Fail -> {
-                    _error.value = result.error
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                is com.tina.musicband.data.Result.Error -> {
-                    _error.value = result.exception.toString()
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
-                else -> {
-                    _status.value = LoadApiStatus.ERROR
-                    null
-                }
+        repository.retrieveFollowersCount(userID.value!!) { followerCount ->
+                _followersCount.value = followerCount
             }
-        }
     }
 
     private fun checkIfUserIsFollowed(){

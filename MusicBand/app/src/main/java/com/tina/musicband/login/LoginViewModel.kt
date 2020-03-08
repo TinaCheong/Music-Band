@@ -56,7 +56,7 @@ class LoginViewModel (private val repository: MusicBandRepository) : ViewModel()
             FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
 
-                MusicBandApplication.instance.user.fbToken = loginResult.accessToken.toString()
+                user.fbToken = loginResult.accessToken.toString()
                 handleFacebookAccessToken(user, loginResult.accessToken)
             }
 

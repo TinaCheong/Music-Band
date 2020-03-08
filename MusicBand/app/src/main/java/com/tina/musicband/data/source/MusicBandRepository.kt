@@ -17,17 +17,17 @@ interface MusicBandRepository {
 
     suspend fun changeAvatarAndBackground(user: User): Result<Boolean>
 
-    suspend fun getFollowers(): Result<List<Follower>>
+    fun getFollowers(callbackHandler:((List<Follower>)->Unit)?)
 
-    suspend fun getFollowings(): Result<List<Following>>
+    fun getFollowings(callbackHandler:((List<Following>)->Unit)?)
 
     suspend fun retrieveUsersData(userID: String): Result<User>
 
     suspend fun retrievePostsCount(userID: String): Result<Int>
 
-    suspend fun retrieveFollowingsCount(userID: String): Result<Int>
+    fun retrieveFollowingsCount(userID: String, callbackHandler:((Int)->Unit)?)
 
-    suspend fun retrieveFollowersCount(userID: String): Result<Int>
+    fun retrieveFollowersCount(userID: String, callbackHandler:((Int)->Unit)?)
 
     suspend fun checkIfUserIsFollowed(userID: String): Result<Boolean>
 
@@ -35,11 +35,11 @@ interface MusicBandRepository {
 
     suspend fun unfollowUser(userID: String): Result<Boolean>
 
-    suspend fun updateUsersData(data: Map<String, String>): Result<Boolean>
+    suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean>
 
     suspend fun updateBackgroundAndAvatar(): Result<User>
 
-    suspend fun getProfileData(): Result<User>
+    fun detectProfileDataChange(callbackHandler:((User)->Unit)?)
 
     suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>>
 

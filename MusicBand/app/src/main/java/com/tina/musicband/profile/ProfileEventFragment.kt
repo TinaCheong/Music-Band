@@ -30,12 +30,6 @@ class ProfileEventFragment : Fragment() {
 
     val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
-    private val postsList = mutableListOf<Posts>()
-
-    val list = mutableListOf<PostSealedItem>()
-
-    private lateinit var adapter: MainAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,68 +39,17 @@ class ProfileEventFragment : Fragment() {
             inflater, R.layout.fragment_profile_event, container, false
         )
 
-        adapter = MainAdapter(viewModel)
+        binding.viewModel = viewModel
 
-        binding.recyclerViewEventProfile.adapter = adapter
+        binding.lifecycleOwner = this
 
+        binding.recyclerViewEventProfile.adapter = MainAdapter(viewModel)
 
+        viewModel.retrievePostByUserID(UserManager.userToken.toString())
 
-//        viewModel.loadProfileAvatar()
-        viewModel.getProfileAvatar(UserManager.userToken.toString())
+        viewModel.readUserDataResult(UserManager.userToken.toString())
 
-        viewModel.isProfileAvatarPrepared.observe(this, Observer {
-            it?.let {
-                fetchPosts()
-                viewModel.doneReadingProfileAvatar()
-            }
-        })
-
-        // Inflate the layout for this fragment
         return binding.root
     }
-
-
-    private fun fetchPosts() {
-        FirebaseFirestore.getInstance().collection("posts")
-            .orderBy("createdTime", Query.Direction.DESCENDING)
-            .whereEqualTo("userId", UserManager.userToken.toString())
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-
-
-                    for (document in it.result!!){
-
-                        val posts = document.toObject(Posts::class.java)
-
-                        postsList.add(posts)
-
-
-                        when(posts.type) {
-                            POST_TYPES.EVENT.value -> list.add(PostSealedItem.EventItem(posts))
-                            POST_TYPES.MUSIC.value -> list.add(PostSealedItem.MusicItem(posts))
-                        }
-
-                    }
-                    adapter.submitList(list)
-
-                    showHint()
-                }
-            }
-    }
-
-    private fun showHint(){
-        if(list.size == 0){
-            binding.noPostImage.visibility = View.VISIBLE
-            binding.questionMarkImage.visibility = View.VISIBLE
-            binding.noPostText.visibility = View.VISIBLE
-        }else{
-            binding.noPostImage.visibility = View.GONE
-            binding.questionMarkImage.visibility = View.GONE
-            binding.noPostText.visibility = View.GONE
-        }
-
-    }
-
 
 }

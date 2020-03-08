@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.User
@@ -41,7 +42,7 @@ class AvatarDialogFragment : DialogFragment(){
             dismiss()
         }
 
-        viewModel.setUser(User())
+        viewModel.setUser(MusicBandApplication.user)
 
         viewModel.setting.observe(viewLifecycleOwner, Observer {
             it?.let {

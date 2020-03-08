@@ -51,6 +51,7 @@ class SearchMusicFragment : Fragment() {
 
         binding.recyclerViewSearchMusicPage.adapter = SearchMusicAdapter(viewModel)
 
+        viewModel.getAllSongsResult()
 
         viewModel.selectedSong.observe(this, Observer {
             it?.userId?.let {userID ->

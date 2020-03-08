@@ -14,10 +14,11 @@ class MusicBandApplication : Application() {
     // Depends on the flavor,
     val repository: MusicBandRepository
         get() = ServiceLocator.provideRepository(this)
-    val user = User()
+//    val user = User()
 
     companion object {
         var instance: MusicBandApplication by Delegates.notNull()
+        var user = User()
     }
 
     override fun onCreate() {

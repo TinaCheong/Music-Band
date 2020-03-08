@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.User
 import com.tina.musicband.databinding.DialogBgSelectProfileBinding
@@ -33,7 +34,7 @@ class BackgroundDialogFragment : DialogFragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.setUser(User())
+        viewModel.setUser(MusicBandApplication.user)
 
         binding.closeButton.setOnClickListener {
             dismiss()

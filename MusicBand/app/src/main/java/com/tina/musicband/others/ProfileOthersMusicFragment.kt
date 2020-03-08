@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.tina.musicband.R
-import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.FragmentProfileOthersMusicBinding
 import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.search.SearchMusicAdapter
@@ -23,7 +21,7 @@ class ProfileOthersMusicFragment(private val userID : String) : Fragment() {
 
     lateinit var binding : FragmentProfileOthersMusicBinding
     val viewModel by viewModels<SearchMusicViewModel> { getVmFactory() }
-    var songs = mutableListOf<Songs>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,36 +34,14 @@ class ProfileOthersMusicFragment(private val userID : String) : Fragment() {
 
         binding.lifecycleOwner = this
 
+        binding.viewModel = viewModel
+
         binding.recyclerViewMusicOthers.adapter = SearchMusicAdapter(viewModel)
 
-        viewModel.fetchSongsByID(userID)
+        viewModel.retrieveSongsByUserID(userID)
 
-        viewModel.songs.observe(viewLifecycleOwner, Observer {
-
-            (binding.recyclerViewMusicOthers.adapter as? SearchMusicAdapter)?.submitList(it)
-            showHint()
-
-        })
-
-        // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun showHint(){
-
-        if (viewModel.songs.value?.size == 0) {
-
-            binding.noMusicImage.visibility = View.VISIBLE
-            binding.noMusicText.visibility = View.VISIBLE
-
-        } else {
-
-            binding.noMusicImage.visibility = View.GONE
-            binding.noMusicText.visibility = View.GONE
-
-        }
-
-
-    }
 
 }

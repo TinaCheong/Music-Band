@@ -4,6 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.profile.ProfileViewModel" />
 
     </data>
 
@@ -33,6 +36,7 @@
                     android:layout_height="180dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/bg_triangle"
+                    app:setBackground="@{viewModel.user}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -41,6 +45,7 @@
                     android:id="@+id/profile_edit_avatar"
                     android:layout_width="129dp"
                     android:layout_height="129dp"
+                    app:setAvatarByUser="@{viewModel.user}"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar_edit"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -130,6 +135,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
+                    android:text="@={viewModel.user.introduction}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -145,6 +151,7 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:padding="8dp"
+                    android:text="@={viewModel.user.speciality}"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
@@ -163,6 +170,7 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:padding="8dp"
+                    android:text="@={viewModel.user.education}"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
@@ -183,6 +191,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
+                    android:text="@={viewModel.user.position}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/profile_position" />
@@ -197,6 +206,7 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:padding="8dp"
+                    android:text="@={viewModel.user.favouriteMusic}"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textSize="22sp"
@@ -212,6 +222,7 @@
                     android:layout_marginEnd="16dp"
                     android:backgroundTint="@color/white"
                     android:ems="10"
+                    android:text="@={viewModel.user.experience}"
                     android:inputType="textPersonName"
                     android:padding="8dp"
                     android:textColor="@color/white"
@@ -260,7 +271,7 @@
                     android:backgroundTint="@color/white"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="Tina Cheong"
+                    android:text="@{viewModel.user.username}"
                     android:enabled="false"
                     android:padding="8dp"
                     android:textColor="@color/white"
