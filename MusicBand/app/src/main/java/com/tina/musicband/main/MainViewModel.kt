@@ -136,17 +136,6 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val userAvatarMap = mutableMapOf<String, Int>()
     val list = mutableListOf<Posts>()
 
-    fun retrieveUser() {
-        _status.value = LoadApiStatus.LOADING
-        coroutineScope.launch {
-            FirebaseFirestore
-                .getInstance()
-                .collection("users")
-                .document(UserManager.userToken.toString())
-                .get()
-        }
-    }
-
     fun prepareSnapshotListener() {
 
         _status.value = LoadApiStatus.LOADING
@@ -289,6 +278,7 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                 }
             }
         }
-
     }
+
+
 }

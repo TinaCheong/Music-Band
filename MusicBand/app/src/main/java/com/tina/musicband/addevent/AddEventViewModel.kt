@@ -80,13 +80,13 @@ class AddEventViewModel(private val repository: MusicBandRepository) : ViewModel
         selectedDate.value = sdf.format(date)
     }
 
-    private fun publishPost(post: Posts){
+    private fun publishEvent(post: Posts){
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            when (val result = repository.publishPost(post)) {
+            when (val result = repository.publishEventPost(post)) {
                 is com.tina.musicband.data.Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -121,7 +121,7 @@ class AddEventViewModel(private val repository: MusicBandRepository) : ViewModel
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
                     _posts.value?.let {
-                     publishPost(Posts(type = POST_TYPES.EVENT.value,
+                     publishEvent(Posts(type = POST_TYPES.EVENT.value,
                          date = selectedDate.value,
                          image = result.data,
                          title = it.title,

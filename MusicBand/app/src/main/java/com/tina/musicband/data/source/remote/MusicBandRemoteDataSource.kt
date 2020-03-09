@@ -1,25 +1,16 @@
 package com.tina.musicband.data.source.remote
 
-import android.icu.util.Calendar
 import android.net.Uri
-import android.os.UserManager
-import android.view.View
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
-import com.tina.musicband.R
 import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandDataSource
-import com.tina.musicband.follower.FollowerAdapter
+import com.tina.musicband.login.UserManager
 import com.tina.musicband.main.POST_TYPES
 import com.tina.musicband.main.PostSealedItem
 import com.tina.musicband.util.Logger
 import java.util.*
-import kotlin.concurrent.timerTask
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -35,6 +26,28 @@ private const val COLLECTION_FOLLOWING = "following"
 
 object MusicBandRemoteDataSource : MusicBandDataSource {
 
+    override suspend fun publishSong(song: Songs): Result<Boolean> = suspendCoroutine { continuation ->
+        val songs = FirebaseFirestore.getInstance().collection(PATH_SONGS)
+        val document = songs.document()
+
+        song.songId = document.id
+        song.userId = UserManager.userToken.toString()
+
+        document.set(song).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.i("PublishSong: $song")
+
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {
+
+                    Logger.w("[${this::class.simpleName}] Error setting documents. ${it.message}")
+                    continuation.resume(Result.Error(it))
+                }
+            }
+        }
+    }
+
     override suspend fun uploadImage(imageUri: Uri): Result<String> = suspendCoroutine { continuation ->
             val storageReference = FirebaseStorage.getInstance()
                 .reference.child("images/" + UUID.randomUUID().toString())
@@ -49,39 +62,82 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
             }.addOnFailureListener {
 
                 Logger.w("Upload Fail")
-
             }
         }
 
-    override suspend fun publishPost(post: Posts): Result<Boolean> = suspendCoroutine { continuation ->
+    override suspend fun publishEventPost(post: Posts): Result<Boolean> = suspendCoroutine { continuation ->
             val posts = FirebaseFirestore.getInstance().collection(PATH_POSTS)
             val document = posts.document()
 
             post.postId = document.id
             post.createdTime = java.util.Calendar.getInstance().timeInMillis
-            post.userName = com.tina.musicband.login.UserManager.userName
-            post.userId = com.tina.musicband.login.UserManager.userToken.toString()
+            post.userName = UserManager.userName
+            post.userId = UserManager.userToken.toString()
 
             document
                 .set(post)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Logger.i("PublishPost: $post")
+                        Logger.i("PublishEvent: $post")
 
                         continuation.resume(Result.Success(true))
                     } else {
                         task.exception?.let {
 
-                            Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                            Logger.w("[${this::class.simpleName}] Error setting documents. ${it.message}")
                             continuation.resume(Result.Error(it))
                         }
                     }
                 }
         }
 
-    override suspend fun publishMusic(posts: Posts): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun publishMusicPost(post: Posts): Result<Boolean> = suspendCoroutine { continuation ->
+        val posts = FirebaseFirestore.getInstance().collection(PATH_POSTS)
+        val document = posts.document()
+        val songs = FirebaseFirestore.getInstance().collection(PATH_SONGS)
+        val songId = songs.document().id
+
+        post.postId = document.id
+        post.createdTime = java.util.Calendar.getInstance().timeInMillis
+        post.userName = UserManager.userName
+        post.userId = UserManager.userToken.toString()
+        post.song.userId = UserManager.userToken.toString()
+        post.song.songId = songId
+
+        document
+            .set(post)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Logger.i("PublishMusic: $post")
+
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+                }
+            }
     }
+
+    override suspend fun uploadSong(songUri: Uri): Result<String>  = suspendCoroutine { continuation ->
+        val storageReference = FirebaseStorage.getInstance()
+            .reference.child("songs/" + UUID.randomUUID().toString())
+
+        storageReference.putFile(songUri).addOnSuccessListener {
+            val uri = it.metadata?.reference?.downloadUrl
+            uri?.addOnSuccessListener {
+
+                continuation.resume(Result.Success(it.toString()))
+
+            }
+        }.addOnFailureListener{
+
+            Logger.w("Upload Fail")
+        }
+    }
+
 
     override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection("users")
@@ -398,8 +454,9 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     }
 
     override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> = suspendCoroutine { continuation ->
-        FirebaseFirestore.getInstance().collection("posts")
+        FirebaseFirestore.getInstance().collection(PATH_POSTS)
             .whereEqualTo("userId", userID)
+            .orderBy("createdTime", Query.Direction.DESCENDING)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

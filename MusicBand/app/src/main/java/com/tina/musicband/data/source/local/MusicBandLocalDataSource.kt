@@ -7,6 +7,19 @@ import com.tina.musicband.data.source.MusicBandDataSource
 import com.tina.musicband.main.PostSealedItem
 
 class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
+
+    override suspend fun publishSong(song: Songs): Result<Boolean> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun publishMusicPost(post: Posts): Result<Boolean> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun uploadSong(songUri: Uri): Result<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -31,11 +44,7 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun publishPost(post: Posts): Result<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun publishMusic(posts: Posts): Result<Boolean> {
+    override suspend fun publishEventPost(post: Posts): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

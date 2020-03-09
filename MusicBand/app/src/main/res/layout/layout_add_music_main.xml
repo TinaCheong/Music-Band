@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.addmusic.AddMusicViewModel" />
+        <import type="android.view.View">
+        </import>
+        <import type="com.tina.musicband.network.LoadApiStatus">
+        </import>
 
     </data>
 
@@ -20,6 +27,7 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Title"
+            android:text="@={viewModel.posts.title}"
             android:padding="8dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -39,6 +47,7 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="@string/composer"
+            android:text="@={viewModel.posts.composer}"
             android:padding="8dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -57,6 +66,7 @@
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="@string/description"
+            android:text="@={viewModel.posts.description}"
             android:padding="8dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -72,7 +82,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:translationZ="90dp"
-            android:visibility="invisible"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/submit_button"
             app:layout_constraintEnd_toEndOf="@+id/submit_button"
             app:layout_constraintStart_toStartOf="@+id/submit_button"
@@ -89,6 +99,7 @@
             android:background="@drawable/search_view_round_corner"
             android:elevation="12dp"
             android:text="@string/submit"
+            android:onClick="@{() -> viewModel.uploadAudioToFirebase()}"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

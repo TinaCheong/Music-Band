@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tina.musicband.MusicBandViewModel
 import com.tina.musicband.addevent.AddEventViewModel
+import com.tina.musicband.addmusic.AddMusicViewModel
 import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.dialog.AvatarDialogViewModel
@@ -55,6 +56,9 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(FollowingProfileViewModel::class.java) ->
                     FollowingProfileViewModel(repository)
+
+                isAssignableFrom(AddMusicViewModel::class.java) ->
+                    AddMusicViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

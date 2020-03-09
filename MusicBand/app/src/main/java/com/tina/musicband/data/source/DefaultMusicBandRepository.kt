@@ -8,6 +8,18 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
                                  private val localDataSource: MusicBandDataSource)
     : MusicBandRepository {
 
+    override suspend fun publishSong(song: Songs): Result<Boolean> {
+        return remoteDataSource.publishSong(song)
+    }
+
+    override suspend fun publishMusicPost(post: Posts): Result<Boolean> {
+        return remoteDataSource.publishMusicPost(post)
+    }
+
+    override suspend fun uploadSong(songUri: Uri): Result<String> {
+        return remoteDataSource.uploadSong(songUri)
+    }
+
     override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
         return remoteDataSource.detectProfileDataChange(callbackHandler)
     }
@@ -32,12 +44,8 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.uploadImage(imageUri)
     }
 
-    override suspend fun publishPost(post: Posts): Result<Boolean> {
-        return remoteDataSource.publishPost(post)
-    }
-
-    override suspend fun publishMusic(posts: Posts): Result<Boolean> {
-        return remoteDataSource.publishMusic(posts)
+    override suspend fun publishEventPost(post: Posts): Result<Boolean> {
+        return remoteDataSource.publishEventPost(post)
     }
 
     override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> {

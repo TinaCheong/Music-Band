@@ -6,9 +6,13 @@ import com.tina.musicband.main.PostSealedItem
 
 interface MusicBandDataSource {
 
-    suspend fun publishPost(post: Posts): Result<Boolean>
+    suspend fun publishEventPost(post: Posts): Result<Boolean>
 
-    suspend fun publishMusic(posts: Posts): Result<Boolean>
+    suspend fun publishMusicPost(post: Posts): Result<Boolean>
+
+    suspend fun publishSong(song: Songs): Result<Boolean>
+
+    suspend fun uploadSong(songUri: Uri): Result<String>
 
     suspend fun uploadImage(imageUri: Uri): Result<String>
 
