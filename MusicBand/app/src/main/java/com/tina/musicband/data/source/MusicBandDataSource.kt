@@ -38,7 +38,7 @@ interface MusicBandDataSource {
 
     suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean>
 
-    suspend fun updateBackgroundAndAvatar(): Result<User>
+    fun retrievePostsDataInstantly(userID: String, callbackHandler:((List<Posts>)->Unit)?)
 
     fun detectProfileDataChange(callbackHandler:((User)->Unit)?)
 
@@ -48,5 +48,5 @@ interface MusicBandDataSource {
 
     suspend fun getAllSongs(): Result<List<Songs>>
 
-    suspend fun retrieveUsersAvatar(userID: String): Result<User>
+    suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>>
 }

@@ -8,6 +8,10 @@ import com.tina.musicband.main.PostSealedItem
 
 class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
 
+    override fun retrievePostsDataInstantly(userID: String, callbackHandler: ((List<Posts>) -> Unit)?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override suspend fun publishSong(song: Songs): Result<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -76,10 +80,6 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun updateBackgroundAndAvatar(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -92,7 +92,7 @@ class MusicBandLocalDataSource (val context: Context) : MusicBandDataSource{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun retrieveUsersAvatar(userID: String): Result<User> {
+    override suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

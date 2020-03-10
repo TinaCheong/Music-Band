@@ -7,6 +7,10 @@ import com.tina.musicband.main.PostSealedItem
 class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSource,
                                  private val localDataSource: MusicBandDataSource)
     : MusicBandRepository {
+    override fun retrievePostsDataInstantly(userID: String, callbackHandler: ((List<Posts>) -> Unit)?
+    ) {
+        return remoteDataSource.retrievePostsDataInstantly(userID, callbackHandler)
+    }
 
     override suspend fun publishSong(song: Songs): Result<Boolean> {
         return remoteDataSource.publishSong(song)
@@ -76,10 +80,6 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.updateUsersData(data)
     }
 
-    override suspend fun updateBackgroundAndAvatar(): Result<User> {
-        return remoteDataSource.updateBackgroundAndAvatar()
-    }
-
     override suspend fun retrieveUsersPosts(userID: String): Result<List<PostSealedItem>> {
         return remoteDataSource.retrieveUsersPosts(userID)
     }
@@ -92,8 +92,8 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.getAllSongs()
     }
 
-    override suspend fun retrieveUsersAvatar(userID: String): Result<User> {
-        return remoteDataSource.retrieveUsersAvatar(userID)
+    override suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>> {
+        return remoteDataSource.retrieveUsersFollowings(userID)
     }
 
 }

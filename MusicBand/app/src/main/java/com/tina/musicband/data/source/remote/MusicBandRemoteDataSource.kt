@@ -141,7 +141,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
     override suspend fun changeAvatarAndBackground(user: User): Result<Boolean> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection("users")
-                .document(com.tina.musicband.login.UserManager.userToken.toString())
+                .document(UserManager.userToken.toString())
                 .update("avatar", user.avatar, "background", user.background)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -160,7 +160,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
     override fun getFollowers(callbackHandler:((List<Follower>)->Unit)?) {
         FirebaseFirestore.getInstance().collection(PATH_USERS)
-            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .document(UserManager.userToken.toString())
             .collection(COLLECTION_FOLLOWER)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
 
@@ -175,7 +175,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
     override fun getFollowings(callbackHandler:((List<Following>)->Unit)?) {
             FirebaseFirestore.getInstance().collection(PATH_USERS)
-                .document(com.tina.musicband.login.UserManager.userToken.toString())
+                .document(UserManager.userToken.toString())
                 .collection(COLLECTION_FOLLOWING)
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
 
@@ -296,7 +296,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
 
                         for (follower in followers) {
 
-                            if (follower.userId == com.tina.musicband.login.UserManager.userToken.toString()) {
+                            if (follower.userId == UserManager.userToken.toString()) {
 
                                 continuation.resume(Result.Success(true))
                                 break
@@ -319,7 +319,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     override suspend fun followUser(userID: String): Result<Boolean> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection(PATH_USERS)
-                .document(com.tina.musicband.login.UserManager.userToken.toString())
+                .document(UserManager.userToken.toString())
                 .collection(COLLECTION_FOLLOWING)
                 .document(userID)
                 .set(mapOf("userId" to userID))
@@ -330,8 +330,8 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                         FirebaseFirestore.getInstance().collection(PATH_USERS)
                             .document(userID)
                             .collection(COLLECTION_FOLLOWER)
-                            .document(com.tina.musicband.login.UserManager.userToken.toString())
-                            .set(mapOf("userId" to com.tina.musicband.login.UserManager.userToken.toString()))
+                            .document(UserManager.userToken.toString())
+                            .set(mapOf("userId" to UserManager.userToken.toString()))
                             .addOnCompleteListener {
 
                                 if (it.isSuccessful) {
@@ -367,7 +367,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     override suspend fun unfollowUser(userID: String): Result<Boolean> =
         suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection(PATH_USERS)
-                .document(com.tina.musicband.login.UserManager.userToken.toString())
+                .document(UserManager.userToken.toString())
                 .collection(COLLECTION_FOLLOWING)
                 .document(userID)
                 .delete()
@@ -413,7 +413,7 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     override suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean> =
         suspendCoroutine { continuation ->
         FirebaseFirestore.getInstance().collection("users")
-            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .document(UserManager.userToken.toString())
             .update(data)
             .addOnCompleteListener { task ->
 
@@ -434,14 +434,25 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
             }
     }
 
-    override suspend fun updateBackgroundAndAvatar(): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun retrievePostsDataInstantly(userID: String, callbackHandler: ((List<Posts>) -> Unit)?) {
+        FirebaseFirestore.getInstance().collection(PATH_POSTS)
+            .orderBy("createdTime", Query.Direction.DESCENDING)
+            .whereEqualTo("userId", userID)
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+
+                if (documentSnapshot != null) {
+
+                    val posts = documentSnapshot.toObjects(Posts::class.java)
+
+                    callbackHandler?.invoke(posts)
+                }
+            }
     }
 
     override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
 
         FirebaseFirestore.getInstance().collection(PATH_USERS)
-            .document(com.tina.musicband.login.UserManager.userToken.toString())
+            .document(UserManager.userToken.toString())
             .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
 
                 if (documentSnapshot != null) {
@@ -538,8 +549,27 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     }
 
 
-    override suspend fun retrieveUsersAvatar(userID: String): Result<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>> = suspendCoroutine { continuation ->
+
+        FirebaseFirestore.getInstance().collection(PATH_USERS)
+            .document(userID)
+            .collection(COLLECTION_FOLLOWING)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+                    val following = task.result!!.toObjects(Following::class.java)
+
+                    continuation.resume(Result.Success(following))
+                } else {
+                    task.exception?.let {
+
+                        Logger.w("[${this::class.simpleName}] Error getting followings ${it.message}")
+                        continuation.resume(Result.Error(it))
+                    }
+
+                }
+            }
     }
 
 }

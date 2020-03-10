@@ -1,9 +1,6 @@
 package com.tina.musicband.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.tina.musicband.data.*
@@ -83,19 +80,10 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val setFab: LiveData<Boolean>
         get() = _setFab
 
-    private val _profileAvatar = MutableLiveData<Int>()
+    private val _followings = MutableLiveData<List<Following>>()
 
-    val profileAvatar: LiveData<Int>
-        get() = _profileAvatar
-
-    private val _isProfileAvatarPrepared = MutableLiveData<Boolean>()
-
-    val isProfileAvatarPrepared: LiveData<Boolean>
-        get() = _isProfileAvatarPrepared
-
-    fun doneReadingProfileAvatar() {
-        _isProfileAvatarPrepared.value = null
-    }
+    val followings: LiveData<List<Following>>
+        get() = _followings
 
     private val _likeStatus = MutableLiveData<Boolean>()
         .apply {
@@ -136,89 +124,90 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val userAvatarMap = mutableMapOf<String, Int>()
     val list = mutableListOf<Posts>()
 
-    fun prepareSnapshotListener() {
+//    fun prepareSnapshotListener() {
+//
+//        _status.value = LoadApiStatus.LOADING
+//
+//        FirebaseFirestore.getInstance()
+//            .collection("users")
+//            .document(UserManager.userToken.toString())
+//            .get()
+//            .addOnSuccessListener {
+//                it.toObject(User::class.java)?.let { user ->
+//                    userAvatarMap[user.userId] = user.avatar
+//                }
+//
+//                FirebaseFirestore.getInstance()
+//                    .collection("posts")
+//                    .orderBy("createdTime", Query.Direction.DESCENDING)
+//                    .whereEqualTo("userId", UserManager.userToken.toString())
+//                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+//
+//                        if (querySnapshot != null) {
+//
+//                            _posts.value = querySnapshot.toObjects(Posts::class.java)
+//
+//                            FirebaseFirestore.getInstance().collection("users")
+//                                .document(UserManager.userToken.toString())
+//                                .collection("following")
+//                                .get()
+//                                .addOnCompleteListener {
+//                                    if (it.isSuccessful) {
+//
+//                                        _status.value = LoadApiStatus.DONE
+//
+//                                        val following =
+//                                            it.result!!.toObjects(Following::class.java)
+//
+//
+//                                        for (j in 0 until following.size) {
+//                                            val follower = following[j]
+//
+//                                            FirebaseFirestore.getInstance().collection("posts")
+//                                                .orderBy("createdTime", Query.Direction.DESCENDING)
+//                                                .whereEqualTo("userId", follower.userId)
+//                                                .get()
+//                                                .addOnCompleteListener {
+//                                                    if (it.isSuccessful) {
+//
+//                                                        val post =
+//                                                            it.result!!.toObjects(Posts::class.java)
+//
+//                                                        /** GET AVATAR FROM FOLLOWER */
+//                                                        FirebaseFirestore.getInstance()
+//                                                            .collection("users")
+//                                                            .document(follower.userId)
+//                                                            .get()
+//                                                            .addOnSuccessListener {
+//                                                                it.toObject(User::class.java)
+//                                                                    ?.let { user ->
+//                                                                        userAvatarMap[user.userId] =
+//                                                                            user.avatar
+//                                                                    }
+//
+//                                                                list.addAll(post)
+//
+//                                                                if (j == following.count() - 1) {
+//                                                                    _posts.value?.let { previousList ->
+//                                                                        list.addAll(previousList)
+//                                                                    }
+//                                                                    _posts.value = list
+//                                                                }
+//                                                            }
+//                                                    }
+//
+//                                                }
+//                                        }
+//                                    }
+//
+//                                }
+//                        }
+//
+//                    }
+//            }
+//    }
 
-        _status.value = LoadApiStatus.LOADING
-
-        FirebaseFirestore.getInstance()
-            .collection("users")
-            .document(UserManager.userToken.toString())
-            .get()
-            .addOnSuccessListener {
-                it.toObject(User::class.java)?.let { user ->
-                    userAvatarMap[user.userId] = user.avatar
-                }
-
-                FirebaseFirestore.getInstance()
-                    .collection("posts")
-                    .orderBy("createdTime", Query.Direction.DESCENDING)
-                    .whereEqualTo("userId", UserManager.userToken.toString())
-                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                        if (querySnapshot != null) {
-
-                            _posts.value = querySnapshot.toObjects(Posts::class.java)
-
-                            FirebaseFirestore.getInstance().collection("users")
-                                .document(UserManager.userToken.toString())
-                                .collection("following")
-                                .get()
-                                .addOnCompleteListener {
-                                    if (it.isSuccessful) {
-
-                                        _status.value = LoadApiStatus.DONE
-
-                                        val following =
-                                            it.result!!.toObjects(Following::class.java)
-
-
-                                        for (j in 0 until following.size) {
-                                            val follower = following[j]
-
-                                            FirebaseFirestore.getInstance().collection("posts")
-                                                .orderBy("createdTime", Query.Direction.DESCENDING)
-                                                .whereEqualTo("userId", follower.userId)
-                                                .get()
-                                                .addOnCompleteListener {
-                                                    if (it.isSuccessful) {
-
-                                                        val post =
-                                                            it.result!!.toObjects(Posts::class.java)
-
-                                                        /** GET AVATAR FROM FOLLOWER */
-                                                        FirebaseFirestore.getInstance().collection("users")
-                                                            .document(follower.userId)
-                                                            .get()
-                                                            .addOnSuccessListener {
-                                                                it.toObject(User::class.java)
-                                                                    ?.let { user ->
-                                                                        userAvatarMap[user.userId] =
-                                                                            user.avatar
-                                                                    }
-
-                                                                list.addAll(post)
-
-                                                                if (j == following.count() - 1) {
-                                                                    _posts.value?.let { previousList ->
-                                                                        list.addAll(previousList)
-                                                                    }
-                                                                    _posts.value = list
-                                                                }
-                                                            }
-                                                    }
-
-                                                }
-                                        }
-                                    }
-
-                                }
-                        }
-
-                    }
-            }
-    }
-
-    fun readUserDataResult(userID: String){
+    fun readUserDataResult(userID: String) {
 
         coroutineScope.launch {
 
@@ -250,7 +239,46 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     }
 
-    fun retrievePostByUserID(userID : String){
+    fun retrieveUserPostsInstantly(userID: String) {
+
+        repository.retrievePostsDataInstantly(userID) { posts ->
+            _posts.value = posts
+        }
+    }
+
+    private fun retrieveUserFollowings() {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            _followings.value = when (val result =
+                repository.retrieveUsersFollowings(UserManager.userToken.toString())) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+            }
+        }
+    }
+
+
+    fun retrievePostByUserID(userID: String) {
 
         coroutineScope.launch {
 
@@ -280,5 +308,34 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
         }
     }
 
+    val isUserDataReadyToGetPosts = MediatorLiveData<Boolean>().apply {
+        addSource(_user) {
+            value = checkIfUserAndFollowingsDataAreReady()
+            if (_user.value != null) retrieveUserFollowings()
+        }
+        addSource(_followings) {
+            value = checkIfUserAndFollowingsDataAreReady()
+            if (_followings.value != null) {
+
+                _followings.value?.let {
+
+                    for (following in 0 until it.size) {
+
+                        val user = it[following]
+
+                        readUserDataResult(user.userId)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkIfUserAndFollowingsDataAreReady(): Boolean {
+        return _user.value != null && _followings.value != null
+    }
+
+    fun doneReadingPosts() {
+        isUserDataReadyToGetPosts.value = null
+    }
 
 }

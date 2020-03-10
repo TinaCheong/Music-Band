@@ -3,6 +3,7 @@ package com.tina.musicband.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.UserManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,7 +45,7 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.prepareSnapshotListener()
+        viewModel.readUserDataResult(com.tina.musicband.login.UserManager.userToken.toString())
 
         // Implement the FAB Animation
         binding.mainFab.setOnClickListener {
@@ -70,46 +71,58 @@ class MainFragment : Fragment() {
             }
         })
 
-        viewModel.setFab.observe(this, Observer {
-            it?.let {
-                binding.mainFab.visibility = View.VISIBLE
+        viewModel.isUserDataReadyToGetPosts.observe(viewLifecycleOwner, Observer {
+            viewModel.retrieveUserPostsInstantly(com.tina.musicband.login.UserManager.userToken.toString())
+            viewModel.followings.value?.let {
+                for (following in 0 until it.size) {
+                    val user = it[following]
+                    viewModel.retrieveUserPostsInstantly(user.userId)
+                }
             }
+            viewModel.doneReadingPosts()
         })
 
-        return binding.root
-    }
+            viewModel.setFab.observe(this, Observer {
+                it?.let {
+                    binding.mainFab.visibility = View.VISIBLE
+                }
+            })
 
-    // FAB Animation Settings
-
-    private fun fabAnimation() {
-
-        val fabOpen = AnimationUtils.loadAnimation(activity, R.anim.fab_open)
-        val fabClose = AnimationUtils.loadAnimation(activity, R.anim.fab_close)
-        val fabRotateForward = AnimationUtils.loadAnimation(activity, R.anim.fab_rotate_forward)
-        val fabRotateBackward = AnimationUtils.loadAnimation(activity, R.anim.fab_rotate_backward)
-
-        if (isOpen) {
-
-            binding.mainFab.startAnimation(fabRotateForward)
-            binding.musicFab.startAnimation(fabClose)
-            binding.eventFab.startAnimation(fabClose)
-            binding.musicFab.setClickable(false)
-            binding.eventFab.setClickable(false)
-
-            isOpen = false
-
-        } else {
-
-            binding.mainFab.startAnimation(fabRotateBackward)
-            binding.musicFab.startAnimation(fabOpen)
-            binding.eventFab.startAnimation(fabOpen)
-            binding.musicFab.setClickable(true)
-            binding.eventFab.setClickable(true)
-
-            isOpen = true
+            return binding.root
         }
 
+                // FAB Animation Settings
+
+                private fun fabAnimation() {
+
+            val fabOpen = AnimationUtils.loadAnimation(activity, R.anim.fab_open)
+            val fabClose = AnimationUtils.loadAnimation(activity, R.anim.fab_close)
+            val fabRotateForward = AnimationUtils.loadAnimation(activity, R.anim.fab_rotate_forward)
+            val fabRotateBackward =
+                AnimationUtils.loadAnimation(activity, R.anim.fab_rotate_backward)
+
+            if (isOpen) {
+
+                binding.mainFab.startAnimation(fabRotateForward)
+                binding.musicFab.startAnimation(fabClose)
+                binding.eventFab.startAnimation(fabClose)
+                binding.musicFab.setClickable(false)
+                binding.eventFab.setClickable(false)
+
+                isOpen = false
+
+            } else {
+
+                binding.mainFab.startAnimation(fabRotateBackward)
+                binding.musicFab.startAnimation(fabOpen)
+                binding.eventFab.startAnimation(fabOpen)
+                binding.musicFab.setClickable(true)
+                binding.eventFab.setClickable(true)
+
+                isOpen = true
+            }
+
+        }
+
+
     }
-
-
-}
