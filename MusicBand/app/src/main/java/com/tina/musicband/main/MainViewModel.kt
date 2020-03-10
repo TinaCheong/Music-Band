@@ -1,11 +1,8 @@
 package com.tina.musicband.main
 
 import androidx.lifecycle.*
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandRepository
-import com.tina.musicband.login.UserManager
 import com.tina.musicband.network.LoadApiStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,10 +77,15 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val setFab: LiveData<Boolean>
         get() = _setFab
 
-    private val _followings = MutableLiveData<List<Following>>()
+    private val _followingsID = MutableLiveData<MutableList<String>>()
 
-    val followings: LiveData<List<Following>>
-        get() = _followings
+    val followingsID: LiveData<MutableList<String>>
+        get() = _followingsID
+
+    private val _followingData = MutableLiveData<List<User>>()
+
+    val followingData: LiveData<List<User>>
+        get() = _followingData
 
     private val _likeStatus = MutableLiveData<Boolean>()
         .apply {
@@ -124,89 +126,6 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val userAvatarMap = mutableMapOf<String, Int>()
     val list = mutableListOf<Posts>()
 
-//    fun prepareSnapshotListener() {
-//
-//        _status.value = LoadApiStatus.LOADING
-//
-//        FirebaseFirestore.getInstance()
-//            .collection("users")
-//            .document(UserManager.userToken.toString())
-//            .get()
-//            .addOnSuccessListener {
-//                it.toObject(User::class.java)?.let { user ->
-//                    userAvatarMap[user.userId] = user.avatar
-//                }
-//
-//                FirebaseFirestore.getInstance()
-//                    .collection("posts")
-//                    .orderBy("createdTime", Query.Direction.DESCENDING)
-//                    .whereEqualTo("userId", UserManager.userToken.toString())
-//                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//
-//                        if (querySnapshot != null) {
-//
-//                            _posts.value = querySnapshot.toObjects(Posts::class.java)
-//
-//                            FirebaseFirestore.getInstance().collection("users")
-//                                .document(UserManager.userToken.toString())
-//                                .collection("following")
-//                                .get()
-//                                .addOnCompleteListener {
-//                                    if (it.isSuccessful) {
-//
-//                                        _status.value = LoadApiStatus.DONE
-//
-//                                        val following =
-//                                            it.result!!.toObjects(Following::class.java)
-//
-//
-//                                        for (j in 0 until following.size) {
-//                                            val follower = following[j]
-//
-//                                            FirebaseFirestore.getInstance().collection("posts")
-//                                                .orderBy("createdTime", Query.Direction.DESCENDING)
-//                                                .whereEqualTo("userId", follower.userId)
-//                                                .get()
-//                                                .addOnCompleteListener {
-//                                                    if (it.isSuccessful) {
-//
-//                                                        val post =
-//                                                            it.result!!.toObjects(Posts::class.java)
-//
-//                                                        /** GET AVATAR FROM FOLLOWER */
-//                                                        FirebaseFirestore.getInstance()
-//                                                            .collection("users")
-//                                                            .document(follower.userId)
-//                                                            .get()
-//                                                            .addOnSuccessListener {
-//                                                                it.toObject(User::class.java)
-//                                                                    ?.let { user ->
-//                                                                        userAvatarMap[user.userId] =
-//                                                                            user.avatar
-//                                                                    }
-//
-//                                                                list.addAll(post)
-//
-//                                                                if (j == following.count() - 1) {
-//                                                                    _posts.value?.let { previousList ->
-//                                                                        list.addAll(previousList)
-//                                                                    }
-//                                                                    _posts.value = list
-//                                                                }
-//                                                            }
-//                                                    }
-//
-//                                                }
-//                                        }
-//                                    }
-//
-//                                }
-//                        }
-//
-//                    }
-//            }
-//    }
-
     fun readUserDataResult(userID: String) {
 
         coroutineScope.launch {
@@ -236,24 +155,57 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
                 }
             }
         }
-
     }
 
-    fun retrieveUserPostsInstantly(userID: String) {
-
-        repository.retrievePostsDataInstantly(userID) { posts ->
-            _posts.value = posts
-        }
-    }
-
-    private fun retrieveUserFollowings() {
+    private fun readFollowingDataResult(userIDs: List<String>) {
 
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
 
-            _followings.value = when (val result =
-                repository.retrieveUsersFollowings(UserManager.userToken.toString())) {
+            _followingData.value = when (val result = repository.retrieveAllUsersData(userIDs)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    for (user in result.data) {
+                        userAvatarMap[user.userId] = user.avatar
+                    }
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                    null
+                }
+            }
+        }
+
+    }
+
+    fun retrieveUserPostsInstantly(userIDs: MutableList<String>) {
+
+        repository.retrievePostsDataInstantly(userIDs) { posts ->
+            _posts.value = posts
+        }
+    }
+
+    private fun getUserFollowingsID() {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            _followingsID.value = when (val result =
+                repository.getUsersFollowingsID()) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadApiStatus.DONE
@@ -311,27 +263,18 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
     val isUserDataReadyToGetPosts = MediatorLiveData<Boolean>().apply {
         addSource(_user) {
             value = checkIfUserAndFollowingsDataAreReady()
-            if (_user.value != null) retrieveUserFollowings()
+            if (_user.value != null) getUserFollowingsID()
         }
-        addSource(_followings) {
+        addSource(_followingsID) {
             value = checkIfUserAndFollowingsDataAreReady()
-            if (_followings.value != null) {
-
-                _followings.value?.let {
-
-                    for (following in 0 until it.size) {
-
-                        val user = it[following]
-
-                        readUserDataResult(user.userId)
-                    }
-                }
-            }
+            if (_followingsID.value != null) readFollowingDataResult(_followingsID.value!!)
         }
+        addSource(_followingData){
+            value = checkIfUserAndFollowingsDataAreReady() }
     }
 
     private fun checkIfUserAndFollowingsDataAreReady(): Boolean {
-        return _user.value != null && _followings.value != null
+        return _user.value != null && _followingsID.value != null && _followingData.value != null
     }
 
     fun doneReadingPosts() {

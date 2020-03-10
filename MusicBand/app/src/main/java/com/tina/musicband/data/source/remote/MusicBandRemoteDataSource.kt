@@ -214,6 +214,45 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                 }
         }
 
+    override suspend fun retrieveAllUsersData(userIDs: List<String>): Result<List<User>> =
+        suspendCoroutine { continuation ->
+
+        val usersData = mutableListOf<User>()
+
+            var counter = 0
+
+        for (userID in userIDs) {
+            FirebaseFirestore.getInstance().collection(PATH_USERS)
+                .document(userID)
+                .get()
+                .addOnCompleteListener { task ->
+
+                    counter += 1
+
+                    if (task.isSuccessful) {
+
+                        val user = task.result!!.toObject(User::class.java)
+
+                        usersData.add(user!!)
+
+                        if (counter == userIDs.count()) {
+                            continuation.resume(Result.Success(usersData))
+                        }
+
+                    } else {
+
+                        task.exception?.let {
+
+                            Logger.w("[${this::class.simpleName}] Error getting users. ${it.message}")
+                            continuation.resume(Result.Error(it))
+                        }
+
+                    }
+
+                }
+        }
+    }
+
     override suspend fun retrievePostsCount(userID: String): Result<Int> = suspendCoroutine { continuation ->
             FirebaseFirestore.getInstance().collection(PATH_POSTS)
                 .whereEqualTo("userId", userID)
@@ -434,19 +473,33 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
             }
     }
 
-    override fun retrievePostsDataInstantly(userID: String, callbackHandler: ((List<Posts>) -> Unit)?) {
+    override fun retrievePostsDataInstantly(userIDs: MutableList<String>, callbackHandler: ((List<Posts>) -> Unit)?) {
+
+        userIDs.add(UserManager.userToken.toString())
+
+        val postList = mutableListOf<Posts>()
+
+        var counter = 0
+
+        for (userID in userIDs){
+
         FirebaseFirestore.getInstance().collection(PATH_POSTS)
             .orderBy("createdTime", Query.Direction.DESCENDING)
             .whereEqualTo("userId", userID)
             .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
 
+                counter += 1
+
                 if (documentSnapshot != null) {
 
                     val posts = documentSnapshot.toObjects(Posts::class.java)
 
-                    callbackHandler?.invoke(posts)
+                    postList.addAll(posts)
                 }
+
+                if (counter == userIDs.count()) {callbackHandler?.invoke(postList)}
             }
+        }
     }
 
     override fun detectProfileDataChange(callbackHandler: ((User) -> Unit)?) {
@@ -549,18 +602,18 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
     }
 
 
-    override suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>> = suspendCoroutine { continuation ->
+    override suspend fun getUsersFollowingsID(): Result<MutableList<String>> = suspendCoroutine { continuation ->
 
         FirebaseFirestore.getInstance().collection(PATH_USERS)
-            .document(userID)
+            .document(UserManager.userToken.toString())
             .collection(COLLECTION_FOLLOWING)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
 
-                    val following = task.result!!.toObjects(Following::class.java)
+                    val followings = task.result!!.toObjects(Following::class.java)
 
-                    continuation.resume(Result.Success(following))
+                    continuation.resume(Result.Success(followings.map { it.userId }.toMutableList()))
                 } else {
                     task.exception?.let {
 
@@ -571,5 +624,4 @@ object MusicBandRemoteDataSource : MusicBandDataSource {
                 }
             }
     }
-
 }

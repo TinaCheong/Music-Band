@@ -7,10 +7,19 @@ import com.tina.musicband.main.PostSealedItem
 class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSource,
                                  private val localDataSource: MusicBandDataSource)
     : MusicBandRepository {
-    override fun retrievePostsDataInstantly(userID: String, callbackHandler: ((List<Posts>) -> Unit)?
-    ) {
-        return remoteDataSource.retrievePostsDataInstantly(userID, callbackHandler)
+    override suspend fun retrieveAllUsersData(userIDs: List<String>): Result<List<User>> {
+        return remoteDataSource.retrieveAllUsersData(userIDs)
     }
+
+    override fun retrievePostsDataInstantly(userIDs: MutableList<String>, callbackHandler: ((List<Posts>) -> Unit)?
+    ) {
+        return remoteDataSource.retrievePostsDataInstantly(userIDs, callbackHandler)
+    }
+
+    override suspend fun getUsersFollowingsID(): Result<MutableList<String>> {
+        return remoteDataSource.getUsersFollowingsID()
+    }
+
 
     override suspend fun publishSong(song: Songs): Result<Boolean> {
         return remoteDataSource.publishSong(song)
@@ -92,8 +101,5 @@ class DefaultMusicBandRepository(private val remoteDataSource: MusicBandDataSour
         return remoteDataSource.getAllSongs()
     }
 
-    override suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>> {
-        return remoteDataSource.retrieveUsersFollowings(userID)
-    }
 
 }

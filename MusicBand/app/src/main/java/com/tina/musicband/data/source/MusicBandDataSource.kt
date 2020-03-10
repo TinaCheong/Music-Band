@@ -24,6 +24,8 @@ interface MusicBandDataSource {
 
     suspend fun retrieveUsersData(userID: String): Result<User>
 
+    suspend fun retrieveAllUsersData(userIDs: List<String>): Result<List<User>>
+
     suspend fun retrievePostsCount(userID: String): Result<Int>
 
     fun retrieveFollowingsCount(userID: String, callbackHandler:((Int)->Unit)?)
@@ -38,7 +40,7 @@ interface MusicBandDataSource {
 
     suspend fun updateUsersData(data: Map<String, String?>): Result<Boolean>
 
-    fun retrievePostsDataInstantly(userID: String, callbackHandler:((List<Posts>)->Unit)?)
+    fun retrievePostsDataInstantly(userIDs: MutableList<String>, callbackHandler:((List<Posts>)->Unit)?)
 
     fun detectProfileDataChange(callbackHandler:((User)->Unit)?)
 
@@ -48,5 +50,5 @@ interface MusicBandDataSource {
 
     suspend fun getAllSongs(): Result<List<Songs>>
 
-    suspend fun retrieveUsersFollowings(userID: String): Result<List<Following>>
+    suspend fun getUsersFollowingsID(): Result<MutableList<String>>
 }

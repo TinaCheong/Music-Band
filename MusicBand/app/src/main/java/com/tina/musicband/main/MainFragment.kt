@@ -72,14 +72,14 @@ class MainFragment : Fragment() {
         })
 
         viewModel.isUserDataReadyToGetPosts.observe(viewLifecycleOwner, Observer {
-            viewModel.retrieveUserPostsInstantly(com.tina.musicband.login.UserManager.userToken.toString())
-            viewModel.followings.value?.let {
-                for (following in 0 until it.size) {
-                    val user = it[following]
-                    viewModel.retrieveUserPostsInstantly(user.userId)
+            it?.let {
+                if (it) {
+                    viewModel.followingsID.value?.let {
+                        viewModel.retrieveUserPostsInstantly(it)
+                    }
+                    viewModel.doneReadingPosts()
                 }
             }
-            viewModel.doneReadingPosts()
         })
 
             viewModel.setFab.observe(this, Observer {

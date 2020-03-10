@@ -19,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.tina.musicband.*
 import com.tina.musicband.data.Songs
 import com.tina.musicband.databinding.ItemMusicPlayerSearchBinding
+import com.tina.musicband.ext.createTime
 import java.io.IOException
 import java.lang.Exception
 import kotlin.math.roundToInt
@@ -138,7 +139,7 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
                     val currentPosition = msg.what
                     val percent = (1 / ( mediaPlayer.duration / 100.0) * currentPosition).roundToInt()
                     binding.musicSeekBar.progress = percent
-                    val startTime = createTIme(currentPosition)
+                    val startTime = currentPosition.createTime()
 
                     if (startTime.contains("-")) {
                         binding.musicStartTime.setText("00:00")
@@ -156,16 +157,11 @@ class SearchMusicAdapter(val searchMusicViewModel: SearchMusicViewModel) : ListA
         }
 
 
-        private fun createTIme(time: Int): String {
+        fun createTime(time: Int): String {
             var timeLevel: String
             val min = time / 1000 / 60
             val sec = time / 1000 % 60
             timeLevel = String.format("%02d:%02d", min, sec)
-
-//        if(sec<10){
-//            timeLevel += "0"
-//            timeLevel += sec
-//        }
 
             return timeLevel
 
