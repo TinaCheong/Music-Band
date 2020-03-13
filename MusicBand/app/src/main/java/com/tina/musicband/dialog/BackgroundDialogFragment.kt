@@ -5,18 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.User
-import com.tina.musicband.databinding.DialogAvatarSelectProfileBinding
 import com.tina.musicband.databinding.DialogBgSelectProfileBinding
+import com.tina.musicband.ext.getVmFactory
 
-class BackgroundDialog : DialogFragment() {
+class BackgroundDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogBgSelectProfileBinding
-    private val viewModel: BackgroundDialogViewModel by lazy{
-        ViewModelProviders.of(this).get(BackgroundDialogViewModel::class.java)
-    }
+    val viewModel by viewModels<BackgroundDialogViewModel> { getVmFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,16 +34,18 @@ class BackgroundDialog : DialogFragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.setUser(User())
+        viewModel.setUser(MusicBandApplication.user)
 
         binding.closeButton.setOnClickListener {
             dismiss()
         }
 
-        binding.saveButton.setOnClickListener {
-            viewModel.save()
-            dismiss()
-        }
+        viewModel.setting.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                dismiss()
+                viewModel.finishSetting()
+            }
+        })
 
         return binding.root
     }

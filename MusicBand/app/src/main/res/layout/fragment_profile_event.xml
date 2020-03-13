@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.main.MainViewModel" />
+        <import type="android.view.View">
+        </import>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +32,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:posts="@{viewModel.userPosts}"/>
 
             <ImageView
                 android:id="@+id/no_post_image"
@@ -36,6 +41,7 @@
                 android:layout_height="120dp"
                 android:layout_marginTop="63dp"
                 android:tint="@color/white_50"
+                android:visibility="@{viewModel.userPosts.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/question_mark_image"
@@ -48,6 +54,7 @@
                 android:layout_marginTop="110dp"
                 android:layout_marginEnd="100dp"
                 android:tint="@color/white_50"
+                android:visibility="@{viewModel.userPosts.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/recycler_view__event_profile"
                 app:srcCompat="@drawable/ic_question_mark" />
@@ -57,10 +64,11 @@
                 android:layout_width="279dp"
                 android:layout_height="95dp"
                 android:gravity="center"
-                android:text="Can't see anything?\n Go meet some friends or post something :)"
+                android:text="@string/no_post_text"
                 android:textColor="@color/gray_DDDDDD_50"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:visibility="@{viewModel.userPosts.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintEnd_toEndOf="@+id/no_post_image"
                 app:layout_constraintStart_toStartOf="@+id/no_post_image"
                 app:layout_constraintTop_toBottomOf="@+id/no_post_image" />

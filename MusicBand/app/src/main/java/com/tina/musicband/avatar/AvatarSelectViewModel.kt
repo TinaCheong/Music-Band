@@ -6,62 +6,44 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
-import com.tina.musicband.MusicBandApplication
-import com.tina.musicband.R
 import com.tina.musicband.data.User
-import com.tina.musicband.login.UserManager
+import com.tina.musicband.data.source.MusicBandRepository
+import com.tina.musicband.network.LoadApiStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-enum class AVATAR(val value: Int){
-    WOMAN_WITH_BROWN_HAIR(0),
-    WOMAN_WITH_RED_HAIR(1),
-    WOMAN_WITH_BLACK_HAIR(2),
-    MAN_WITH_DARK_BROWN_HAIR(3),
-    MAN_WITH_GRAY_HAIR(4),
-    MAN_WITH_BROWN_HAIR(5)
-}
 
-fun AVATAR.getDrawable(): Drawable {
-    return when(this) {
-        AVATAR.WOMAN_WITH_BROWN_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_woman_1)
-        AVATAR.WOMAN_WITH_RED_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_woman_2)
-        AVATAR.WOMAN_WITH_BLACK_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_woman_3)
-        AVATAR.MAN_WITH_DARK_BROWN_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_man_1)
-        AVATAR.MAN_WITH_GRAY_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_man_2)
-        AVATAR.MAN_WITH_BROWN_HAIR -> MusicBandApplication.instance.applicationContext.resources.getDrawable(
-            R.drawable.ic_man_3)
-
-    }
-}
-
-fun Int.getAvatarDrawable() : Drawable {
-    return when(this) {
-        AVATAR.WOMAN_WITH_BROWN_HAIR.value -> AVATAR.WOMAN_WITH_BROWN_HAIR.getDrawable()
-        AVATAR.WOMAN_WITH_RED_HAIR.value -> AVATAR.WOMAN_WITH_RED_HAIR.getDrawable()
-        AVATAR.WOMAN_WITH_BLACK_HAIR.value -> AVATAR.WOMAN_WITH_BLACK_HAIR.getDrawable()
-        AVATAR.MAN_WITH_DARK_BROWN_HAIR.value -> AVATAR.MAN_WITH_DARK_BROWN_HAIR.getDrawable()
-        AVATAR.MAN_WITH_GRAY_HAIR.value -> AVATAR.MAN_WITH_GRAY_HAIR.getDrawable()
-        else -> AVATAR.MAN_WITH_BROWN_HAIR.getDrawable()
-    }
-}
-
-fun String.getDrawable() : Drawable {
-    return this.toInt().getAvatarDrawable()
-}
-
-fun String.getAvatar() : Int {
-    return if (this.toInt() < 0 || this.toInt() > 5) AVATAR.MAN_WITH_BROWN_HAIR.value else this.toInt()
-}
-
-class AvatarSelectViewModel : ViewModel() {
+class AvatarSelectViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     private var selectedIcon : View? = null
     private var user: User? = null
+
+    private val _status = MutableLiveData<LoadApiStatus>()
+
+    val status: LiveData<LoadApiStatus>
+        get() = _status
+
+    private val _error = MutableLiveData<String>()
+
+    val error: LiveData<String>
+        get() = _error
+
+    private val _setting = MutableLiveData<Boolean>()
+
+    val setting: LiveData<Boolean>
+        get() = _setting
+
+    private var viewModelJob = Job()
+
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
 
     fun selectAvatar(view: View){
 
@@ -78,12 +60,36 @@ class AvatarSelectViewModel : ViewModel() {
         this.user = user
     }
 
-    fun save() {
-        user?.let {
-            FirebaseFirestore.getInstance().collection("users")
-                .document(UserManager.userToken!!)
-                .update("avatar", it.avatar)
+    fun saveAvatar() {
+
+        coroutineScope.launch {
+
+            _status.value = LoadApiStatus.LOADING
+
+            when (val result = repository.changeAvatarAndBackground(user!!)) {
+                is com.tina.musicband.data.Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadApiStatus.DONE
+                    _setting.value = true
+                }
+                is com.tina.musicband.data.Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadApiStatus.ERROR
+                }
+                is com.tina.musicband.data.Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadApiStatus.ERROR
+                }
+                else -> {
+                    _status.value = LoadApiStatus.ERROR
+                }
+            }
         }
 
+    }
+
+    fun finishSetting(){
+
+        _setting.value = null
     }
 }

@@ -75,14 +75,14 @@
         app:destination="@id/avatarSelectFragment" />
     <dialog
         android:id="@+id/avatarDialog"
-        android:name="com.tina.musicband.dialog.AvatarDialog"
+        android:name="com.tina.musicband.dialog.AvatarDialogFragment"
         android:label="AvatarDialog" />
     <action
         android:id="@+id/action_global_avatarDialog"
         app:destination="@id/avatarDialog" />
     <dialog
         android:id="@+id/backgroundDialog"
-        android:name="com.tina.musicband.dialog.BackgroundDialog"
+        android:name="com.tina.musicband.dialog.BackgroundDialogFragment"
         android:label="BackgroundDialog" />
     <action
         android:id="@+id/action_global_backgroundDialog"

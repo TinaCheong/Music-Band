@@ -7,6 +7,8 @@
         <variable
             name="viewModel"
             type="com.tina.musicband.addevent.AddEventViewModel" />
+        <import type="android.view.View"/>
+        <import type="com.tina.musicband.network.LoadApiStatus"/>
 
     </data>
 
@@ -36,6 +38,7 @@
             android:backgroundTint="@color/white"
             android:ems="10"
             android:hint="@string/title"
+            android:text="@={viewModel.posts.title}"
             android:padding="8dp"
             android:inputType="textPersonName"
             android:textColor="@color/white"
@@ -104,6 +107,7 @@
             android:backgroundTint="@color/white"
             android:ems="10"
             android:hint="@string/description"
+            android:text="@={viewModel.posts.description}"
             android:padding="8dp"
             android:inputType="textPersonName"
             android:textColor="@color/white"
@@ -130,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/no_file_selected"
+            android:text="@{viewModel.uploadHint}"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/image_border"
@@ -142,7 +146,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:translationZ="90dp"
-            android:visibility="invisible"
+            android:visibility="@{viewModel.status == LoadApiStatus.LOADING? View.VISIBLE: View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/submit_button"
             app:layout_constraintEnd_toEndOf="@+id/submit_button"
             app:layout_constraintStart_toStartOf="@+id/submit_button"
@@ -158,6 +162,7 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/search_view_round_corner"
             android:text="@string/submit"
+            android:onClick="@{()->viewModel.uploadPostDataToFirebase()}"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/back_button"

@@ -6,20 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.User
 import com.tina.musicband.databinding.DialogAvatarSelectProfileBinding
+import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.login.UserManager
 
-class AvatarDialog : DialogFragment(){
+class AvatarDialogFragment : DialogFragment(){
 
     private lateinit var binding: DialogAvatarSelectProfileBinding
-    private val viewModel: AvatarDialogViewModel by lazy{
-        ViewModelProviders.of(this).get(AvatarDialogViewModel::class.java)
-    }
+    val viewModel by viewModels<AvatarDialogViewModel> { getVmFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +42,14 @@ class AvatarDialog : DialogFragment(){
             dismiss()
         }
 
-        viewModel.setUser(User())
+        viewModel.setUser(MusicBandApplication.user)
 
-        binding.saveButton.setOnClickListener {
-            viewModel.save()
-            dismiss()
-        }
+        viewModel.setting.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                dismiss()
+                viewModel.finishSetting()
+            }
+        })
 
         return binding.root
     }

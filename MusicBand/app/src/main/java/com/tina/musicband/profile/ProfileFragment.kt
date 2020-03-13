@@ -28,9 +28,6 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var adapter: PagerAdapter
     val viewModel by viewModels<ProfileViewModel> { getVmFactory() }
-    private var postCount: Int = 0
-    private var followingCount: Int = 0
-    private var followersCount: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,38 +40,17 @@ class ProfileFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
+        binding.viewModel = viewModel
+
         changePages()
         setTabLayoutIcons()
-        viewModel.getAvatarAndBackground()
+        viewModel.retrievePostsCountResult()
+        viewModel.retrieveFollowingsCountResult()
+        viewModel.retrieveFollowersCountResult()
 
         binding.profileEditIcon.setOnClickListener {
             findNavController().navigate(R.id.action_global_profileEditFragment)
         }
-
-
-        viewModel.profileAvatar.observe(this, Observer {
-            it?.let {
-                binding.profileAvatar.setImageDrawable(
-                    viewModel.profileAvatar.value?.getAvatarDrawable()
-                )
-            }
-
-        })
-
-        viewModel.profileBackground.observe(this, Observer {
-            it.let {
-                binding.profileBackground.setImageDrawable(
-                    viewModel.profileBackground.value?.getBackgroundDrawable()
-                )
-            }
-        })
-
-        binding.profileUsername.setText(UserManager.userName)
-
-
-        getPostCount()
-        getFollowerCount()
-        getFollowingCount()
 
         binding.followersCount.setOnClickListener {
             findNavController().navigate(R.id.action_global_followerProfileFragment)
@@ -84,8 +60,6 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_global_followingProfileFragment)
         }
 
-
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -98,7 +72,6 @@ class ProfileFragment : Fragment() {
                 binding.tabLayoutProfile
             )
         )
-
     }
 
     private fun setTabLayoutIcons() {
@@ -108,63 +81,4 @@ class ProfileFragment : Fragment() {
         binding.tabLayoutProfile.getTabAt(1)?.setIcon(R.drawable.ic_calender)
 
     }
-
-    private fun getPostCount(){
-
-        FirebaseFirestore.getInstance().collection("posts")
-            .whereEqualTo("userId", UserManager.userToken.toString())
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
-                        postCount++
-                    }
-
-                    binding.postsCount.text = postCount.toString()
-                    postCount = 0
-                }
-            }
-
-    }
-
-    private fun getFollowingCount(){
-
-        FirebaseFirestore.getInstance().collection("users")
-            .document(UserManager.userToken.toString())
-            .collection("following")
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
-                        followingCount++
-                    }
-
-                    binding.followingCount.text = followingCount.toString()
-                    followingCount = 0
-                }
-            }
-
-    }
-
-    private fun getFollowerCount(){
-
-        FirebaseFirestore.getInstance().collection("users")
-            .document(UserManager.userToken.toString())
-            .collection("follower")
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(document in it.result!!){
-                        followersCount++
-
-                    }
-
-                    binding.followersCount.text = followersCount.toString()
-                    followersCount = 0
-                }
-            }
-
-    }
-
-
 }

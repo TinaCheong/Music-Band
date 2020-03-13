@@ -1,5 +1,6 @@
 package com.tina.musicband
 
+import com.tina.musicband.ext.createTime
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,5 +14,16 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun checkSongsCreatedTime(){
+        assertEquals("06:30", 390000.createTime())
+    }
+
+    @Test
+    fun checkSongCreatedTime2(){
+        assertEquals("05:24", 324000.createTime())
+
     }
 }

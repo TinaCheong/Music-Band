@@ -7,13 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.tina.musicband.MainActivity
-import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.R
 import com.tina.musicband.data.User
 import com.tina.musicband.databinding.FragmentAvatarSelectBinding
+import com.tina.musicband.ext.getVmFactory
 import com.tina.musicband.login.UserManager
 
 /**
@@ -22,9 +23,7 @@ import com.tina.musicband.login.UserManager
 class AvatarSelectFragment : Fragment() {
 
     lateinit var binding: FragmentAvatarSelectBinding
-    private val viewModel: AvatarSelectViewModel by lazy{
-        ViewModelProviders.of(this).get(AvatarSelectViewModel::class.java)
-    }
+    val viewModel by viewModels<AvatarSelectViewModel> { getVmFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,17 +36,18 @@ class AvatarSelectFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        viewModel.setUser(User())
+        binding.viewModel = viewModel
 
+        viewModel.setUser(User())
 
         binding.enterNameText.setText(UserManager.userName)
 
-        binding.saveButton.setOnClickListener {
-            viewModel.save()
-            findNavController().navigate(R.id.action_global_mainFragment)
-        }
-
-        binding.viewModel = viewModel
+        viewModel.setting.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(R.id.action_global_mainFragment)
+                viewModel.finishSetting()
+            }
+        })
 
 
         // Inflate the layout for this fragment

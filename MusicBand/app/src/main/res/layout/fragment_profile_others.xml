@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.others.ProfileOthersViewModel" />
+        <import type="android.view.View">
+        </import>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +36,7 @@
                     android:layout_height="220dp"
                     android:layout_marginEnd="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bg_square"
+                    app:setBackground="@{viewModel.user}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +47,7 @@
                     android:layout_height="130dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="45dp"
+                    app:setAvatarByUser="@{viewModel.user}"
                     app:layout_constraintStart_toStartOf="@+id/profile_background"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.username}"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -65,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:textColor="@color/white"
+                    android:text="@{String.valueOf(viewModel.postsCount)}"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/line2"
@@ -90,6 +96,7 @@
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:text="@{String.valueOf(viewModel.followersCount)}"
                     app:layout_constraintEnd_toStartOf="@+id/line3"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/line2"
@@ -112,6 +119,7 @@
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:text="@{String.valueOf(viewModel.followingCount)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/line3"
@@ -165,7 +173,8 @@
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_follow"
                     android:tint="@color/white"
-                    android:visibility="invisible"
+                    android:visibility="@{viewModel.checkFollowStatus == true ? View.VISIBLE : View.INVISIBLE}"
+                    android:onClick="@{() -> viewModel.unfollowUser()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/following_text" />
 
@@ -176,6 +185,8 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="16dp"
                     android:tint="@color/white"
+                    android:visibility="@{viewModel.checkFollowStatus == true ? View.INVISIBLE : View.VISIBLE}"
+                    android:onClick="@{() -> viewModel.followUser()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/following_text"
                     app:srcCompat="@drawable/ic_follow_button"/>
@@ -199,7 +210,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.introduction}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -226,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.speciality}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -254,7 +265,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.education}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -282,7 +293,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.position}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -297,7 +308,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
-                    android:text="Favourite Music"
+                    android:text="@string/favourite_music"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -310,7 +321,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.favouriteMusic}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -338,7 +349,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/loading"
+                    android:text="@{viewModel.user.experience}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"

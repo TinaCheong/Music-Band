@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
         <data>
-
+              <variable
+                  name="viewModel"
+                  type="com.tina.musicband.profile.ProfileViewModel" />
         </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +36,7 @@
                                     android:layout_height="180dp"
                                     android:scaleType="centerCrop"
                                     android:src="@drawable/bg_flower"
+                                    app:setBackground="@{viewModel.user}"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="1.0"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +47,7 @@
                                     android:layout_width="129dp"
                                     android:layout_height="129dp"
                                     android:layout_marginTop="100dp"
+                                    app:setAvatarByUser="@{viewModel.user}"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +57,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
-                                    android:text="@string/loading"
+                                    android:text="@{viewModel.user.username}"
                                     android:textColor="@color/white"
                                     android:textSize="30sp"
                                     app:layout_constraintEnd_toEndOf="parent"
@@ -107,6 +111,7 @@
                                     android:textColor="@color/white"
                                     android:textSize="24sp"
                                     android:textStyle="bold"
+                                    android:text="@{String.valueOf(viewModel.postsCount)}"
                                     app:layout_constraintEnd_toStartOf="@+id/line2"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -129,6 +134,7 @@
                                     android:textColor="@color/white"
                                     android:textSize="24sp"
                                     android:textStyle="bold"
+                                    android:text="@{String.valueOf(viewModel.followersCount)}"
                                     app:layout_constraintEnd_toStartOf="@+id/line3"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toEndOf="@+id/line2"
@@ -151,6 +157,7 @@
                                     android:textColor="@color/white"
                                     android:textSize="24sp"
                                     android:textStyle="bold"
+                                    android:text="@{String.valueOf(viewModel.followingCount)}"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toEndOf="@+id/line3"

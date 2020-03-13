@@ -4,6 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.tina.musicband.following.FollowingProfileViewModel" />
+        <import type="android.view.View">
+        </import>
 
     </data>
 
@@ -22,7 +27,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:followings="@{viewModel.followings}"/>
 
         <ImageView
             android:id="@+id/no_following_icon"
@@ -31,7 +37,7 @@
             android:layout_marginTop="45dp"
             android:src="@drawable/ic_no_follow"
             android:tint="@color/white_50"
-            android:visibility="invisible"
+            android:visibility="@{viewModel.followings.size() == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/question_mark_icon" />
@@ -42,7 +48,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="120dp"
             android:layout_marginEnd="110dp"
-            android:visibility="invisible"
+            android:visibility="@{viewModel.followings.size() == 0 ? View.VISIBLE : View.GONE}"
             android:src="@drawable/ic_ic_question_mark_search"
             android:tint="@color/white_50"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,8 +59,8 @@
             android:layout_width="279dp"
             android:layout_height="95dp"
             android:gravity="center"
-            android:text="Wanna follow someone?\n Go and explore the music world :)"
-            android:visibility="invisible"
+            android:text="@string/no_following"
+            android:visibility="@{viewModel.followings.size() == 0 ? View.VISIBLE : View.GONE}"
             android:textColor="@color/white_50"
             android:textSize="20sp"
             android:textStyle="bold"

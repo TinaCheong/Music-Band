@@ -1,13 +1,17 @@
 package com.tina.musicband.factory
 
-import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tina.musicband.MusicBandViewModel
 import com.tina.musicband.addevent.AddEventViewModel
+import com.tina.musicband.addmusic.AddMusicViewModel
+import com.tina.musicband.avatar.AvatarSelectViewModel
 import com.tina.musicband.data.source.MusicBandRepository
+import com.tina.musicband.dialog.AvatarDialogViewModel
+import com.tina.musicband.dialog.BackgroundDialogViewModel
+import com.tina.musicband.follower.FollowerProfileViewModel
+import com.tina.musicband.following.FollowingProfileViewModel
 import com.tina.musicband.login.LoginViewModel
-import com.tina.musicband.main.MainAdapter
 import com.tina.musicband.main.MainViewModel
 import com.tina.musicband.profile.ProfileViewModel
 import com.tina.musicband.search.SearchMusicViewModel
@@ -37,6 +41,24 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(AddEventViewModel::class.java) ->
                     AddEventViewModel(repository)
+
+                isAssignableFrom(AvatarSelectViewModel::class.java) ->
+                    AvatarSelectViewModel(repository)
+
+                isAssignableFrom(AvatarDialogViewModel::class.java) ->
+                    AvatarDialogViewModel(repository)
+
+                isAssignableFrom(BackgroundDialogViewModel::class.java) ->
+                    BackgroundDialogViewModel(repository)
+
+                isAssignableFrom(FollowerProfileViewModel::class.java) ->
+                    FollowerProfileViewModel(repository)
+
+                isAssignableFrom(FollowingProfileViewModel::class.java) ->
+                    FollowingProfileViewModel(repository)
+
+                isAssignableFrom(AddMusicViewModel::class.java) ->
+                    AddMusicViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

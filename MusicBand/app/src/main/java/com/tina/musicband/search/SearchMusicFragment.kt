@@ -35,12 +35,7 @@ import java.lang.Exception
 class SearchMusicFragment : Fragment() {
 
     val viewModel by viewModels<SearchMusicViewModel> { getVmFactory() }
-
     lateinit var binding : FragmentSearchMusicBinding
-//    lateinit var handler: Handler
-    private  val songsList = mutableListOf<Songs>()
-    private var status = LoadApiStatus.LOADING
-    lateinit var adapter : SearchMusicAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,101 +45,13 @@ class SearchMusicFragment : Fragment() {
             inflater, R.layout.fragment_search_music, container, false
         )
 
+        binding.viewModel = viewModel
+
         binding.lifecycleOwner = this
 
-//        val mediaPlayer = MediaPlayer.create(activity, R.raw.all_i_ask_of_you)
-//
-//        mediaPlayer.seekTo(0)
-//
-//        binding.musicPlayButton.setOnClickListener {
-//            mediaPlayer.start()
-//        }
-//
-//        binding.musicPauseButton.setOnClickListener {
-//            mediaPlayer.pause()
-//        }
-//
-//        val totalTime = mediaPlayer.duration
-//
-//        binding.musicSeekBar.setMax(totalTime)
-//
-//        binding.musicSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                if(fromUser) {
-//                    mediaPlayer.seekTo(progress)
-////                    binding.musicSeekBar.setProgress(progress)
-//                }
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-//                if (mediaPlayer != null) {
-//                    mediaPlayer.pause()
-//                }
-//            }
-//
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-//                if (mediaPlayer != null) {
-//                    mediaPlayer.start()
-//                }
-//            }
-//        })
-//
-//        class MusicRunnable: Runnable {
-//            override fun run() {
-//                while(mediaPlayer != null){
-//                    try {
-//                        val message = Message()
-//                        message.what = mediaPlayer.getCurrentPosition()
-//                        handler.sendMessage(message)
-//                        Thread.sleep(1000)
-//                    }catch (e : Exception){
-//
-//                    }
-//                }
-//            }
-//        }
-//
-//        handler = @SuppressLint("HandlerLeak")
-//        object : Handler(){
-//            override fun handleMessage(msg: Message) {
-//                val currentPosition = msg.what
-//                binding.musicSeekBar.setProgress(currentPosition)
-//
-//                val startTime = createTIme(currentPosition)
-//                binding.musicStartTime.setText(startTime)
-//
-//                val endTime = createTIme(totalTime - currentPosition)
-//                binding.musicEndTime.setText(endTime)
-//
-//            }
-//        }
-//
-//        val runnable = Thread(MusicRunnable())
-//        runnable.start()
-        adapter = SearchMusicAdapter(viewModel)
+        binding.recyclerViewSearchMusicPage.adapter = SearchMusicAdapter(viewModel)
 
-        binding.recyclerViewSearchMusicPage.adapter = adapter
-
-        binding.searchPageProgressBar.visibility = View.VISIBLE
-
-        FirebaseFirestore.getInstance().collection("songs")
-            .get()
-            .addOnCompleteListener {
-                if(it.isSuccessful){
-
-                    status == LoadApiStatus.DONE
-                    binding.searchPageProgressBar.visibility = View.GONE
-
-                    for (document in it.result!!){
-
-                        val songs = document.toObject(Songs::class.java)
-                        songsList.add(songs)
-
-                    }
-                    showHint()
-                    adapter.submitList(songsList)
-                }
-            }
+        viewModel.getAllSongsResult()
 
         viewModel.selectedSong.observe(this, Observer {
             it?.userId?.let {userID ->
@@ -174,39 +81,19 @@ class SearchMusicFragment : Fragment() {
     private fun search(keyword: String?){
 
         val resultList = mutableListOf<Songs>()
-        for(song in songsList){
+        for(song in viewModel.songs.value!!){
             if(song.songTitle.toLowerCase().contains(keyword.toString()) ||
                 song.songTitle.toUpperCase().contains(keyword.toString())){
 
                 resultList.add(song)
-
             }
 
-            binding.recyclerViewSearchMusicPage.adapter = adapter
-            adapter.submitList(resultList)
+            binding.recyclerViewSearchMusicPage.adapter = SearchMusicAdapter(viewModel)
+            (binding.recyclerViewSearchMusicPage.adapter as SearchMusicAdapter).submitList(resultList)
 
         }
 
     }
-
-    private fun showHint(){
-        if(status == LoadApiStatus.DONE && songsList.size == 0){
-
-            binding.noMusicImage.visibility = View.VISIBLE
-            binding.questionMarkImage.visibility = View.VISIBLE
-            binding.noMusicText.visibility = View.VISIBLE
-
-        }else{
-
-            binding.noMusicImage.visibility = View.GONE
-            binding.questionMarkImage.visibility = View.GONE
-            binding.noMusicText.visibility = View.GONE
-
-
-        }
-    }
-
-
-
 
 }
+

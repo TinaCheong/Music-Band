@@ -54,7 +54,7 @@ class LoginFragment : Fragment() {
             binding.enterButton.visibility = View.INVISIBLE
 
             binding.facebookLoginButton.setOnClickListener {
-                viewModel.fbLogin(MusicBandApplication.instance.user)
+                viewModel.fbLogin(MusicBandApplication.user)
             }
         } else {
             binding.googleLoginButton.visibility = View.INVISIBLE

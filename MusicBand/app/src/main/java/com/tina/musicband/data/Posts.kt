@@ -12,9 +12,9 @@ data class Posts(
     var avatar: String = "",
     var postId: String = "",
     var createdTime: Long = 1,
-    var title: String = "None",
+    var title: String? = null,
     var date: String? = "",
-    var description: String = "None",
+    var description: String? = null,
     var image: String = "",
     var composer: String = "None",
     var song: Songs = Songs("No Title", "", "", "", "")
