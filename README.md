@@ -33,7 +33,7 @@ Meet other music lovers on social media network.
 <img height="450" width="250.9" src='https://upload.cc/i1/2020/03/13/Jg6kBG.jpg'> <img height="450" width="250.9" src='https://upload.cc/i1/2020/03/13/MY6IyH.png'>
 </p>
 
-## Skill
+## Implementation
 - <b>Language:</b> Kotlin
 - <b>User Interface:</b> Activities, Fragment, Lifecycles, ConstraintLayout, RecyclerView, Dialog, DatePicker, Floating Action Button, Media Player
 - <b>Jetpack:</b> LiveData, Lifecycles, ViewModel, Navigation, Data Binding
