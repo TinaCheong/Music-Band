@@ -12,8 +12,8 @@ import com.tina.musicband.data.User
 import com.tina.musicband.databinding.ItemFollowProfileBinding
 import com.tina.musicband.login.UserManager
 
-class FollowerAdapter :
-    ListAdapter<Follower, FollowerAdapter.FollowerViewHolder>(FollowerDiffCallback) {
+class FollowerAdapter(private val viewModel: FollowerProfileViewModel) : ListAdapter<Follower, FollowerAdapter.FollowerViewHolder>(FollowerDiffCallback) {
+
     override fun onBindViewHolder(holder: FollowerViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
@@ -86,17 +86,11 @@ companion object {
 }
 
 companion object FollowerDiffCallback : DiffUtil.ItemCallback<Follower>() {
-    override fun areItemsTheSame(
-        oldItem: Follower,
-        newItem: Follower
-    ): Boolean {
+    override fun areItemsTheSame(oldItem: Follower, newItem: Follower): Boolean {
         return oldItem === newItem
     }
 
-    override fun areContentsTheSame(
-        oldItem: Follower,
-        newItem: Follower
-    ): Boolean {
+    override fun areContentsTheSame(oldItem: Follower, newItem: Follower): Boolean {
         return oldItem.userId == newItem.userId
     }
 }

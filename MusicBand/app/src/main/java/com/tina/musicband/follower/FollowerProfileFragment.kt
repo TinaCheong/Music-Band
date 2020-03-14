@@ -33,7 +33,7 @@ class FollowerProfileFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.recyclerViewFollowerPage.adapter = FollowerAdapter()
+        binding.recyclerViewFollowerPage.adapter = FollowerAdapter(viewModel)
 
         return binding.root
     }
