@@ -159,6 +159,11 @@ class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 
     private fun readFollowingDataResult(userIDs: List<String>) {
 
+        if (userIDs.isEmpty()) {
+            _followingData.value = listOf()
+            return
+        }
+
         coroutineScope.launch {
 
             _status.value = LoadApiStatus.LOADING
