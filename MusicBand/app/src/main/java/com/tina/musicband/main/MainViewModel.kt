@@ -1,6 +1,10 @@
 package com.tina.musicband.main
 
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Message
 import androidx.lifecycle.*
+import com.tina.musicband.MusicBandApplication
 import com.tina.musicband.data.*
 import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.network.LoadApiStatus
@@ -8,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainViewModel(private val repository: MusicBandRepository) : ViewModel() {
 

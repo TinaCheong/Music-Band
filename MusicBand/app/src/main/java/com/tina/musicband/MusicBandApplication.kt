@@ -1,6 +1,7 @@
 package com.tina.musicband
 
 import android.app.Application
+import android.media.MediaPlayer
 import com.tina.musicband.data.User
 import com.tina.musicband.data.source.MusicBandRepository
 import com.tina.musicband.util.ServiceLocator
@@ -14,7 +15,6 @@ class MusicBandApplication : Application() {
     // Depends on the flavor,
     val repository: MusicBandRepository
         get() = ServiceLocator.provideRepository(this)
-//    val user = User()
 
     companion object {
         var instance: MusicBandApplication by Delegates.notNull()

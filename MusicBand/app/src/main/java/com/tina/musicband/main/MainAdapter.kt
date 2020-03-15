@@ -296,8 +296,16 @@ class MainAdapter(private val mainViewModel: MainViewModel) :
                 }
             })
 
+//            mediaPlayer.setOnCompletionListener {
+//                mediaPlayer.release()
+//            }
 
+            mediaPlayer.setOnErrorListener { mp, what, extra ->
 
+                Logger.i("what: $what, extra: $extra")
+
+                return@setOnErrorListener false
+            }
 
             handler = @SuppressLint("HandlerLeak")
             object : Handler() {
