@@ -49,6 +49,7 @@ Meet other music lovers on social media network.
 - Gradle 5.4.1+
 
 ## Release
+- 1.3.2 - 2020/03/14
 - 1.3.1 - 2020/03/12 
 - 1.3.0 - 2020/03/01
 - 1.2.0 - 2020/02/29
